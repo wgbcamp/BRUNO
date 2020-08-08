@@ -64,9 +64,6 @@ function initial7CardDeal(){
     
     console.dir(players, {'maxArrayLength': null});
     console.log(deck);
-
-
-
 }
 
 //ARRAY SHUFFLE FUNCTIONS**
@@ -111,17 +108,17 @@ function assignDealer(){
 
     //sends all nonzero values to the end of array
     for(i=0; i<players.length; i++){
-        if (isNaN(players[i].hand[0].charAt(players[i].hand[0].length-1)) == true && players[i].dealer == ""){
+        if (isNaN(players[i].hand[0].slice(-1)) == true && players[i].dealer == ""){
             players[i].dealer = "Not a number";
             players = players.concat(players.splice(i, 1));
-            i=0;
+            i--;
         }
     }
 
     //sorts all zero values from highest to lowest
     for(i=0; i<10; i++){
             for(a=0; a<players.length; a++){
-                    if(players[a].hand[0].charAt(players[a].hand[0].length-1) > i && players[a].dealer == ""){
+                    if(players[a].hand[0].slice(-1) > i && players[a].dealer == ""){
 
                         players = players.splice(a, 1).concat(players);
                     }      
