@@ -16,17 +16,83 @@
 //     // console.log(array[0])
 //     // console.log(array[array.length-1])
 
-var array = ["candy", "apple", "stacy"];
 
-array.push(array.splice(0,1).toString())
-// array.splice(array.length,1,array[0])
-console.log(array)
 
-var players = [{name: "sam", hand: ["cherry"], score: 0}, {name: "jeff", hand: ["orange"], score: 6} ];
+// var array = ["candy", "apple", "stacy"];
 
-for (i=players.length-1; i>=0; i--){
+// array.push(array.splice(0,1).toString())
+// // array.splice(array.length,1,array[0])
+// console.log(array)
+
+// var players = [{name: "sam", hand: ["cherry"], score: 0}, {name: "jeff", hand: ["orange"], score: 6} ];
+
+// for (i=players.length-1; i>=0; i--){
             
-    console.log("testing the loop")
-    console.log(players[i].hand);
+//     console.log("testing the loop")
+//     console.log(players[i].hand);
 
+// }
+
+// var arrayOfFunctions = [
+//     function(){ first_function('a string')}
+// ]
+
+
+
+// var testDeck = ["Coco", "Flower"];
+// console.log(testDeck);
+
+// var arrayOfFunctions = [
+//     function firstSkip(){
+//         console.log("firstSkip")
+//     },
+//     function firstReverse(){
+//         console.log("firstReverse")
+//     },
+//     function firstDrawTwo(){
+//         console.log("firstDrawTwo")
+//     },
+//     function firstWild(){
+//         console.log("firstWild")
+//     },
+//     function firstWildDrawFour(){
+//         console.log("firstWildDrawFour")
+//         if(testDeck[0] == "Coco"){
+//            testDeck.splice(0, 1);
+//            i = -1;
+//            console.log(testDeck) 
+//         }
+
+//     }
+// ]
+
+// for (i=0; i<5; i++){
+//     arrayOfFunctions[i]();
+// }
+
+// var number = 0;
+// console.log("number started out as " + number)
+
+// function add(){
+//     number++;
+// }
+
+// function check(){
+//     console.log("number is now " + number);
+// }
+
+// add();
+// check();
+
+function passdown(){
+    var test = 0;
+    receive(test);
 }
+
+function receive(test){
+    console.log(test);
+}
+
+passdown();
+
+

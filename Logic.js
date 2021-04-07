@@ -203,11 +203,33 @@ function createDrawPile(){
 //starts discard pile, applies rules based on first card revealed
 function beginDiscardPile(){
 
-    while (drawPile[0] == "WildCard" || drawPile[0] == "WildDraw4Card"){
+    var arrayOfFunctions = [
+        function firstSkip(){},
+        function firstReverse(){},
+        function firstDrawTwo(){},
+        function firstWild(){},
+        function firstWildDrawFour(){}
+    ]
+
+    for (i=0; i<5; i++){
+        arrayOfFunctions[i]();
+    }
+
+    //Skip rule
+
+    //Reverse rule
+
+    //Draw Two rule
+
+    //Wild rule
+
+    //Wild Draw Four rule
+    while (drawPile[0] == "WildDraw4Card"){
         console.log("Pushing a wild card to the bottom of the deck..")
         drawPile.push(drawPile.splice(0, 1).toString());
     }
-        discardPile = (drawPile.splice(0, 1));
+        
+    discardPile = (drawPile.splice(0, 1));
 
     console.log("discardPile created..")
     console.log("drawPile is = ")
