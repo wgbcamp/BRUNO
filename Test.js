@@ -21,3 +21,12 @@ var array = ["candy", "apple", "stacy"];
 array.push(array.splice(0,1).toString())
 // array.splice(array.length,1,array[0])
 console.log(array)
+
+var players = [{name: "sam", hand: ["cherry"], score: 0}, {name: "jeff", hand: ["orange"], score: 6} ];
+
+for (i=players.length-1; i>=0; i--){
+            
+    console.log("testing the loop")
+    console.log(players[i].hand);
+
+}

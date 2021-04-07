@@ -1,3 +1,5 @@
+var inquirer = require('inquirer');
+
 //DECK ARRAY**
 var deck = [ "BlueCard0", "BlueCard1", "BlueCard1", "BlueCard2", "BlueCard2", "BlueCard3", "BlueCard3", "BlueCard4", "BlueCard4", "BlueCard5", "BlueCard5", "BlueCard6", "BlueCard6", "BlueCard7", "BlueCard7", "BlueCard8", "BlueCard8", "BlueCard9", "BlueCard9", "BlueCardSkip", "BlueCardSkip", "BlueCardReverse", "BlueCardReverse", "BlueCardDraw2", "BlueCardDraw2", "greenCard0", "greenCard1", "greenCard1", "greenCard2", "greenCard2", "greenCard3", "greenCard3", "greenCard4", "greenCard4", "greenCard5", "greenCard5", "greenCard6", "greenCard6", "greenCard7", "greenCard7", "greenCard8", "greenCard8", "greenCard9", "greenCard9", "greenCardSkip", "greenCardSkip", "greenCardReverse", "greenCardReverse", "greenCardDraw2", "greenCardDraw2", "RedCard0", "RedCard1", "RedCard1", "RedCard2", "RedCard2", "RedCard3", "RedCard3", "RedCard4", "RedCard4", "RedCard5", "RedCard5", "RedCard6", "RedCard6", "RedCard7", "RedCard7", "RedCard8", "RedCard8", "RedCard9", "RedCard9", "RedCardSkip", "RedCardSkip", "RedCardReverse", "RedCardReverse", "RedCardDraw2", "RedCardDraw2", "YellowCard0", "YellowCard1", "YellowCard1", "YellowCard2", "YellowCard2", "YellowCard3", "YellowCard3", "YellowCard4", "YellowCard4", "YellowCard5", "YellowCard5", "YellowCard6", "YellowCard6", "YellowCard7", "YellowCard7", "YellowCard8", "YellowCard8", "YellowCard9", "YellowCard9", "YellowCardSkip", "YellowCardSkip", "YellowCardReverse", "YellowCardReverse", "YellowCardDraw2", "YellowCardDraw2", "WildCard", "WildCard", "WildCard", "WildCard", "WildDraw4Card", "WildDraw4Card", "WildDraw4Card", "WildDraw4Card"]
 
@@ -49,21 +51,24 @@ function shuffleDeck(){
 //adds number of players to game, will use connected sessions in the future
 function generatePlayers(){
 
-    const readline = require('readline').createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
-    
-    readline.question("How many players are in this game? ", playerCount => {
-        console.log(`There are ${playerCount} players in this game!`);
-        for (i=0; i<playerCount; i++){
-            players.push({name: `player${i+1}`, hand: [], score: 0, dealer: ""});
-        }
-    
-        console.log(players);
-        initialDraw();
-        readline.close();
-    });
+    inquirer
+        .prompt([
+            {
+                type: 'list',
+                name: 'playerCount',
+                message: 'How many players are in this game?',
+                choices: [1,2,3,4,5,6,7,8]
+            }
+        ])
+        .then((answer) =>{
+            var playerCount = JSON.stringify(answer.playerCount);
+            console.log(`There are ${playerCount} players in this game!`);
+            for (i=0; i<playerCount; i++){
+                players.push({name: `player${i+1}`, hand: [], score: 0, dealer: ""});
+            }
+            console.log(players);
+            initialDraw();
+        })
 }
 
 
@@ -195,7 +200,7 @@ function createDrawPile(){
     beginDiscardPile();
 }
 
-//place top card of draw pile into discard pile
+//starts discard pile, applies rules based on first card revealed
 function beginDiscardPile(){
 
     while (drawPile[0] == "WildCard" || drawPile[0] == "WildDraw4Card"){
@@ -210,12 +215,53 @@ function beginDiscardPile(){
     console.log("discardPile is = ")
     console.log(discardPile)   
 
+    console.log ("#####Just checking...")
+    console.log(players);
+    startPlay();
 }
 
+// starts regular gameplay
+function startPlay(){
+    normalTurn();
+           
+}
 
+function normalTurn(){
 
+    console.log("drawPile is = ")
+    console.log(drawPile);
+    console.log("discardPile is = ")
+    console.log(discardPile) 
+    var currPlay = players.length-1;
+    console.log(players[currPlay]);
 
+    inquirer
+    .prompt([
+        {
+            type: 'list',
+            name: 'startPlay',
+            message: `What card will ${players[currPlay].name} play?`,
+            choices: players[currPlay].hand
+        }
+    ])
+    .then((answer) =>{
 
+        
+        var cardPicked = JSON.stringify(answer.startPlay);
+        cardPicked = cardPicked.slice(1,-1);
+
+            //validate if card exists at top of discard pile based on type
+
+            if(cardPicked.charAt(0) == discardPile[0].charAt(0) || cardPicked.slice(cardPicked.length-2,cardPicked.length) == discardPile[0].slice(discardPile[0].length-2, discardPile[0].length) || cardPicked.charAt(0) == "W"){
+                console.log(`${cardPicked} matches ${discardPile[0]}!`)
+                console.log(`Copying ${cardPicked} to top of discard pile.`);
+                discardPile.unshift(cardPicked);
+                console.log(`Removing ${cardPicked} from ${players[currPlay].name}'s hand.`);
+                players[currPlay].hand.splice(players[currPlay].hand.indexOf(cardPicked), 1);
+                normalTurn();
+            }
+    })
+}
 
 
 

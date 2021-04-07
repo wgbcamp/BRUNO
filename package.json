@@ -1,0 +1,22 @@
+{
+  "name": "bruno",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Logic.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wgbcamp/BRUNO.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wgbcamp/BRUNO/issues"
+  },
+  "homepage": "https://github.com/wgbcamp/BRUNO#readme",
+  "dependencies": {
+    "inquirer": "^8.0.0"
+  }
+}
