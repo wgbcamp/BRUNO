@@ -16,7 +16,7 @@ var currentPlayer = players.length-1;
 //GLOBAL GAMEPLAY VARIABLES
 var globalColor;
 var globalNumberOrSymbol;
-var gameDirection;
+var playerCounter;
 
 
 
@@ -67,6 +67,7 @@ function generatePlayers(){
             for (i=0; i<playerCount; i++){
                 players.push({name: `player${i+1}`, hand: [], score: 0, dealer: ""});
             }
+            playerCounter = players.length - 1;
             console.log(players);
             initialDraw();
         })
@@ -261,22 +262,18 @@ function normalTurn(modifier){
     console.log(discardPile)
 
 
-    var currPlay;
-
-    if (modifier == undefined){
-        currPlay = players.length-1;
-    }else{
-        currPlay = players.length-1-modifier;
-    }
-    console.log(players[currPlay]);
+    if (modifier !== undefined){
+        playerCounter = playerCounter-modifier
+        }
+    console.log(players[playerCounter]);
 
     inquirer
     .prompt([
         {
             type: 'list',
             name: 'startPlay',
-            message: `What card will ${players[currPlay].name} play?`,
-            choices: players[currPlay].hand
+            message: `What card will ${players[playerCounter].name} play?`,
+            choices: players[playerCounter].hand
         }
     ])
     .then((answer) =>{
@@ -296,8 +293,13 @@ function normalTurn(modifier){
                 }
                 console.log(`Copying ${cardPicked} to top of discard pile.`);
                 discardPile.unshift(cardPicked);
-                console.log(`Removing ${cardPicked} from ${players[currPlay].name}'s hand.`);
-                players[currPlay].hand.splice(players[currPlay].hand.indexOf(cardPicked), 1);
+                console.log(`Removing ${cardPicked} from ${players[playerCounter].name}'s hand.`);
+                players[playerCounter].hand.splice(players[playerCounter].hand.indexOf(cardPicked), 1);
+                playerCounter--;
+                console.log("PlayerCounter = " + playerCounter);
+                    if(playerCounter < 0){
+                        playerCounter = players.length-1
+                    }
                 normalTurn();
             }
     })

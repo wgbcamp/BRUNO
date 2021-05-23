@@ -101,4 +101,30 @@ function receive(test){
 // passdown();
 // receive();
 
+var players = ["jimmy", "jimjam", "eric"];
+var playerCounter = players.length;
+console.log(playerCounter);
+function scopetest(){
+    console.log(playerCounter);
+    playerCounter++;
+    console.log(playerCounter);
+    if (playerCounter == 4){
+        playerCounter = 1
+    }
+    console.log(playerCounter);
+    test2();
+}
+
+// async function waitBro(){
+//     await sleep(3000)
+//     console.log(playerCounter)
+// }
+
+function test2(){
+    console.log(playerCounter)
+}
+
+
+
+scopetest();
 
