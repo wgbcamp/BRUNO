@@ -90,9 +90,15 @@ function passdown(){
 }
 
 function receive(test){
-    console.log(test);
+    // console.log(test);
+    console.log(6-test);
+    console.log(test)
+    if(test == undefined){
+        console.log("its undefined!")
+    }
 }
 
-passdown();
+// passdown();
+// receive();
 
 

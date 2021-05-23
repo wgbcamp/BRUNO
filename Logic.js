@@ -1,7 +1,7 @@
 var inquirer = require('inquirer');
 
 //DECK ARRAY**
-var deck = [ "BlueCard0", "BlueCard1", "BlueCard1", "BlueCard2", "BlueCard2", "BlueCard3", "BlueCard3", "BlueCard4", "BlueCard4", "BlueCard5", "BlueCard5", "BlueCard6", "BlueCard6", "BlueCard7", "BlueCard7", "BlueCard8", "BlueCard8", "BlueCard9", "BlueCard9", "BlueCardSkip", "BlueCardSkip", "BlueCardReverse", "BlueCardReverse", "BlueCardDraw2", "BlueCardDraw2", "greenCard0", "greenCard1", "greenCard1", "greenCard2", "greenCard2", "greenCard3", "greenCard3", "greenCard4", "greenCard4", "greenCard5", "greenCard5", "greenCard6", "greenCard6", "greenCard7", "greenCard7", "greenCard8", "greenCard8", "greenCard9", "greenCard9", "greenCardSkip", "greenCardSkip", "greenCardReverse", "greenCardReverse", "greenCardDraw2", "greenCardDraw2", "RedCard0", "RedCard1", "RedCard1", "RedCard2", "RedCard2", "RedCard3", "RedCard3", "RedCard4", "RedCard4", "RedCard5", "RedCard5", "RedCard6", "RedCard6", "RedCard7", "RedCard7", "RedCard8", "RedCard8", "RedCard9", "RedCard9", "RedCardSkip", "RedCardSkip", "RedCardReverse", "RedCardReverse", "RedCardDraw2", "RedCardDraw2", "YellowCard0", "YellowCard1", "YellowCard1", "YellowCard2", "YellowCard2", "YellowCard3", "YellowCard3", "YellowCard4", "YellowCard4", "YellowCard5", "YellowCard5", "YellowCard6", "YellowCard6", "YellowCard7", "YellowCard7", "YellowCard8", "YellowCard8", "YellowCard9", "YellowCard9", "YellowCardSkip", "YellowCardSkip", "YellowCardReverse", "YellowCardReverse", "YellowCardDraw2", "YellowCardDraw2", "WildCard", "WildCard", "WildCard", "WildCard", "WildDraw4Card", "WildDraw4Card", "WildDraw4Card", "WildDraw4Card"]
+var deck = [ "BlueCard0", "BlueCard1", "BlueCard1", "BlueCard2", "BlueCard2", "BlueCard3", "BlueCard3", "BlueCard4", "BlueCard4", "BlueCard5", "BlueCard5", "BlueCard6", "BlueCard6", "BlueCard7", "BlueCard7", "BlueCard8", "BlueCard8", "BlueCard9", "BlueCard9", "BlueCardSkip", "BlueCardSkip", "BlueCardReverse", "BlueCardReverse", "BlueCardDraw2", "BlueCardDraw2", "GreenCard0", "GreenCard1", "GreenCard1", "GreenCard2", "GreenCard2", "GreenCard3", "GreenCard3", "GreenCard4", "GreenCard4", "GreenCard5", "GreenCard5", "GreenCard6", "GreenCard6", "GreenCard7", "GreenCard7", "GreenCard8", "GreenCard8", "GreenCard9", "GreenCard9", "GreenCardSkip", "GreenCardSkip", "GreenCardReverse", "GreenCardReverse", "GreenCardDraw2", "GreenCardDraw2", "RedCard0", "RedCard1", "RedCard1", "RedCard2", "RedCard2", "RedCard3", "RedCard3", "RedCard4", "RedCard4", "RedCard5", "RedCard5", "RedCard6", "RedCard6", "RedCard7", "RedCard7", "RedCard8", "RedCard8", "RedCard9", "RedCard9", "RedCardSkip", "RedCardSkip", "RedCardReverse", "RedCardReverse", "RedCardDraw2", "RedCardDraw2", "YellowCard0", "YellowCard1", "YellowCard1", "YellowCard2", "YellowCard2", "YellowCard3", "YellowCard3", "YellowCard4", "YellowCard4", "YellowCard5", "YellowCard5", "YellowCard6", "YellowCard6", "YellowCard7", "YellowCard7", "YellowCard8", "YellowCard8", "YellowCard9", "YellowCard9", "YellowCardSkip", "YellowCardSkip", "YellowCardReverse", "YellowCardReverse", "YellowCardDraw2", "YellowCardDraw2", "WildCard", "WildCard", "WildCard", "WildCard", "WildDraw4Card", "WildDraw4Card", "WildDraw4Card", "WildDraw4Card"]
 
 //DRAW PILE ARRAY
 var drawPile = [];
@@ -11,6 +11,7 @@ var discardPile = [];
 
 //PLAYER ARRAY**
 var players = [];
+var currentPlayer = players.length-1;
 
 //GLOBAL GAMEPLAY VARIABLES
 var globalColor;
@@ -203,58 +204,70 @@ function createDrawPile(){
 //starts discard pile, applies rules based on first card revealed
 function beginDiscardPile(){
 
-    var arrayOfFunctions = [
-        function firstSkip(){},
-        function firstReverse(){},
-        function firstDrawTwo(){},
-        function firstWild(){},
-        function firstWildDrawFour(){}
-    ]
-
-    for (i=0; i<5; i++){
-        arrayOfFunctions[i]();
+    var firstCard;
+    var modifier = 1;
+    switch ("WildCard"){
+        case "WildDraw4Card":
+            console.log("Pushing a wild card to the bottom of the deck..")
+            drawPile.push(drawPile.splice(0, 1).toString());
+            discardPile = (drawPile.splice(0, 1)); 
+            normalTurn();
+            break;
+        case "WildCard":
+            inquirer
+            .prompt([
+                {
+                    type: 'list',
+                    name: 'chooseColor',
+                    message: `What color will ${players[players.length-2].name} choose?`,
+                    choices: [
+                        'Red',
+                        'Blue',
+                        'Green',
+                        'Yellow'
+                    ]
+                }
+            ]).then((answer) =>{
+                console.log("The color " + answer.chooseColor + " has been chosen.")
+                discardPile.unshift(answer.chooseColor);
+                normalTurn(modifier);
+            })
+            break;
+        case "BlueCardSkip":
+        case "GreenCardSkip":
+        case "RedCardSkip":
+        case "YellowCardSkip": 
+        default:
+            console.log("SORRY")
     }
+
 
     //Skip rule
 
     //Reverse rule
 
-    //Draw Two rule
+    //Draw Two rule       
 
-    //Wild rule
-
-    //Wild Draw Four rule
-    while (drawPile[0] == "WildDraw4Card"){
-        console.log("Pushing a wild card to the bottom of the deck..")
-        drawPile.push(drawPile.splice(0, 1).toString());
-    }
-        
-    discardPile = (drawPile.splice(0, 1));
-
-    console.log("discardPile created..")
-    console.log("drawPile is = ")
-    console.log(drawPile);
-    console.log("discardPile is = ")
-    console.log(discardPile)   
-
-    console.log ("#####Just checking...")
-    console.log(players);
-    startPlay();
 }
 
 // starts regular gameplay
-function startPlay(){
-    normalTurn();
-           
-}
 
-function normalTurn(){
+//regular gameplay
+function normalTurn(modifier){
 
     console.log("drawPile is = ")
     console.log(drawPile);
     console.log("discardPile is = ")
-    console.log(discardPile) 
-    var currPlay = players.length-1;
+    console.log(discardPile)
+
+
+    var currPlay;
+
+    if (modifier == undefined){
+        currPlay = players.length-1;
+    }else{
+        currPlay = players.length-1-modifier;
+    }
     console.log(players[currPlay]);
 
     inquirer
@@ -268,14 +281,19 @@ function normalTurn(){
     ])
     .then((answer) =>{
 
-        
+        console.log("THIS IS ANSWER.STARTPLAY!!! " + answer.startPlay);
         var cardPicked = JSON.stringify(answer.startPlay);
-        cardPicked = cardPicked.slice(1,-1);
+        cardPicked = cardPicked.slice(1,-1); //removes quotes
 
             //validate if card exists at top of discard pile based on type
 
+            //first statement=checking first character, second statement=checking for last two characters to get number type, third statement=wildcard check
             if(cardPicked.charAt(0) == discardPile[0].charAt(0) || cardPicked.slice(cardPicked.length-2,cardPicked.length) == discardPile[0].slice(discardPile[0].length-2, discardPile[0].length) || cardPicked.charAt(0) == "W"){
                 console.log(`${cardPicked} matches ${discardPile[0]}!`)
+                if(modifier !== undefined){
+                    console.log("Removing color placeholder");
+                    discardPile.shift();
+                }
                 console.log(`Copying ${cardPicked} to top of discard pile.`);
                 discardPile.unshift(cardPicked);
                 console.log(`Removing ${cardPicked} from ${players[currPlay].name}'s hand.`);
@@ -284,7 +302,3 @@ function normalTurn(){
             }
     })
 }
-
-
-
-
