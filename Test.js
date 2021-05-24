@@ -84,36 +84,36 @@
 // add();
 // check();
 
-function passdown(){
-    var test = 0;
-    receive(test);
-}
+// function passdown(){
+//     var test = 0;
+//     receive(test);
+// }
 
-function receive(test){
-    // console.log(test);
-    console.log(6-test);
-    console.log(test)
-    if(test == undefined){
-        console.log("its undefined!")
-    }
-}
+// function receive(test){
+//     // console.log(test);
+//     console.log(6-test);
+//     console.log(test)
+//     if(test == undefined){
+//         console.log("its undefined!")
+//     }
+// }
 
-// passdown();
-// receive();
+// // passdown();
+// // receive();
 
-var players = ["jimmy", "jimjam", "eric"];
-var playerCounter = players.length;
-console.log(playerCounter);
-function scopetest(){
-    console.log(playerCounter);
-    playerCounter++;
-    console.log(playerCounter);
-    if (playerCounter == 4){
-        playerCounter = 1
-    }
-    console.log(playerCounter);
-    test2();
-}
+// var players = ["jimmy", "jimjam", "eric"];
+// var playerCounter = players.length;
+// console.log(playerCounter);
+// function scopetest(){
+//     console.log(playerCounter);
+//     playerCounter++;
+//     console.log(playerCounter);
+//     if (playerCounter == 4){
+//         playerCounter = 1
+//     }
+//     console.log(playerCounter);
+//     test2();
+// }
 
 // async function waitBro(){
 //     await sleep(3000)
@@ -126,5 +126,13 @@ function test2(){
 
 
 
-scopetest();
+// scopetest();
 
+var x = -5;
+x++; x++;
+console.log(x);
+y = Math.abs(x)
+console.log(y);
+
+var gameDirection;
+console.log(gameDirection);

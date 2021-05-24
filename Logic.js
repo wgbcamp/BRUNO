@@ -17,9 +17,8 @@ var currentPlayer = players.length-1;
 var globalColor;
 var globalNumberOrSymbol;
 var playerCounter;
-var skip = 0;
-var modifier = 0;
-
+var rule;
+var gameDirection = 0;
 
 
 //MAIN GAME FUNCTION CALLS**
@@ -207,12 +206,13 @@ function createDrawPile(){
 //starts discard pile, applies rules based on first card revealed
 function beginDiscardPile(){
 
-    switch ("GreenCardSkip"){
+    switch ("WildDraw4Card"){
         case "WildDraw4Card":
             while (drawPile[0] == 'WildDraw4Card'){
                 console.log("Pushing a wild card to the bottom of the deck..")
-                discardPile.unshift(drawPile.splice(0, 1));
+                drawPile.push(drawPile.splice(0, 1).toString());
             }
+            discardPile.unshift(drawPile.splice(0, 1).toString());
             normalTurn();
             break;
         case "WildCard":
@@ -230,9 +230,10 @@ function beginDiscardPile(){
                     ]
                 }
             ]).then((answer) =>{
+                discardPile.unshift(drawPile.splice(0, 1).toString());
                 console.log("The color " + answer.chooseColor + " has been chosen.")
                 discardPile.unshift(answer.chooseColor);
-                modifier++;
+                rule = "modifier";
                 normalTurn();
             })
             break;
@@ -240,16 +241,30 @@ function beginDiscardPile(){
         case "GreenCardSkip":
         case "RedCardSkip":
         case "YellowCardSkip":
-            discardPile.unshift(drawPile.splice(0, 1)); 
-            skip++; 
+            discardPile.unshift(drawPile.splice(0, 1).toString()); 
+            rule = "skip";
+            normalTurn();
+            break;
+        case "BlueCardReverse":
+        case "GreenCardReverse":
+        case "RedCardReverse":
+        case "YellowCardReverse":
+            discardPile.unshift(drawPile.splice(0, 1).toString());
+            rule = "reverse";
+            playerCounter = 0;
+            gameDirection = 1;
+            //reserve this for normal reserve cards during play
+            // if(gameDirection == 0){
+            //     gameDirection = 1;
+            //     }
+            // if(gameDirection == 1){
+            //     gameDirection = 0;
+            // }
             normalTurn();
             break;
         default:
             console.log("SORRY")
     }
-
-    //Reverse rule
-
     //Draw Two rule       
 
 }
@@ -262,57 +277,150 @@ function normalTurn(){
     console.log("discardPile is = ")
     console.log(discardPile)
  
-    if (skip == 1){
-        skip--;
-        playerCounter--;
-        console.log("PlayerCounter = " + playerCounter);
+    switch (rule){
+        case "modifier":
+            rule = "";
+            console.log(players[playerCounter]);
+            inquirer
+            .prompt([
+                {
+                    type: 'list',
+                    name: 'startPlay',
+                    message: `What card will ${players[playerCounter].name} play?`,
+                    choices: players[playerCounter].hand
+                }
+            ])
+            .then((answer) =>{
+                var cardPicked = JSON.stringify(answer.startPlay);
+                cardPicked = cardPicked.slice(1,-1); //removes quotes
+                    //validate if card exists at top of discard pile based on type
+                    //first statement=checking first character, second statement=checking for last two characters to get number type, third statement=wildcard check
+                    if(cardPicked.charAt(0) == discardPile[0].charAt(0) || cardPicked.slice(cardPicked.length-2,cardPicked.length) == discardPile[0].slice(discardPile[0].length-2, discardPile[0].length) || cardPicked.charAt(0) == "W"){
+                        console.log(`${cardPicked} matches ${discardPile[0]}!`)
+                        console.log(`Copying ${cardPicked} to top of discard pile.`);
+                        discardPile.unshift(cardPicked);
+                        console.log(`Removing ${cardPicked} from ${players[playerCounter].name}'s hand.`);
+                        players[playerCounter].hand.splice(players[playerCounter].hand.indexOf(cardPicked), 1);
+                        if(gameDirection == 0){
+                            playerCounter--;
+                        }else{
+                            playerCounter++;
+                        }
+                        console.log("PlayerCounter = " + playerCounter);
+                            if(playerCounter < 0){
+                                playerCounter = players.length-1
+                            }else if (playerCounter > players.length-1){
+                                playerCounter = 0;
+                            }
+                        console.log("Removing color placeholder");
+                        discardPile.splice(discardPile.length-2, 1);
+                        normalTurn();
+                    }
+            })
+            break;
+        case "skip":
+            rule = "";
+            if(gameDirection == 0){
+                playerCounter--;
+            }else{
+                playerCounter++;
+            }
+            console.log("PlayerCounter = " + playerCounter);
             if(playerCounter < 0){
                 playerCounter = players.length-1
+            }else if (playerCounter > players.length-1){
+                playerCounter = 0;
             }
-        normalTurn();
-    }else{
-        console.log(players[playerCounter]);
+            normalTurn();
+            break;
+        case "reverse":
+            rule = "";
+            if(gameDirection == 0){
+                playerCounter--;
+            }else{
+                playerCounter++;
+            }
+            console.log(players[playerCounter]);
 
-        inquirer
-        .prompt([
-            {
-                type: 'list',
-                name: 'startPlay',
-                message: `What card will ${players[playerCounter].name} play?`,
-                choices: players[playerCounter].hand
-            }
-        ])
-        .then((answer) =>{
-    
-            console.log("THIS IS ANSWER.STARTPLAY!!! " + answer.startPlay);
-            var cardPicked = JSON.stringify(answer.startPlay);
-            cardPicked = cardPicked.slice(1,-1); //removes quotes
-    
-                //validate if card exists at top of discard pile based on type
-    
-                //first statement=checking first character, second statement=checking for last two characters to get number type, third statement=wildcard check
-                if(cardPicked.charAt(0) == discardPile[0].charAt(0) || cardPicked.slice(cardPicked.length-2,cardPicked.length) == discardPile[0].slice(discardPile[0].length-2, discardPile[0].length) || cardPicked.charAt(0) == "W"){
-                    console.log(`${cardPicked} matches ${discardPile[0]}!`)
-                    if(modifier == 1){
-                        modifier--;
-                        console.log("Removing color placeholder");
-                        discardPile.shift();
-                    }
-                    console.log(`Copying ${cardPicked} to top of discard pile.`);
-                    discardPile.unshift(cardPicked);
-                    console.log(`Removing ${cardPicked} from ${players[playerCounter].name}'s hand.`);
-                    players[playerCounter].hand.splice(players[playerCounter].hand.indexOf(cardPicked), 1);
-                    playerCounter--;
-                    console.log("PlayerCounter = " + playerCounter);
+            inquirer
+            .prompt([
+                {
+                    type: 'list',
+                    name: 'startPlay',
+                    message: `What card will ${players[playerCounter].name} play?`,
+                    choices: players[playerCounter].hand
+                }
+            ])
+            .then((answer) =>{
+                var cardPicked = JSON.stringify(answer.startPlay);
+                cardPicked = cardPicked.slice(1,-1); //removes quotes
+        
+                    //validate if card exists at top of discard pile based on type
+        
+                    //first statement=checking first character, second statement=checking for last two characters to get number type, third statement=wildcard check
+                    if(cardPicked.charAt(0) == discardPile[0].charAt(0) || cardPicked.slice(cardPicked.length-2,cardPicked.length) == discardPile[0].slice(discardPile[0].length-2, discardPile[0].length) || cardPicked.charAt(0) == "W"){
+                        console.log(`${cardPicked} matches ${discardPile[0]}!`)
+                        console.log(`Copying ${cardPicked} to top of discard pile.`);
+                        discardPile.unshift(cardPicked);
+                        console.log(`Removing ${cardPicked} from ${players[playerCounter].name}'s hand.`);
+                        players[playerCounter].hand.splice(players[playerCounter].hand.indexOf(cardPicked), 1);
+                        if(gameDirection == 0){
+                            playerCounter--;
+                        }else{
+                            playerCounter++;
+                        }
+                        console.log("PlayerCounter = " + playerCounter);
                         if(playerCounter < 0){
                             playerCounter = players.length-1
+                        }else if (playerCounter > players.length-1){
+                            playerCounter = 0;
                         }
-                    normalTurn();
+                        normalTurn();
+                    }
+            })  
+            break;
+        default:
+            console.log(players[playerCounter]);
+
+            inquirer
+            .prompt([
+                {
+                    type: 'list',
+                    name: 'startPlay',
+                    message: `What card will ${players[playerCounter].name} play?`,
+                    choices: players[playerCounter].hand
                 }
-        })
+            ])
+            .then((answer) =>{
+        
+                console.log("THIS IS ANSWER.STARTPLAY!!! " + answer.startPlay);
+                var cardPicked = JSON.stringify(answer.startPlay);
+                cardPicked = cardPicked.slice(1,-1); //removes quotes
+        
+                    //validate if card exists at top of discard pile based on type
+        
+                    //first statement=checking first character, second statement=checking for last two characters to get number type, third statement=wildcard check
+                    if(cardPicked.charAt(0) == discardPile[0].charAt(0) || cardPicked.slice(cardPicked.length-2,cardPicked.length) == discardPile[0].slice(discardPile[0].length-2, discardPile[0].length) || cardPicked.charAt(0) == "W"){
+                        console.log(`${cardPicked} matches ${discardPile[0]}!`)
+                        console.log(`Copying ${cardPicked} to top of discard pile.`);
+                        discardPile.unshift(cardPicked);
+                        console.log(`Removing ${cardPicked} from ${players[playerCounter].name}'s hand.`);
+                        players[playerCounter].hand.splice(players[playerCounter].hand.indexOf(cardPicked), 1);
+                        if(gameDirection == 0){
+                            playerCounter--;
+                        }else{
+                            playerCounter++;
+                        }
+                        console.log("PlayerCounter = " + playerCounter);
+                        if(playerCounter < 0){
+                            playerCounter = players.length-1
+                        }else if (playerCounter > players.length-1){
+                            playerCounter = 0;
+                        }
+                        normalTurn();
+                    }
+            })  
     }
-
-    
-
-
 }
+
+function specialCardRules(){};
