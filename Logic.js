@@ -14,11 +14,10 @@ var players = [];
 var currentPlayer = players.length-1;
 
 //GLOBAL GAMEPLAY VARIABLES
-var globalColor;
-var globalNumberOrSymbol;
 var playerCounter;
 var rule;
 var gameDirection = 0;
+var firstReverse = 1;
 
 
 //MAIN GAME FUNCTION CALLS**
@@ -206,16 +205,19 @@ function createDrawPile(){
 //starts discard pile, applies rules based on first card revealed
 function beginDiscardPile(){
 
-    switch ("WildCard"){
+    switch ("BlueCardReverse"){
         case "WildDraw4Card":
+            firstReverse = 0;
             while (drawPile[0] == 'WildDraw4Card'){
                 console.log("Pushing a wild card to the bottom of the deck..")
                 drawPile.push(drawPile.splice(0, 1).toString());
             }
             discardPile.unshift(drawPile.splice(0, 1).toString());
+            
             normalTurn();
             break;
         case "WildCard":
+            firstReverse = 0;
             inquirer
             .prompt([
                 {
@@ -241,6 +243,7 @@ function beginDiscardPile(){
         case "GreenCardSkip":
         case "RedCardSkip":
         case "YellowCardSkip":
+            firstReverse = 0;
             discardPile.unshift(drawPile.splice(0, 1).toString()); 
             rule = "skip";
             normalTurn();
@@ -251,21 +254,21 @@ function beginDiscardPile(){
         case "YellowCardReverse":
             discardPile.unshift(drawPile.splice(0, 1).toString());
             rule = "reverse";
-            playerCounter = 0;
-            gameDirection = 1;
-            //reserve this for normal reserve cards during play
-            // if(gameDirection == 0){
-            //     gameDirection = 1;
-            //     }
-            // if(gameDirection == 1){
-            //     gameDirection = 0;
-            // }
+            if (gameDirection == 0){
+                gameDirection = 1;
+            }else{
+                gameDirection = 0;
+            }
+            if (firstReverse == 1){
+                playerCounter = 0;
+            }
             normalTurn();
             break;
         case "BlueCardDraw2":
         case "GreenCardDraw2":
         case "RedCardDraw2":
         case "YellowCardDraw2":
+            firstReverse = 0;
             discardPile.unshift(drawPile.splice(0, 1).toString());
             rule = "draw2";
             players[playerCounter].hand.push(drawPile.splice(0, 1).toString());
@@ -273,7 +276,9 @@ function beginDiscardPile(){
             normalTurn();
             break;
         default:
-            console.log("SORRY")
+            firstReverse = 0;
+            discardPile.unshift(drawPile.splice(0, 1).toString());
+            normalTurn();
     }       
 
 }
@@ -375,4 +380,6 @@ function standardSequence(){
     })  
 }
 
-function specialCardRules(){};
+function specialCardRules(){
+    
+};
