@@ -120,19 +120,24 @@
 //     console.log(playerCounter)
 // }
 
-function test2(){
-    console.log(playerCounter)
+// function test2(){
+//     console.log(playerCounter)
+// }
+
+
+
+// // scopetest();
+
+// var x = -5;
+// x++; x++;
+// console.log(x);
+// y = Math.abs(x)
+// console.log(y);
+
+// var gameDirection;
+// console.log(gameDirection);
+
+var array = ["salsa", "coffee"];
+if (array[0].length > 4){
+    console.log("it works")
 }
-
-
-
-// scopetest();
-
-var x = -5;
-x++; x++;
-console.log(x);
-y = Math.abs(x)
-console.log(y);
-
-var gameDirection;
-console.log(gameDirection);
