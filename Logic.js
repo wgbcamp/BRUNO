@@ -206,7 +206,7 @@ function createDrawPile(){
 //starts discard pile, applies rules based on first card revealed
 function beginDiscardPile(){
 
-    switch ("WildDraw4Card"){
+    switch ("RedCardDraw2"){
         case "WildDraw4Card":
             while (drawPile[0] == 'WildDraw4Card'){
                 console.log("Pushing a wild card to the bottom of the deck..")
@@ -260,6 +260,16 @@ function beginDiscardPile(){
             // if(gameDirection == 1){
             //     gameDirection = 0;
             // }
+            normalTurn();
+            break;
+        case "BlueCardDraw2":
+        case "GreenCardDraw2":
+        case "RedCardDraw2":
+        case "YellowCardDraw2":
+            discardPile.unshift(drawPile.splice(0, 1).toString());
+            rule = "draw2";
+            players[playerCounter].hand.push(drawPile.splice(0, 1).toString());
+            players[playerCounter].hand.push(drawPile.splice(0, 1).toString());
             normalTurn();
             break;
         default:
@@ -378,6 +388,48 @@ function normalTurn(){
                         normalTurn();
                     }
             })  
+            break;
+        case "draw2":
+            rule = "";
+            console.log(players[playerCounter]);
+
+            inquirer
+            .prompt([
+                {
+                    type: 'list',
+                    name: 'startPlay',
+                    message: `What card will ${players[playerCounter].name} play?`,
+                    choices: players[playerCounter].hand
+                }
+            ])
+            .then((answer) =>{
+        
+                var cardPicked = JSON.stringify(answer.startPlay);
+                cardPicked = cardPicked.slice(1,-1); //removes quotes
+        
+                    //validate if card exists at top of discard pile based on type
+        
+                    //first statement=checking first character, second statement=checking for last two characters to get number type, third statement=wildcard check
+                    if(cardPicked.charAt(0) == discardPile[0].charAt(0) || cardPicked.slice(cardPicked.length-2,cardPicked.length) == discardPile[0].slice(discardPile[0].length-2, discardPile[0].length) || cardPicked.charAt(0) == "W"){
+                        console.log(`${cardPicked} matches ${discardPile[0]}!`)
+                        console.log(`Copying ${cardPicked} to top of discard pile.`);
+                        discardPile.unshift(cardPicked);
+                        console.log(`Removing ${cardPicked} from ${players[playerCounter].name}'s hand.`);
+                        players[playerCounter].hand.splice(players[playerCounter].hand.indexOf(cardPicked), 1);
+                        if(gameDirection == 0){
+                            playerCounter--;
+                        }else{
+                            playerCounter++;
+                        }
+                        console.log("PlayerCounter = " + playerCounter);
+                        if(playerCounter < 0){
+                            playerCounter = players.length-1
+                        }else if (playerCounter > players.length-1){
+                            playerCounter = 0;
+                        }
+                        normalTurn();
+                    }
+            })
             break;
         default:
             console.log(players[playerCounter]);
