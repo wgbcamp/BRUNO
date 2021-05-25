@@ -205,7 +205,7 @@ function createDrawPile(){
 //starts discard pile, applies rules based on first card revealed
 function beginDiscardPile(){
 
-    switch ("BlueCardReverse"){
+    switch (drawPile[0]){
         case "WildDraw4Card":
             firstReverse = 0;
             while (drawPile[0] == 'WildDraw4Card'){
@@ -356,22 +356,28 @@ function standardSequence(){
                 discardPile.unshift(cardPicked);
                 console.log(`Removing ${cardPicked} from ${players[playerCounter].name}'s hand.`);
                 players[playerCounter].hand.splice(players[playerCounter].hand.indexOf(cardPicked), 1);
+                //HERE GOES THE CARD TYPE EFFECTS
+                
+                //choose the next player based on game direction status
                 if(gameDirection == 0){
                     playerCounter--;
                 }else{
                     playerCounter++;
                 }
                 console.log("PlayerCounter = " + playerCounter);
+                //check if player counter tracking goes out of bounds, correct when necessary
                 if(playerCounter < 0){
                     playerCounter = players.length-1
                 }else if (playerCounter > players.length-1){
                     playerCounter = 0;
                 }
+                //remove card from discardPile after a card is played if its a temporary card added as a result of a wild card play
                 if(discardPile[discardPile.length-2].length < 7){
                     console.log("Removing color placeholder");
                     discardPile.splice(discardPile.length-2, 1);
                     }
                 normalTurn();
+                //restart function if played card does not match the type of the card at the top of the discard pile, alert player
             }else{
                 console.log(players[playerCounter].name + " picked " + cardPicked + ", but it doesn't match " + discardPile[0] + "! Calling normalTurn() again.");
                 normalTurn();
