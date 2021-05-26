@@ -19,6 +19,7 @@ var rule;
 var gameDirection = 0;
 var firstReverse = 0;
 var wildCardColor;
+var stayOnPlayer = 0;
 
 
 //MAIN GAME FUNCTION CALLS**
@@ -210,45 +211,33 @@ function beginDiscardPile(){
             while (drawPile[0] == 'WildDraw4Card'){
                 console.log("Pushing a wild card to the bottom of the deck..")
                 drawPile.push(drawPile.splice(0, 1).toString());
-            }
-            discardPile.unshift(drawPile.splice(0, 1).toString());
-            
-            normalTurn();
+            }        
             break;
         case "WildCard":
-            discardPile.unshift(drawPile.splice(0, 1).toString());
             rule = "wildcard";
-            normalTurn();
             break;
         case "BlueCardSkip":
         case "GreenCardSkip":
         case "RedCardSkip":
-        case "YellowCardSkip":
-            discardPile.unshift(drawPile.splice(0, 1).toString()); 
+        case "YellowCardSkip": 
             rule = "skip";
-            normalTurn();
             break;
         case "BlueCardReverse":
         case "GreenCardReverse":
         case "RedCardReverse":
         case "YellowCardReverse":
-            discardPile.unshift(drawPile.splice(0, 1).toString());
             rule = "reverse";
-            normalTurn();
             break;
         case "BlueCardDraw2":
         case "GreenCardDraw2":
         case "RedCardDraw2":
         case "YellowCardDraw2":
-            discardPile.unshift(drawPile.splice(0, 1).toString());
             rule = "draw2";
-            normalTurn();
             break;
         default:
-            discardPile.unshift(drawPile.splice(0, 1).toString());
-            normalTurn();
     }       
-
+    discardPile.unshift(drawPile.splice(0, 1).toString());
+    normalTurn();
 }
 
 //regular gameplay
@@ -277,7 +266,7 @@ function normalTurn(){
                 }
             ]).then((answer) =>{
                 console.log("The color " + answer.chooseColor + " has been chosen.")
-                wildCardColor = answer.chooseColor;
+                wildCardColor = answer.chooseColor.toString();
                 standardSequence();
             })
             break;
@@ -358,18 +347,22 @@ function standardSequence(){
     //prevents first reverse card rule from being applied
     firstReverse = 1;
 
-    //choose the next player based on game direction status
-    if(gameDirection == 0){
-        playerCounter--;
-    }else{
-        playerCounter++;
+    //prevents function from moving onto next player until a correct card is played
+    if(stayOnPlayer == 0){
+        //choose the next player based on game direction status
+        if(gameDirection == 0){
+            playerCounter--;
+        }else{
+            playerCounter++;
+        }
+        //check if player counter tracking goes out of bounds, correct when necessary
+        if(playerCounter < 0){
+            playerCounter = players.length-1
+        }else if (playerCounter > players.length-1){
+            playerCounter = 0;
+        }
     }
-    //check if player counter tracking goes out of bounds, correct when necessary
-    if(playerCounter < 0){
-        playerCounter = players.length-1
-    }else if (playerCounter > players.length-1){
-        playerCounter = 0;
-    }
+    
     console.log(players[playerCounter]);
 
     inquirer
@@ -382,10 +375,11 @@ function standardSequence(){
         }
     ])
     .then((answer) =>{
-
         var cardPicked = JSON.stringify(answer.startPlay);
         cardPicked = cardPicked.slice(1,-1); //removes quotes
 
+        console.log("THIS IS THE WILDCARD COLOR CHOICE: " + wildCardColor);
+        console.log("THIS IS THE CARD YOU PLAYED: " + cardPicked);
             //validate if card exists at top of discard pile based on type
 
             //first statement=checking first character, second statement=checking for last two characters to get number type, third statement=wildcard check
@@ -408,60 +402,17 @@ function standardSequence(){
                 if(cardPicked.slice(0, cardPicked.length) == "WildCard"){
                     rule = "wildcard";
                 }
+                //lets function move onto next player
+                stayOnPlayer = 0;
+                //removes wildcard color choice
+                wildCardColor = "z";
                 normalTurn();
+
                 //restart function if played card does not match the type of the card at the top of the discard pile, alert player
             }else{
+                stayOnPlayer = 1;
                 console.log(players[playerCounter].name + " picked " + cardPicked + ", but it doesn't match " + discardPile[0] + "!");
-                wrongCardPicked();
-            }
-
-    })  
-}
-
-function wrongCardPicked(){
-    console.log(players[playerCounter]);
-
-    inquirer
-    .prompt([
-        {
-            type: 'list',
-            name: 'startPlay',
-            message: `What card will ${players[playerCounter].name} play?`,
-            choices: players[playerCounter].hand
-        }
-    ])
-    .then((answer) =>{
-
-        console.log("THIS IS ANSWER.STARTPLAY!!! " + answer.startPlay);
-        var cardPicked = JSON.stringify(answer.startPlay);
-        cardPicked = cardPicked.slice(1,-1); //removes quotes
-
-            //validate if card exists at top of discard pile based on type
-
-            //first statement=checking first character, second statement=checking for last two characters to get number type, third statement=wildcard check
-            if(cardPicked.charAt(0) == discardPile[0].charAt(0) || cardPicked.slice(cardPicked.length-2,cardPicked.length) == discardPile[0].slice(discardPile[0].length-2, discardPile[0].length) || cardPicked.charAt(0) == "W"){
-                console.log(`${cardPicked} matches ${discardPile[0]}!`)
-                console.log(`Copying ${cardPicked} to top of discard pile.`);
-                discardPile.unshift(cardPicked);
-                console.log(`Removing ${cardPicked} from ${players[playerCounter].name}'s hand.`);
-                players[playerCounter].hand.splice(players[playerCounter].hand.indexOf(cardPicked), 1);
-                //HERE GOES THE CARD TYPE EFFECTS
-                if(cardPicked.slice(cardPicked.length-4, cardPicked.length) == "Skip"){
-                    rule = "skip";
-                }
-                if(cardPicked.slice(cardPicked.length-7, cardPicked.length) == "Reverse"){
-                    rule = "reverse";
-                }
-                //remove card from discardPile after a card is played if its a temporary card added as a result of a wild card play
-                if(discardPile[discardPile.length-2].length < 7){
-                    console.log("Removing color placeholder");
-                    discardPile.splice(discardPile.length-2, 1);
-                    }
                 normalTurn();
-                //restart function if played card does not match the type of the card at the top of the discard pile, alert player
-            }else{
-                console.log(players[playerCounter].name + " picked " + cardPicked + ", but it doesn't match " + discardPile[0] + "!");
-                wrongCardPicked();
             }
 
     })  
