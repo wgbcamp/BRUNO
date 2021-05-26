@@ -17,6 +17,7 @@ var currentPlayer = players.length-1;
 var playerCounter = 0;
 var rule;
 var gameDirection = 0;
+var firstReverse = 0;
 
 
 //MAIN GAME FUNCTION CALLS**
@@ -257,8 +258,6 @@ function beginDiscardPile(){
         case "YellowCardDraw2":
             discardPile.unshift(drawPile.splice(0, 1).toString());
             rule = "draw2";
-            players[playerCounter].hand.push(drawPile.splice(0, 1).toString());
-            players[playerCounter].hand.push(drawPile.splice(0, 1).toString());
             normalTurn();
             break;
         default:
@@ -307,6 +306,45 @@ function normalTurn(){
             break;
         case "draw2":
             rule = "";
+            if(gameDirection == 0){
+                if(playerCounter > 0){
+                    console.log(players[playerCounter-1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
+                    players[playerCounter-1].hand.push(drawPile.splice(0, 1).toString());
+                    console.log(players[playerCounter-1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
+                    players[playerCounter-1].hand.push(drawPile.splice(0, 1).toString());
+                }else{
+                    console.log(players[players.length-1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
+                    players[players.length-1].hand.push(drawPile.splice(0, 1).toString());
+                    console.log(players[players.length-1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
+                    players[players.length-1].hand.push(drawPile.splice(0, 1).toString());
+                }
+
+            }else{
+                if(playerCounter < players.length-1){
+                    console.log(players[playerCounter+1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
+                    players[playerCounter+1].hand.push(drawPile.splice(0, 1).toString());
+                    console.log(players[playerCounter+1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
+                    players[playerCounter+1].hand.push(drawPile.splice(0, 1).toString());
+                }else{
+                    console.log(players[0].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
+                    players[0].hand.push(drawPile.splice(0, 1).toString());
+                    console.log(players[0].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
+                    players[0].hand.push(drawPile.splice(0, 1).toString());
+                }
+            }
+            if(firstReverse == 1){
+                if(gameDirection == 0){
+                    playerCounter--;
+                }else{
+                    playerCounter++;
+                }
+                console.log("PlayerCounter = " + playerCounter);
+                if(playerCounter < 0){
+                    playerCounter = players.length-1
+                }else if (playerCounter > players.length-1){
+                    playerCounter = 0;
+                }
+            }
             standardSequence();
             break;
         default:
@@ -315,6 +353,9 @@ function normalTurn(){
 }
 
 function standardSequence(){
+
+    //prevents first reverse card rule from being applied
+    firstReverse = 1;
 
     //choose the next player based on game direction status
     if(gameDirection == 0){
@@ -360,6 +401,9 @@ function standardSequence(){
                 }
                 if(cardPicked.slice(cardPicked.length-7, cardPicked.length) == "Reverse"){
                     rule = "reverse";
+                }
+                if(cardPicked.slice(cardPicked.length-5, cardPicked.length) == "Draw2"){
+                    rule = "draw2";
                 }
                 //remove card from discardPile after a card is played if its a temporary card added as a result of a wild card play
                 if(discardPile[discardPile.length-2].length < 7){
