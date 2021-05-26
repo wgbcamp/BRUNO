@@ -337,6 +337,67 @@ function normalTurn(){
             }
             standardSequence();
             break;
+        case "wilddraw4card":
+            rule = "";
+            inquirer
+            .prompt([
+                {
+                    type: 'list',
+                    name: 'chooseColor',
+                    message: `What color will ${players[playerCounter].name} choose?`,
+                    choices: [
+                        'Red',
+                        'Blue',
+                        'Green',
+                        'Yellow'
+                    ]
+                }
+            ]).then((answer) =>{
+                console.log("The color " + answer.chooseColor + " has been chosen.")
+                wildCardColor = answer.chooseColor.toString();
+
+                if(gameDirection == 0){
+                    if(playerCounter > 0){
+                        for(i=0; i<4; i++){
+                            console.log(players[playerCounter-1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
+                            players[playerCounter-1].hand.push(drawPile.splice(0, 1).toString());
+                        }
+                    }else{
+                        for(i=0; i<4; i++){
+                            console.log(players[players.length-1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
+                            players[players.length-1].hand.push(drawPile.splice(0, 1).toString());
+                        }
+                    }
+                }else{
+                    if(playerCounter < players.length-1){
+                        for(i=0; i<4; i++){
+                            console.log(players[playerCounter+1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
+                            players[playerCounter+1].hand.push(drawPile.splice(0, 1).toString()); 
+                        }
+                    }else{
+                        for(i=0; i<4; i++){
+                            console.log(players[0].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
+                            players[0].hand.push(drawPile.splice(0, 1).toString());
+                        }
+                    }
+                }
+
+                if(firstReverse == 1){
+                    if(gameDirection == 0){
+                        playerCounter--;
+                    }else{
+                        playerCounter++;
+                    }
+                    console.log("PlayerCounter = " + playerCounter);
+                    if(playerCounter < 0){
+                        playerCounter = players.length-1
+                    }else if (playerCounter > players.length-1){
+                        playerCounter = 0;
+                    }
+                }
+                standardSequence();
+            })
+            break;
         default:
             standardSequence();
     }
@@ -401,6 +462,9 @@ function standardSequence(){
                 }
                 if(cardPicked.slice(0, cardPicked.length) == "WildCard"){
                     rule = "wildcard";
+                }
+                if(cardPicked == "WildDraw4Card"){
+                    rule = "wilddraw4card"
                 }
                 //lets function move onto next player
                 stayOnPlayer = 0;
