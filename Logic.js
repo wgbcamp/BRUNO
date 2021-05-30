@@ -245,7 +245,10 @@ function beginDiscardPile(){
 
 //regular gameplay
 function normalTurn(){
-    
+    //if drawPile is depleted, run reshuffle, also prevents forcing reshuffle by playing the wrong card
+    if(drawPile.length == 0 && stayOnPlayer == 0){
+        reshuffle();
+    }
     console.log("drawPile is = ")
     console.log(drawPile);
     console.log("discardPile is = ")
@@ -437,6 +440,10 @@ function standardSequence(){
 
                 
             }else if(cardPicked == "Draw card from deck"){
+                //if drawPile is depleted, run reshuffle 
+                if(drawPile.length == 0){
+                    reshuffle();
+                }
                 //player draws card if they have no match or choose to draw on their own accord, if card drawn matches card at top of discardPile, it must be played
                 console.log(players[playerCounter].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
                 players[playerCounter].hand.unshift(drawPile.splice(0, 1).toString());
@@ -570,10 +577,31 @@ function challenge(){
     })
 };
 
+//shuffles deck
+function reshuffle(){
+    var g;
 
+    console.log("discardPile before shuffle (unshuffled): ")
+    console.log(discardPile);
+    console.log("preserving card at top of discardPile");
+    g = discardPile.splice(0, 1).toString();
 
+    var currentIndex = discardPile.length;
+    var randomCard, tempValue;
 
-
+    while (currentIndex !== 0){
+        randomCard = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        tempValue = discardPile[currentIndex];
+        discardPile[currentIndex] = discardPile[randomCard];
+        discardPile[randomCard] = tempValue;
+    }
+    console.log("Reshuffled discardPile and transferring to drawPile");
+    drawPile = (discardPile.splice(0, discardPile.length)); 
+    console.log("Unshifting preserved card into discardPile");
+    discardPile.unshift(g);
+    console.dir(drawPile, {'maxArrayLength': null});
+}
 
 
 
