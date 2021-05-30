@@ -1,0 +1,8 @@
+if you have to draw 4, that player can challenge the player who played the card
+challenged player must show hand to challenger
+check challenged hand for matching card at top of discardPile
+if challenger is wrong, he will draw 6/ if challenged is lying he will draw 4
+
+2 3 1 4
+
+added challenge function and corrected wildcardcolor assignment at start of program, added memory of previous wildcardcolor 
