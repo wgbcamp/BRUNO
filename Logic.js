@@ -171,6 +171,7 @@ function initial7CardDeal(){
             players[z].hand.push(deck[0]);
             deck.splice(0, 1);
         }
+        players[z].hand.push("Draw card from deck");
     }
     
     console.dir(players, {'maxArrayLength': null});
@@ -302,27 +303,27 @@ function normalTurn(){
             if(gameDirection == 0){
                 if(playerCounter > 0){
                     console.log(players[playerCounter-1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                    players[playerCounter-1].hand.push(drawPile.splice(0, 1).toString());
+                    players[playerCounter-1].hand.unshift(drawPile.splice(0, 1).toString());
                     console.log(players[playerCounter-1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                    players[playerCounter-1].hand.push(drawPile.splice(0, 1).toString());
+                    players[playerCounter-1].hand.unshift(drawPile.splice(0, 1).toString());
                 }else{
                     console.log(players[players.length-1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                    players[players.length-1].hand.push(drawPile.splice(0, 1).toString());
+                    players[players.length-1].hand.unshift(drawPile.splice(0, 1).toString());
                     console.log(players[players.length-1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                    players[players.length-1].hand.push(drawPile.splice(0, 1).toString());
+                    players[players.length-1].hand.unshift(drawPile.splice(0, 1).toString());
                 }
 
             }else{
                 if(playerCounter < players.length-1){
                     console.log(players[playerCounter+1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                    players[playerCounter+1].hand.push(drawPile.splice(0, 1).toString());
+                    players[playerCounter+1].hand.unshift(drawPile.splice(0, 1).toString());
                     console.log(players[playerCounter+1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                    players[playerCounter+1].hand.push(drawPile.splice(0, 1).toString());
+                    players[playerCounter+1].hand.unshift(drawPile.splice(0, 1).toString());
                 }else{
                     console.log(players[0].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                    players[0].hand.push(drawPile.splice(0, 1).toString());
+                    players[0].hand.unshift(drawPile.splice(0, 1).toString());
                     console.log(players[0].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                    players[0].hand.push(drawPile.splice(0, 1).toString());
+                    players[0].hand.unshift(drawPile.splice(0, 1).toString());
                 }
             }
             if(firstReverse == 1){
@@ -434,8 +435,41 @@ function standardSequence(){
                 stayOnPlayer = 0;
                 normalTurn();
 
-                //restart function if played card does not match the type of the card at the top of the discard pile, alert player
+                
+            }else if(cardPicked == "Draw card from deck"){
+                //player draws card if they have no match or choose to draw on their own accord, if card drawn matches card at top of discardPile, it must be played
+                console.log(players[playerCounter].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
+                players[playerCounter].hand.unshift(drawPile.splice(0, 1).toString());
+                var x = players[playerCounter].hand[0];
+                console.log("######THIS IS X = " + x);
+                if(x.charAt(0) == discardPile[0].charAt(0) || x.slice(x.length-2,x.length) == discardPile[0].slice(discardPile[0].length-2, discardPile[0].length) || x.charAt(0) == "W" || x.charAt(0) == wildCardColor.charAt(0)){
+                    console.log(`${x} matches ${discardPile[0]}!`);
+                    console.log(`Copying ${x} to top of discard pile.`);
+                    discardPile.unshift(x);
+                    console.log(`Removing ${x} from ${players[playerCounter].name}'s hand.`);
+                    players[playerCounter].hand.splice(players[playerCounter].hand[0], 1);
+                                    //card type will apply a rule that affects the cases of the next normalTurn
+                    if(x.slice(x.length-4, x.length) == "Skip"){
+                        rule = "skip";
+                    }
+                    if(x.slice(x.length-7, x.length) == "Reverse"){
+                        rule = "reverse";
+                    }
+                    if(x.slice(x.length-5, x.length) == "Draw2"){
+                        rule = "draw2";
+                    }
+                    if(x.slice(0, x.length) == "WildCard"){
+                        rule = "wildcard";
+                    }
+                    if(x == "WildDraw4Card"){
+                        rule = "wilddraw4card"
+                    }
+                }
+                //lets function move onto next player
+                stayOnPlayer = 0;
+                normalTurn();
             }else{
+                //restart function if played card does not match the type of the card at the top of the discard pile, alert player
                 stayOnPlayer = 1;
                 console.log(players[playerCounter].name + " picked " + cardPicked + ", but it doesn't match " + discardPile[0] + "!");
                 normalTurn();
@@ -503,19 +537,19 @@ function challenge(){
                 console.log(`${players[playerCounter].name} played WildDraw4Card illegally and will draw 4 cards!`);
                 for(i=0; i<4; i++){
                     console.log(players[playerCounter].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                    players[playerCounter].hand.push(drawPile.splice(0, 1).toString());
+                    players[playerCounter].hand.unshift(drawPile.splice(0, 1).toString());
                 }  
             }else{
                 console.log(`${players[challenger].name} played is incorrect and will draw 6 cards!`);
                 for(i=0; i<6; i++){
                     console.log(players[challenger].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                    players[challenger].hand.push(drawPile.splice(0, 1).toString());
+                    players[challenger].hand.unshift(drawPile.splice(0, 1).toString());
                 }  
             }
         }else{
             for(i=0; i<4; i++){
                 console.log(players[challenger].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                players[challenger].hand.push(drawPile.splice(0, 1).toString());
+                players[challenger].hand.unshift(drawPile.splice(0, 1).toString());
             }
         }
 
@@ -535,8 +569,6 @@ function challenge(){
         standardSequence();
     })
 };
-
-
 
 
 

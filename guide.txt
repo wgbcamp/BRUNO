@@ -1,8 +1,4 @@
-if you have to draw 4, that player can challenge the player who played the card
-challenged player must show hand to challenger
-check challenged hand for matching card at top of discardPile
-if challenger is wrong, he will draw 6/ if challenged is lying he will draw 4
 
-2 3 1 4
-
-added challenge function and corrected wildcardcolor assignment at start of program, added memory of previous wildcardcolor 
+add validation for newly drawn card at line 442, force play card if valid
+add draw card from deck as option in hand at start of card distribution, never remove this choice from hand
+all drawn cards after the initial7CardDeal will be unshifted instead of pushed to player hands
