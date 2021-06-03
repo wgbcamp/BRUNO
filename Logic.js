@@ -11,7 +11,6 @@ var discardPile = [];
 
 //PLAYER ARRAY**
 var players = [];
-var currentPlayer = players.length-1;
 
 //GLOBAL GAMEPLAY VARIABLES
 var playerCounter = 0;
@@ -22,6 +21,7 @@ var wildCardColor = "z";
 var previousWildCardColor;
 var stayOnPlayer = 0;
 var challenger;
+var noCardsLeft = "blank";
 
 
 //MAIN GAME FUNCTION CALLS**
@@ -246,90 +246,47 @@ function beginDiscardPile(){
 //regular gameplay
 function normalTurn(){
     //if drawPile is depleted, run reshuffle, also prevents forcing reshuffle by playing the wrong card
-    if(drawPile.length == 0 && stayOnPlayer == 0){
-        reshuffle();
+    for (i=0; i<players.length; i++){
+        if(players[i].hand.length == 0){
+            noCardsLeft == players[i].name;
+        }
     }
-    console.log("drawPile is = ")
-    console.log(drawPile);
-    console.log("discardPile is = ")
-    console.log(discardPile)
- 
-    switch (rule){
-        case "wildcard":
-            rule = "";
-            inquirer
-            .prompt([
-                {
-                    type: 'list',
-                    name: 'chooseColor',
-                    message: `What color will ${players[playerCounter].name} choose?`,
-                    choices: [
-                        'Red',
-                        'Blue',
-                        'Green',
-                        'Yellow'
-                    ]
-                }
-            ]).then((answer) =>{
-                console.log("The color " + answer.chooseColor + " has been chosen.")
-                previousWildCardColor = wildCardColor;
-                wildCardColor = answer.chooseColor.toString();
-                standardSequence();
-            })
-            break;
-        case "skip":
-            rule = "";
-            if(gameDirection == 0){
-                playerCounter--;
-            }else{
-                playerCounter++;
-            }
-            console.log("PlayerCounter = " + playerCounter);
-            if(playerCounter < 0){
-                playerCounter = players.length-1
-            }else if (playerCounter > players.length-1){
-                playerCounter = 0;
-            }
-            standardSequence();
-            break;
-        case "reverse":
-            rule = "";
-            if(gameDirection == 0){
-                gameDirection = 1
-            }else{
-                gameDirection = 0
-            }
-            standardSequence();
-            break;
-        case "draw2":
-            rule = "";
-            if(gameDirection == 0){
-                if(playerCounter > 0){
-                    console.log(players[playerCounter-1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                    players[playerCounter-1].hand.unshift(drawPile.splice(0, 1).toString());
-                    console.log(players[playerCounter-1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                    players[playerCounter-1].hand.unshift(drawPile.splice(0, 1).toString());
-                }else{
-                    console.log(players[players.length-1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                    players[players.length-1].hand.unshift(drawPile.splice(0, 1).toString());
-                    console.log(players[players.length-1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                    players[players.length-1].hand.unshift(drawPile.splice(0, 1).toString());
-                }
-
-            }else{
-                if(playerCounter < players.length-1){
-                    console.log(players[playerCounter+1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                    players[playerCounter+1].hand.unshift(drawPile.splice(0, 1).toString());
-                    console.log(players[playerCounter+1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                    players[playerCounter+1].hand.unshift(drawPile.splice(0, 1).toString());
-                }else{
-                    console.log(players[0].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                    players[0].hand.unshift(drawPile.splice(0, 1).toString());
-                    console.log(players[0].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                    players[0].hand.unshift(drawPile.splice(0, 1).toString());
-                }
-            }
-            if(firstReverse == 1){
+    if(noCardsLeft !== "blank"){
+        endGameScore();
+    }else{
+        if(drawPile.length == 0 && stayOnPlayer == 0){
+            reshuffle();
+        }
+        console.log("drawPile is = ")
+        console.log(drawPile);
+        console.log("discardPile is = ")
+        console.log(discardPile)
+     
+        switch (rule){
+            case "wildcard":
+                rule = "";
+                inquirer
+                .prompt([
+                    {
+                        type: 'list',
+                        name: 'chooseColor',
+                        message: `What color will ${players[playerCounter].name} choose?`,
+                        choices: [
+                            'Red',
+                            'Blue',
+                            'Green',
+                            'Yellow'
+                        ]
+                    }
+                ]).then((answer) =>{
+                    console.log("The color " + answer.chooseColor + " has been chosen.")
+                    previousWildCardColor = wildCardColor;
+                    wildCardColor = answer.chooseColor.toString();
+                    standardSequence();
+                })
+                break;
+            case "skip":
+                rule = "";
                 if(gameDirection == 0){
                     playerCounter--;
                 }else{
@@ -341,34 +298,87 @@ function normalTurn(){
                 }else if (playerCounter > players.length-1){
                     playerCounter = 0;
                 }
-            }
-            standardSequence();
-            break;
-        case "wilddraw4card":
-            rule = "";
-            inquirer
-            .prompt([
-                {
-                    type: 'list',
-                    name: 'chooseColor',
-                    message: `What color will ${players[playerCounter].name} choose?`,
-                    choices: [
-                        'Red',
-                        'Blue',
-                        'Green',
-                        'Yellow'
-                    ]
+                standardSequence();
+                break;
+            case "reverse":
+                rule = "";
+                if(gameDirection == 0){
+                    gameDirection = 1
+                }else{
+                    gameDirection = 0
                 }
-            ]).then((answer) =>{
-                console.log("The color " + answer.chooseColor + " has been chosen.")
-                previousWildCardColor = wildCardColor;
-                wildCardColor = answer.chooseColor.toString();
-                challenge();
-            })
-            break;
-        default:
-            standardSequence();
+                standardSequence();
+                break;
+            case "draw2":
+                rule = "";
+                if(gameDirection == 0){
+                    if(playerCounter > 0){
+                        console.log(players[playerCounter-1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
+                        players[playerCounter-1].hand.unshift(drawPile.splice(0, 1).toString());
+                        console.log(players[playerCounter-1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
+                        players[playerCounter-1].hand.unshift(drawPile.splice(0, 1).toString());
+                    }else{
+                        console.log(players[players.length-1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
+                        players[players.length-1].hand.unshift(drawPile.splice(0, 1).toString());
+                        console.log(players[players.length-1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
+                        players[players.length-1].hand.unshift(drawPile.splice(0, 1).toString());
+                    }
+    
+                }else{
+                    if(playerCounter < players.length-1){
+                        console.log(players[playerCounter+1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
+                        players[playerCounter+1].hand.unshift(drawPile.splice(0, 1).toString());
+                        console.log(players[playerCounter+1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
+                        players[playerCounter+1].hand.unshift(drawPile.splice(0, 1).toString());
+                    }else{
+                        console.log(players[0].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
+                        players[0].hand.unshift(drawPile.splice(0, 1).toString());
+                        console.log(players[0].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
+                        players[0].hand.unshift(drawPile.splice(0, 1).toString());
+                    }
+                }
+                if(firstReverse == 1){
+                    if(gameDirection == 0){
+                        playerCounter--;
+                    }else{
+                        playerCounter++;
+                    }
+                    console.log("PlayerCounter = " + playerCounter);
+                    if(playerCounter < 0){
+                        playerCounter = players.length-1
+                    }else if (playerCounter > players.length-1){
+                        playerCounter = 0;
+                    }
+                }
+                standardSequence();
+                break;
+            case "wilddraw4card":
+                rule = "";
+                inquirer
+                .prompt([
+                    {
+                        type: 'list',
+                        name: 'chooseColor',
+                        message: `What color will ${players[playerCounter].name} choose?`,
+                        choices: [
+                            'Red',
+                            'Blue',
+                            'Green',
+                            'Yellow'
+                        ]
+                    }
+                ]).then((answer) =>{
+                    console.log("The color " + answer.chooseColor + " has been chosen.")
+                    previousWildCardColor = wildCardColor;
+                    wildCardColor = answer.chooseColor.toString();
+                    challenge();
+                })
+                break;
+            default:
+                standardSequence();
+        }
     }
+
 }
 
 function standardSequence(){
@@ -603,11 +613,8 @@ function reshuffle(){
     console.dir(drawPile, {'maxArrayLength': null});
 }
 
+//calculates end game score
+function endGameScore(){
 
-
-
-
-
-
-
-
+    
+}

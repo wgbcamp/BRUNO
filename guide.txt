@@ -1,4 +1,4 @@
-reshuffle discardPile into the drawPile at start of normalTurn and at start of "Draw card from deck" play
+At start of normal turn, loop through every player's hands and if a player has no cards, call endGameScore function<<<
 
 Say BRUNO before before playing last card to be safe
 
