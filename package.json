@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/wgbcamp/BRUNO#readme",
   "dependencies": {
-    "inquirer": "^8.0.0"
+    "inquirer": "^8.0.0",
+    "ws": "^7.4.6"
   }
 }
