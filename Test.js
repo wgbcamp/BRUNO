@@ -142,10 +142,11 @@
 //     console.log("it works")
 // }
 
-var word = "YellowCardReverse";
-console.log(word.length);
-console.log(word.slice(word.length-7, word.length));
+// var word = "YellowCardReverse";
+// console.log(word.length);
+// console.log(word.slice(word.length-7, word.length));
 
 //remember to make new function for wrong card picked, also fix the starting reverse policy
 
 //test starting reverse, normal card plays, reverse card plays, wrong card picked, changed playercounter value from start
+

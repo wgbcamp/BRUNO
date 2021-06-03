@@ -1,0 +1,6 @@
+reshuffle discardPile into the drawPile at start of normalTurn and at start of "Draw card from deck" play
+
+Say BRUNO before before playing last card to be safe
+
+If someone else says BRUNO inbetween your next to last card play and the next player drawing or playing a card
+
