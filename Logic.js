@@ -1,4 +1,4 @@
-var inquirer = require('inquirer');
+export { shuffleDeck, generatePlayers};
 
 //DECK ARRAY**
 var deck = [ "BlueCard0", "BlueCard1", "BlueCard1", "BlueCard2", "BlueCard2", "BlueCard3", "BlueCard3", "BlueCard4", "BlueCard4", "BlueCard5", "BlueCard5", "BlueCard6", "BlueCard6", "BlueCard7", "BlueCard7", "BlueCard8", "BlueCard8", "BlueCard9", "BlueCard9", "BlueCardSkip", "BlueCardSkip", "BlueCardReverse", "BlueCardReverse", "BlueCardDraw2", "BlueCardDraw2", "GreenCard0", "GreenCard1", "GreenCard1", "GreenCard2", "GreenCard2", "GreenCard3", "GreenCard3", "GreenCard4", "GreenCard4", "GreenCard5", "GreenCard5", "GreenCard6", "GreenCard6", "GreenCard7", "GreenCard7", "GreenCard8", "GreenCard8", "GreenCard9", "GreenCard9", "GreenCardSkip", "GreenCardSkip", "GreenCardReverse", "GreenCardReverse", "GreenCardDraw2", "GreenCardDraw2", "RedCard0", "RedCard1", "RedCard1", "RedCard2", "RedCard2", "RedCard3", "RedCard3", "RedCard4", "RedCard4", "RedCard5", "RedCard5", "RedCard6", "RedCard6", "RedCard7", "RedCard7", "RedCard8", "RedCard8", "RedCard9", "RedCard9", "RedCardSkip", "RedCardSkip", "RedCardReverse", "RedCardReverse", "RedCardDraw2", "RedCardDraw2", "YellowCard0", "YellowCard1", "YellowCard1", "YellowCard2", "YellowCard2", "YellowCard3", "YellowCard3", "YellowCard4", "YellowCard4", "YellowCard5", "YellowCard5", "YellowCard6", "YellowCard6", "YellowCard7", "YellowCard7", "YellowCard8", "YellowCard8", "YellowCard9", "YellowCard9", "YellowCardSkip", "YellowCardSkip", "YellowCardReverse", "YellowCardReverse", "YellowCardDraw2", "YellowCardDraw2", "WildCard", "WildCard", "WildCard", "WildCard", "WildDraw4Card", "WildDraw4Card", "WildDraw4Card", "WildDraw4Card"]
@@ -24,12 +24,13 @@ var challenger;
 var noCardsLeft = "blank";
 
 
+
 //MAIN GAME FUNCTION CALLS**
 //shuffleDeck, generatePlayers, initialDraw, assignDealer, retrieveInitialDraw, initial7CardDeal, createDrawPile, beginDiscardPile
 
 
 shuffleDeck();
-generatePlayers();
+
 
 
 
@@ -54,33 +55,21 @@ function shuffleDeck(){
 }
 
 //adds number of players to game, will use connected sessions in the future
-function generatePlayers(){
-
-    inquirer
-        .prompt([
-            {
-                type: 'list',
-                name: 'playerCount',
-                message: 'How many players are in this game?',
-                choices: [1,2,3,4,5,6,7,8]
-            }
-        ])
-        .then((answer) =>{
-            var playerCount = JSON.stringify(answer.playerCount);
+function generatePlayers(playerCount){
+    
             console.log(`There are ${playerCount} players in this game!`);
-            for (i=0; i<playerCount; i++){
+            for (var i=0; i<playerCount; i++){
                 players.push({name: `player${i+1}`, hand: [], score: 0, dealer: ""});
             }
             console.log(players);
             initialDraw();
-        })
 }
 
 
 //all players draw one card at the start of the game
 function initialDraw(){
     console.log("Starting initial draw...")
-    for (i=0; i<players.length; i++){
+    for (var i=0; i<players.length; i++){
             console.log("Pushed " + deck[0] + " into " + players[i].name + "'s hand.")
             players[i].hand.push(deck[0]);
             deck.splice(0, 1);
@@ -110,7 +99,7 @@ function assignDealer(){
     console.table(players);
 
     //sends all nonzero values to the end of array
-    for(i=0; i<players.length; i++){
+    for(var i=0; i<players.length; i++){
         if (isNaN(players[i].hand[0].slice(-1)) == true && players[i].dealer == ""){
             players[i].dealer = "Not a number";
             players = players.concat(players.splice(i, 1));
@@ -119,8 +108,8 @@ function assignDealer(){
     }
 
     //sorts all zero values from highest to lowest
-    for(i=0; i<10; i++){
-            for(a=0; a<players.length; a++){
+    for(var i=0; i<10; i++){
+            for(var a=0; a<players.length; a++){
                     if(players[a].hand[0].slice(-1) > i && players[a].dealer == ""){
 
                         players = players.splice(a, 1).concat(players);
@@ -129,7 +118,7 @@ function assignDealer(){
     }
 
     //resets all players.dealer values to false
-    for(i=0; i<players.length; i++){
+    for(var i=0; i<players.length; i++){
         players[i].dealer = "false"
     }
 
@@ -148,7 +137,7 @@ function retrieveInitialDraw(){
     console.log("before retrieve initial draw")
     console.dir(deck, {'maxArrayLength': null});
     console.table(players);
-    for(i=0; i<players.length; i++){
+    for(var i=0; i<players.length; i++){
         deck.push(players[i].hand[0]);
         players[i].hand = [];
     }
@@ -164,9 +153,9 @@ function retrieveInitialDraw(){
 //evenly distributes 7 cards to 
 function initial7CardDeal(){
 
-    for (z=0; z<players.length; z++){
+    for (var z=0; z<players.length; z++){
 
-        for (a=0; a<7; a++){
+        for (var a=0; a<7; a++){
 
             players[z].hand.push(deck[0]);
             deck.splice(0, 1);
@@ -188,7 +177,7 @@ function createDrawPile(){
     console.log("Creating draw pile...");
     
 
-    for (i=0; i<Math.ceil(deck.length/2); i++){
+    for (var i=0; i<Math.ceil(deck.length/2); i++){
     
         var tempValue;
         var value2 = deck.length-i;
@@ -246,7 +235,7 @@ function beginDiscardPile(){
 //regular gameplay
 function normalTurn(){
     //if drawPile is depleted, run reshuffle, also prevents forcing reshuffle by playing the wrong card
-    for (i=0; i<players.length; i++){
+    for (var i=0; i<players.length; i++){
         if(players[i].hand.length == 0){
             noCardsLeft == players[i].name;
         }
@@ -529,7 +518,7 @@ function challenge(){
             //variable that determines who will draw cards at the end of the challenge
             var draw = 0;
             //loops through hand of player who played WildDrawCard4
-            for (i=0; i<players[playerCounter].hand.length; i++){
+            for (var i=0; i<players[playerCounter].hand.length; i++){
                 //checks for color type between hand and discardPile, but omits wild cards
                 if(players[playerCounter].hand[i].charAt(0) == discardPile[1].charAt(0) && players[playerCounter].hand[i].charAt(0)!== "W"){
                     console.log("### playerCounter.hand = " + players[playerCounter].hand[i].charAt(0))
@@ -552,19 +541,19 @@ function challenge(){
             }
             if(draw == 1){
                 console.log(`${players[playerCounter].name} played WildDraw4Card illegally and will draw 4 cards!`);
-                for(i=0; i<4; i++){
+                for(var i=0; i<4; i++){
                     console.log(players[playerCounter].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
                     players[playerCounter].hand.unshift(drawPile.splice(0, 1).toString());
                 }  
             }else{
                 console.log(`${players[challenger].name} played is incorrect and will draw 6 cards!`);
-                for(i=0; i<6; i++){
+                for(var i=0; i<6; i++){
                     console.log(players[challenger].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
                     players[challenger].hand.unshift(drawPile.splice(0, 1).toString());
                 }  
             }
         }else{
-            for(i=0; i<4; i++){
+            for(var i=0; i<4; i++){
                 console.log(players[challenger].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
                 players[challenger].hand.unshift(drawPile.splice(0, 1).toString());
             }

@@ -4,3 +4,10 @@ Say BRUNO before before playing last card to be safe
 
 If someone else says BRUNO inbetween your next to last card play and the next player drawing or playing a card
 
+declare variable in for loops
+implement express
+serve static html files
+serve javascript
+implement react
+crud mongodb
+send components from server to client
