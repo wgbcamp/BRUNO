@@ -1,0 +1,58 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>A Basic HTML5 Template</title>
+  <meta name="description" content="A simple HTML5 Template for new projects.">
+  
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://kit.fontawesome.com/923c3b4ed2.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div id="headerGrid">
+        <div id="leftNavbarContainer">
+            <div id="siteLogo">LOGO</div>
+        </div>
+        <div id="multiUseContainer">
+            <div id="altSearchBar"></div>
+            <div id="menu">
+                <i class="fas fa-bars fa-1x"></i>
+                Menu
+            </div>
+        </div>
+        <div id="searchContainer">
+        <input type= "text" placeholder="Search" id="searchBar" onfocus="dimContent()">
+        <div id="searchIconContainer">
+        <i class="fas fa-search fa-1x"></i>
+        </div>
+        </div>
+        <div id="rightNavbarContainer">
+            <div id="minimizedSearch">
+                <i class="fas fa-search fa-1x" onclick="showSearchBar()"></i>
+            </div>
+            <div id="cart">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <div id="signIn">Sign In
+                <i class="fas fa-user signInIcon"></i>
+            </div>   
+        </div>
+    </div>
+    <div id="spannedSearchContainer">
+        <input type="text" placeholder="Search" id="spannedSearchBar" onfocusout="removeDimming(); hideSearchBar();">
+
+        <div id="spannedSearchIconContainer">
+            <i class="fas fa-search fa-lg"></i>
+        </div>
+    </div>
+    <div id="mainContent">
+
+    </div>
+    <script src="functions.js"></script>
+</body>
+
+   
+
+</html>
