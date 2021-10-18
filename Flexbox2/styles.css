@@ -40,14 +40,14 @@ body{
     font-size: 25px;
 }
 
-#settings{
+#help{
     display: flex;
     align-items: center;
     justify-content: center;
     grid-column: 3; 
 }
 
-#help{
+#settings{
     display: flex;
     align-items: center;
     justify-content: center;
