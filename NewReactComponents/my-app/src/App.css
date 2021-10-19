@@ -5,12 +5,20 @@ html{
     font-weight: 500;
 }
 
-#body{
+body{
     margin: 0;
     display: flex;
     flex-flow: column;
     height: 100%;
     overflow: hidden;
+}
+
+#root{ 
+    height: 100vh;
+}
+
+#container{
+    height: 100%;
 }
 
 #headerBar{

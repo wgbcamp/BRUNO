@@ -3,23 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle, faCog } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
-
+import animateDropdown from './animateDropdown';
 
 function App() {
 
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = "functions.js";
-    script.async = true;
-    document.body.appendChild(script);
-  return () => {
-      document.body.removeChild(script);
-    }
-  }, []);
-  
-
   return (
-    <div id="body">
+    <div id="container">
       <div id="headerBar">
         <div id="siteLogo">
           <div id="placeholderLogo">
@@ -27,9 +16,9 @@ function App() {
                   
           </div>
         </div>
-        <div id="help" onClick="animateHelp(this.id);"><FontAwesomeIcon icon={faQuestionCircle} />
+        <div id="help" ><FontAwesomeIcon icon={faQuestionCircle} onClick={() => animateDropdown("help")}/>
         </div>
-        <div id="settings" onClick="animateHelp(this.id)"><FontAwesomeIcon icon={faCog} />
+        <div id="settings"><FontAwesomeIcon icon={faCog} onClick={() => animateDropdown("settings")}/>
         </div>
         <div id="source"><a href="https://github.com/wgbcamp/BRUNO"><FontAwesomeIcon icon={faGithub} style={{color: 'white'}}/></a>
         </div>

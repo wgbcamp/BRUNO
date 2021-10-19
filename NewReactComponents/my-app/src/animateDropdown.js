@@ -1,4 +1,4 @@
-function animateHelp(value){
+function animateDropdown(value){
     var x;
     var y;
     if(value == "help"){
@@ -11,12 +11,14 @@ function animateHelp(value){
     var a = document.getElementById(`dropdown${x}`);
     var b = document.getElementById(`dropdown${y}`);
 
+    console.log(a);
+    console.log(b);
         if(a.className == ''){
             //show and fade in
             a.style.animation = "grow 0s ease-in-out forwards";
             a.className = 'fade'; 
     
-            if(b.className = 'fade'){
+            if(b.className == 'fade'){
                 //hide competing dropdown and fade out
                 b.style.animation = "shrink 0s ease-in-out forwards";
                 b.className = ''; 
@@ -32,4 +34,6 @@ function animateHelp(value){
             //return background color to white if changed
             document.body.style.backgroundColor = "white";
         }
-}
+  }
+
+  export default animateDropdown;
