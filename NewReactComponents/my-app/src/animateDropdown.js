@@ -23,7 +23,7 @@ function animateDropdown(value){
                 b.style.animation = "shrink 0s ease-in-out forwards";
                 b.className = ''; 
                 //keep background color the same during transition
-                document.body.style.backgroundColor = "rgb(253, 68, 68)";
+                document.body.style.backgroundColor = "rgb(255, 244, 195)";
             }
         }else{
             //fade out then hide
@@ -31,8 +31,8 @@ function animateDropdown(value){
             setTimeout(function() {
                 a.style.animation = "shrink 0s ease-in-out forwards";
             }, 500);
-            //return background color to white if changed
-            document.body.style.backgroundColor = "white";
+            //return background color to base color if changed
+            document.body.style.backgroundColor = "rgb(255, 244, 195)";
         }
   }
 

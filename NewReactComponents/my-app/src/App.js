@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle, faCog } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import animateDropdown from './animateDropdown';
+import * as cC from './colorChange';
 
 function App() {
 
@@ -12,19 +13,19 @@ function App() {
       <div id="headerBar">
         <div id="siteLogo">
           <div id="placeholderLogo">
-                  BRUNO
+                  B
                   
           </div>
         </div>
-        <div id="help" ><FontAwesomeIcon icon={faQuestionCircle} onClick={() => animateDropdown("help")}/>
+        <div id="help" ><FontAwesomeIcon icon={faQuestionCircle} onClick={() => animateDropdown("help")} onMouseOver={cC.changeToWhite} onMouseOut={cC.changeToBlack} style={{color: 'black'}}/>
         </div>
-        <div id="settings"><FontAwesomeIcon icon={faCog} onClick={() => animateDropdown("settings")}/>
+        <div id="settings"><FontAwesomeIcon icon={faCog} onClick={() => animateDropdown("settings")} onMouseOver={cC.changeToWhite} onMouseOut={cC.changeToBlack} style={{color: 'black'}}/>
         </div>
-        <div id="source"><a href="https://github.com/wgbcamp/BRUNO"><FontAwesomeIcon icon={faGithub} style={{color: 'white'}}/></a>
+        <div id="source"><a href="https://github.com/wgbcamp/BRUNO"><FontAwesomeIcon icon={faGithub} onMouseOver={cC.changeToWhite} onMouseOut={cC.changeToBlack} style={{color: 'black'}}/></a>
         </div>
       </div>
       <div id="dropdownHelp">
-            <p>The key to winning a game of <u><i>BRUNO</i></u>, is by being the first player to play all of the cards in your hand each round.</p>
+            <p>The key to winning a game of <u><b>BRUNO</b></u>, is by being the first player to play all of the cards in your hand each round.</p>
 
                             <p>The <u>first player</u> with no cards left in hand is awarded <u>points</u> based on the cards that are still left in each of their opponents' hands.</p>
 
@@ -38,7 +39,7 @@ function App() {
 
                             <p>The player to the <u>left of the dealer goes first</u>. Cards must be matched by color, type, or action to be played. Otherwise, the player must draw a card from the <u>draw pile</u>.</p>
 
-                            <p>You must click <i>BRUNO</i> before you play your second to last card. If the next player catches you without saying <i>BRUNO</i>, you must draw 4 more cards from the <u>draw pile</u>.</p>
+                            <p>You must click <b>BRUNO</b> before you play your second to last card. If the next player catches you without saying <b>BRUNO</b>, you must draw 4 more cards from the <u>draw pile</u>.</p>
 
                             <p>There are 25 cards of each color type (Red, Blue, Green, & Yellow). These cards include numbered cards from 0 to 9 as well as Skip, Reverse, and Draw 2 cards. There are also 4 Wild cards and 4 Wild Draw 4 cards.</p>
 
@@ -68,6 +69,12 @@ function App() {
             </div>
         </div>
     <div id="mainGrid">
+        <div id="title"> 
+            BRUNO
+            <div id="subtitle">
+                A recreation the classic crazy eights card game.
+            </div>
+        </div>
         <div id="createSession" className="mainButton">
             Create Session
         </div>

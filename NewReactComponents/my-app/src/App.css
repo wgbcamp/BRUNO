@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Spartan:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
 
 html{
-    font-family: 'Spartan', sans-serif;
-    font-weight: 500;
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 400;
 }
 
 body{
@@ -11,6 +11,7 @@ body{
     flex-flow: column;
     height: 100%;
     overflow: hidden;
+    background-color: rgb(255, 244, 195);
 }
 
 #root{ 
@@ -28,7 +29,7 @@ body{
     display: grid;
     grid-template-columns: 30% 10% 1fr 1fr 1fr;
     grid-template-rows: 1fr;
-    background-color: red;
+    background-color: #ffc3d9;
     height: 70px;
     font-size: 22px;
     color: white;
@@ -46,7 +47,7 @@ body{
     align-items: center;
     justify-content: center;
     grid-column: 2;
-    color: white;
+    color: black;
     font-size: 25px;
 }
 
@@ -78,13 +79,15 @@ i {
 
 #dropdownHelp{
     z-index: 2;
-    background-color: rgb(253, 68, 68);
-    color: white;
+    background-color: rgb(255, 244, 195);
+    color: black;
     font-size: 20px;
     height: 0px;
     overflow: scroll;
     position: relative;
     top: 70px;
+    padding-left: 30px;
+    padding-right: 30px;
     opacity: 0;
     transition: opacity 0.5s;
 }
@@ -95,7 +98,7 @@ i {
 
 #dropdownSettings{
     z-index: 2;
-    background-color: rgb(253, 68, 68);
+    background-color: rgb(255, 244, 195);
     color: white;
     font-size: 20px;
     height: 0px;
@@ -122,12 +125,12 @@ i {
 }
 
 .ddButton{
-    background-color: rgb(252, 127, 127);
+    background-color: #ffc3d9;
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-
+    color: black;
 }
 
 #volume{
@@ -167,7 +170,7 @@ i {
 }
 
 .mainButton{
-    background-color: rgb(253, 156, 156);
+    background-color: #ffc3d9;
     color: white;
     border-radius: 10px;
     grid-column: 2/7;
@@ -177,16 +180,42 @@ i {
 }
 
 #createSession{
-    
-    grid-row: 2;
+    grid-row: 4;
 }
 
 #publicSession{
-    
-    grid-row: 3;
+    grid-row: 5;
 }
 
 #searchForSession{
-    
-    grid-row: 4;
+    grid-row: 6;
+}
+
+#createSession, #publicSession, #searchForSession{
+    color: black;
+}
+
+#createSession:hover, #publicSession:hover, #searchForSession:hover{
+    background-color: white;
+}
+
+
+
+#title{
+    display: grid;
+    grid-template-rows: 40px 30px;
+    grid-column: 1;
+    grid-row: 1;
+    grid-column: 2/5;
+    font-size: 45px;
+    font-weight: 700;
+    padding-top: 30px;
+}
+
+#subtitle{
+    padding-top: 12px;
+    padding-left: 4px;
+    font-size: 20px;
+    font-weight: 400;
+    color: rgb(56, 56, 56);
 }
