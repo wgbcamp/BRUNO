@@ -11,7 +11,7 @@ body{
     flex-flow: column;
     height: 100%;
     overflow: hidden;
-    background-color: rgb(255, 244, 195);
+    background-color: #FCFDFF;
 }
 
 #root{ 
@@ -29,7 +29,7 @@ body{
     display: grid;
     grid-template-columns: 30% 10% 1fr 1fr 1fr;
     grid-template-rows: 1fr;
-    background-color: #ffc3d9;
+    background-color: #fdf906;
     height: 70px;
     font-size: 22px;
     color: white;
@@ -79,7 +79,7 @@ i {
 
 #dropdownHelp{
     z-index: 2;
-    background-color: rgb(255, 244, 195);
+    background-color: #FCFDFF;
     color: black;
     font-size: 20px;
     height: 0px;
@@ -92,13 +92,10 @@ i {
     transition: opacity 0.5s;
 }
 
-#dropdownHelp.fade{
-    opacity: 1;
-}
 
 #dropdownSettings{
     z-index: 2;
-    background-color: rgb(255, 244, 195);
+    background-color: #FCFDFF;
     color: white;
     font-size: 20px;
     height: 0px;
@@ -113,9 +110,7 @@ i {
     grid-template-columns: 1fr;
 }
 
-#dropdownSettings.fade{
-    opacity: 1;
-}
+
 
 #settingsChoices{
     display: grid;
@@ -125,7 +120,7 @@ i {
 }
 
 .ddButton{
-    background-color: #ffc3d9;
+    background-color: #c079ff;
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -170,7 +165,7 @@ i {
 }
 
 .mainButton{
-    background-color: #ffc3d9;
+    background-color: #c079ff;
     color: white;
     border-radius: 10px;
     grid-column: 2/7;
@@ -194,11 +189,6 @@ i {
 #createSession, #publicSession, #searchForSession{
     color: black;
 }
-
-#createSession:hover, #publicSession:hover, #searchForSession:hover{
-    background-color: white;
-}
-
 
 
 #title{

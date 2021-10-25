@@ -1,9 +1,6 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faQuestionCircle, faCog } from '@fortawesome/free-solid-svg-icons';
-import { faGithub } from '@fortawesome/free-brands-svg-icons';
-import animateDropdown from './animateDropdown';
+import * as ani from './animateDropdown';
 import * as cC from './colorChange';
 
 function App() {
@@ -17,11 +14,11 @@ function App() {
                   
           </div>
         </div>
-        <div id="help" ><FontAwesomeIcon icon={faQuestionCircle} onClick={() => animateDropdown("help")} onMouseOver={cC.changeToWhite} onMouseOut={cC.changeToBlack} style={{color: 'black'}}/>
-        </div>
-        <div id="settings"><FontAwesomeIcon icon={faCog} onClick={() => animateDropdown("settings")} onMouseOver={cC.changeToWhite} onMouseOut={cC.changeToBlack} style={{color: 'black'}}/>
-        </div>
-        <div id="source"><a href="https://github.com/wgbcamp/BRUNO"><FontAwesomeIcon icon={faGithub} onMouseOver={cC.changeToWhite} onMouseOut={cC.changeToBlack} style={{color: 'black'}}/></a>
+        <i id="help" className="fas fa-question-circle" onClick={ani.animateDropdown} onMouseOver={cC.changeToWhite} onMouseOut={cC.changeToBlack} style={{color: 'black'}}/>
+
+        <i id="settings" className="fas fa-cog" onClick={ani.animateDropdown} onMouseOver={cC.changeToWhite} onMouseOut={cC.changeToBlack} style={{color: 'black'}}/>
+
+        <div id="source"><a href="https://github.com/wgbcamp/BRUNO"><i className="fab fa-github" onMouseOver={cC.changeToWhite} onMouseOut={cC.changeToBlack} style={{color: 'black'}}> </i></a>
         </div>
       </div>
       <div id="dropdownHelp">
@@ -72,16 +69,16 @@ function App() {
         <div id="title"> 
             BRUNO
             <div id="subtitle">
-                A recreation the classic crazy eights card game.
+                A recreation of the classic crazy eights card game.
             </div>
         </div>
-        <div id="createSession" className="mainButton">
+        <div id="createSession" className="mainButton" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor}>
             Create Session
         </div>
-        <div id="publicSession" className="mainButton">
+        <div id="publicSession" className="mainButton" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor}>
             Browse Public Games
         </div>
-        <div id="searchForSession" className="mainButton">
+        <div id="searchForSession" className="mainButton" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor}>
             Search for Private Game
         </div>
     </div>
