@@ -10,7 +10,7 @@ body{
     display: flex;
     flex-flow: column;
     height: 100%;
-    overflow: hidden;
+    overflow-y: hidden;
     background-color: #FCFDFF;
 }
 
@@ -23,6 +23,7 @@ body{
 }
 
 #headerBar{
+    z-index: 2;
     position: fixed;
     width: 100%;
     display: grid;
@@ -30,6 +31,7 @@ body{
     grid-template-rows: 1fr;
     background-color: #fdf906;
     height: 70px;
+    top: 0px;
     font-size: 22px;
     color: white;
     text-decoration: none;
@@ -82,7 +84,7 @@ i {
     color: black;
     font-size: 20px;
     height: 100vh;
-    overflow: scroll;
+  
     position: relative;
     top: 70px;
     padding-left: 30px;
