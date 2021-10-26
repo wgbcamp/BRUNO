@@ -31,7 +31,7 @@ export const animateDropdown = e => {
         //swap transparencies and z-index back to original
         a.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, fill: 'forwards' });
         c.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, fill: 'forwards' });
-        setTimeout(() => { a.style.zIndex = 0; c.style.zIndex = 1; }, 200);
+        setTimeout(() => { a.style.zIndex = 0; c.style.zIndex = 1; window.scrollTo(0, 0); }, 200);
         //hide scroll bar when help is hidden
         document.body.style.overflowY = "hidden";
     }

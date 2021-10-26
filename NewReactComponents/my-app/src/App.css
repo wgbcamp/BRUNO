@@ -147,7 +147,7 @@ i {
 #mainGrid{
     z-index: 1;
     position: absolute;
-    top: 70px;
+    top: 100px;
     height: 100vh;
     width: 100vw;
     background-color: white;
