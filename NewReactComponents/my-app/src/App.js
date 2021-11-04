@@ -1,7 +1,7 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
-import * as ani from './animateDropdown';
-import * as cC from './colorChange';
+import * as ani from './animations/animateDropdown';
+import * as cC from './animations/colorChange';
 
 function App() {
 
@@ -90,6 +90,9 @@ function App() {
         <div id="searchForSession" className="mainButton btnClr" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor}>
             Search for Private Game
         </div>
+    </div>
+    <div id="sessionNamer">
+        
     </div>
     </div>
   );
