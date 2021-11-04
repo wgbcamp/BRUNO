@@ -10,6 +10,7 @@ export const animateDropdown = e => {
     }else{
         a = document.getElementById('dropdownSettings');
         b = document.getElementById('dropdownHelp');
+        document.body.style.overflowY = "hidden";
         
     }
     var c = document.getElementById("mainGrid");
@@ -17,15 +18,15 @@ export const animateDropdown = e => {
         //swap transparencies and z-index
         a.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, fill: 'forwards' });
         c.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, fill: 'forwards' });
-        setTimeout(() => { a.style.zIndex = 1; c.style.zIndex = 0; }, 200);
+        setTimeout(() => { a.style.zIndex = 1; c.style.zIndex = 0; window.scrollTo(0, 0); }, 200);
 
         if(b.style.zIndex == 1){
             //transparent background and last clicked dropdown, send last clicked to bottom
             b.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, fill: 'forwards' });
             c.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 0, fill: 'forwards' });
-            setTimeout(() => { b.style.zIndex = 0; }, 200);
+            setTimeout(() => { b.style.zIndex = 0; window.scrollTo(0, 0); }, 200);
             //hide scroll bar when help is hidden
-            document.body.style.overflowY = "hidden";
+            
         }
     }else{
         //swap transparencies and z-index back to original

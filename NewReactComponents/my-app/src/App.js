@@ -5,20 +5,28 @@ import * as cC from './colorChange';
 
 function App() {
 
+    React.useEffect(() => {
+        function resizeContent(){
+            console.log('innerWidth: ' + window.innerWidth + 'innerHeight: ' + window.innerHeight)
+        }
+        window.addEventListener('resize', resizeContent);
+    })
+    
+
   return (
     <div id="container">
-      <div id="headerBar">
+      <div id="headerBar" className="headerBar">
         <div id="siteLogo">
           <div id="placeholderLogo">
-                  B
+                  BRUNO
                   
           </div>
         </div>
-        <i id="help" className="fas fa-question-circle" onClick={ani.animateDropdown} onMouseOver={cC.changeToWhite} onMouseOut={cC.changeToBlack} style={{color: 'black'}}/>
+        <div id="help" onClick={ani.animateDropdown} onMouseOut={cC.changeToBlack} style={{color: 'black'}}>Help </div>
 
-        <i id="settings" className="fas fa-cog" onClick={ani.animateDropdown} onMouseOver={cC.changeToWhite} onMouseOut={cC.changeToBlack} style={{color: 'black'}}/>
+        <div id="settings" onClick={ani.animateDropdown} onMouseOut={cC.changeToBlack} style={{color: 'black'}}>Settings</div>
 
-        <div id="source"><a href="https://github.com/wgbcamp/BRUNO"><i className="fab fa-github" onMouseOver={cC.changeToWhite} onMouseOut={cC.changeToBlack} style={{color: 'black'}}> </i></a>
+        <div id="source"><a href="https://github.com/wgbcamp/BRUNO"><i className="fab fa-github" onMouseOut={cC.changeToBlack} style={{color: 'black'}}> </i></a>
         </div>
       </div>
       <div id="dropdownHelp">
@@ -54,13 +62,14 @@ function App() {
         </div>
         <div id="dropdownSettings">
             <div id="settingsChoices">
-                <div id="volume" className="ddButton">
+                <div id="volume" className="ddButton btnClr">
                     Sounds: ON/OFF
                 </div>
-                <div id="textSize" className="ddButton">
+                <div id="textSize" className="ddButton btnClr">
                     Change text size
                 </div>
-                <div id="leaveSession" className="ddButton">
+                <div id="darkMode" className="ddButton btnClr" onClick={cC.darkMode}>Enable Dark Mode</div>
+                <div id="leaveSession" className="ddButton btnClr">
                     Leave Session
                 </div>
             </div>
@@ -72,13 +81,13 @@ function App() {
                 A recreation of the classic crazy eights card game.
             </div>
         </div>
-        <div id="createSession" className="mainButton" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor}>
+        <div id="createSession" className="mainButton btnClr" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor}>
             Create Session
         </div>
-        <div id="publicSession" className="mainButton" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor}>
+        <div id="publicSession" className="mainButton btnClr" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor}>
             Browse Public Games
         </div>
-        <div id="searchForSession" className="mainButton" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor}>
+        <div id="searchForSession" className="mainButton btnClr" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor}>
             Search for Private Game
         </div>
     </div>
