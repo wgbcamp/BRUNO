@@ -16,9 +16,9 @@ export const originalColor = e => {
     e.target.animate([{ color: 'black' }], {duration: 200, fill: 'forwards'});
 }
 
-export const darkMode = () => {
+export const darkMode = (type) => {
     var c = [];
-
+    console.log(type);
     switch(localStorage.getItem('darkMode')){
         case 'enabled':
             c[1] = '#fdf906';
@@ -40,22 +40,45 @@ export const darkMode = () => {
             break;
     }
 
-    document.getElementById('headerBar').animate([{backgroundColor: c[1]}], {duration: 200, fill: 'forwards'});
+    switch(type){
+        case 'pageLoad':
+            document.getElementById('headerBar').style.backgroundColor = c[1];
 
-    var x = document.querySelectorAll('.btnClr');
-    for (var i=0; i<x.length; i++){
-        x[i].animate([{backgroundColor: c[2]}], {duration: 200, fill: 'forwards'});
+            var x = document.querySelectorAll('.btnClr');
+            for (var i=0; i<x.length; i++){
+                x[i].style.backgroundColor = c[2];
+            }
+        
+            document.body.style.backgroundColor = c[3];
+            document.getElementById('mainGrid').style.backgroundColor = c[3];
+            document.getElementById('dropdownHelp').style.backgroundColor = c[3];
+            document.getElementById('dropdownSettings').style.backgroundColor = c[3];
+            
+            document.getElementById('title').style.color = c[4];
+            document.getElementById('subtitle').style.color = c[5];
+            document.getElementById('dropdownHelp').style.color = c[5];
+        
+            document.getElementById('darkMode').innerHTML = c[6];
+            localStorage.setItem('darkMode', c[7]);
+            break;
+        default:
+            document.getElementById('headerBar').animate([{backgroundColor: c[1]}], {duration: 200, fill: 'forwards'});
+
+            var x = document.querySelectorAll('.btnClr');
+            for (var i=0; i<x.length; i++){
+                x[i].animate([{backgroundColor: c[2]}], {duration: 200, fill: 'forwards'});
+            }
+        
+            document.body.animate([{backgroundColor: c[3]}], {duration: 200, fill: 'forwards'});
+            document.getElementById('mainGrid').animate([{backgroundColor: c[3]}], {duration: 200, fill: 'forwards'});
+            document.getElementById('dropdownHelp').style.backgroundColor = c[3];
+            document.getElementById('dropdownSettings').animate([{backgroundColor: c[3]}], {duration: 200, fill: 'forwards'});
+            
+            document.getElementById('title').style.color = c[4];
+            document.getElementById('subtitle').style.color = c[5];
+            document.getElementById('dropdownHelp').style.color = c[5];
+        
+            document.getElementById('darkMode').innerHTML = c[6];
+            localStorage.setItem('darkMode', c[7]);
     }
-
-    document.body.animate([{backgroundColor: c[3]}], {duration: 200, fill: 'forwards'});
-    document.getElementById('mainGrid').animate([{backgroundColor: c[3]}], {duration: 200, fill: 'forwards'});
-    document.getElementById('dropdownHelp').style.backgroundColor = c[3];
-    document.getElementById('dropdownSettings').animate([{backgroundColor: c[3]}], {duration: 200, fill: 'forwards'});
-    
-    document.getElementById('title').style.color = c[4];
-    document.getElementById('subtitle').style.color = c[5];
-    document.getElementById('dropdownHelp').style.color = c[5];
-
-    document.getElementById('darkMode').innerHTML = c[6];
-    localStorage.setItem('darkMode', c[7]);
 }

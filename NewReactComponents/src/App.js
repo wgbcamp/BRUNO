@@ -7,10 +7,23 @@ import * as aP from './animations/animatePopup';
 function App() {
 
     React.useEffect(() => {
-        function resizeContent(){
-            console.log('innerWidth: ' + window.innerWidth + 'innerHeight: ' + window.innerHeight)
+        // function resizeContent(){
+        //     console.log('innerWidth: ' + window.innerWidth + 'innerHeight: ' + window.innerHeight)
+        // }
+        // window.addEventListener('resize', resizeContent);
+
+        
+        function detectDarkMode(){
+            let matched = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if(matched){
+                localStorage.setItem('darkMode', 'disabled');
+                cC.darkMode("pageLoad");
+            }else{
+                localStorage.setItem('darkMode', 'enabled');
+                cC.darkMode("pageLoad");
+            }   
         }
-        window.addEventListener('resize', resizeContent);
+        detectDarkMode();
     })
     
 
