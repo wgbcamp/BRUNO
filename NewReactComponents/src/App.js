@@ -7,13 +7,10 @@ import * as aP from './animations/animatePopup';
 function App() {
 
     React.useEffect(() => {
-        // function resizeContent(){
-        //     console.log('innerWidth: ' + window.innerWidth + 'innerHeight: ' + window.innerHeight)
-        // }
-        // window.addEventListener('resize', resizeContent);
+
 
         
-        function detectDarkMode(){
+    function detectDarkMode(){
             let matched = window.matchMedia('(prefers-color-scheme: dark)').matches;
             if(matched){
                 localStorage.setItem('darkMode', 'disabled');
@@ -26,6 +23,32 @@ function App() {
         detectDarkMode();
     })
     
+    // function resizeContent(){
+    //     console.log('innerWidth: ' + window.innerWidth + 'innerHeight: ' + window.innerHeight)
+    // }
+    // window.addEventListener('resize', resizeContent);
+
+
+    const [value, setValue] = useState("");
+    const [playerCount, setPlayers] = useState(2);
+
+    function increment(){
+        if (playerCount !== 8){
+            setPlayers(playerCount+1);
+        }   
+    }
+
+    function decrement(){
+        if (playerCount !== 2){
+            setPlayers(playerCount-1);
+        }
+    }
+
+    function generateGameCode(){
+        var result = Math.random().toString(36).substring(2,7);
+        console.log(result);
+        setValue(result);
+    }
 
   return (
     <div id="container">
@@ -95,7 +118,7 @@ function App() {
                 A recreation of the classic crazy eights card game.
             </div>
         </div>
-        <div id="createSession" className="mainButton btnClr" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor} onClick={aP.animatePopup}>
+        <div id="createSession" className="mainButton btnClr" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor} onClick={e => {aP.animatePopup(e); generateGameCode();}}>
             Create Session
         </div>
         <div id="publicSession" className="mainButton btnClr" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor}>
@@ -105,14 +128,25 @@ function App() {
             Search for Private Game
         </div>
     </div>
-    <div id="sessionPopup">
-        <div id="codeText">
-            Your session code is:
-        </div>
-        <div id="code">
-            PLACEHOLDER
+    <div id="sessionPopupContainer">
+        <div id="sessionPopup">
+            <div id="codeText">
+                Your session code is:
+            </div>
+            <div id="code">
+                {value}
+            </div>
+            <div id="playerCountText">
+                How many players?
+            </div>
+            <div id="playerCountContainer">
+            <i className="fas fa-long-arrow-alt-left" id="arrow" style={{backgroundColor: "#d7aaff", borderTopLeftRadius: "5px", borderBottomLeftRadius: "5px"}} onClick={() => decrement()}></i>
+            <div id="playerCount">{playerCount}</div>
+            <i className="fas fa-long-arrow-alt-right" id="arrow" style={{backgroundColor: "#d7aaff", borderTopRightRadius: "5px", borderBottomRightRadius: "5px"}} onClick={() => increment()}></i>
+            </div>
         </div>
     </div>
+
     </div>
   );
 }

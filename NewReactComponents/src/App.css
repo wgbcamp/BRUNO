@@ -11,6 +11,7 @@ body{
     height: 100%;
     overflow-y: hidden;
     background-color: #FCFDFF;
+    opacity: 0;
 }
 
 
@@ -89,7 +90,7 @@ i {
     height: 100vh;
   
     position: relative;
-    top: 70px;
+    top: 50px;
     padding-left: 30px;
     padding-right: 30px;
     opacity: 0;
@@ -148,7 +149,7 @@ i {
 #mainGrid{
     z-index: 1;
     position: absolute;
-    top: 100px;
+    top: 70px;
     height: 100vh;
     width: 100vw;
     background-color: white;
@@ -209,19 +210,29 @@ i {
     color: rgb(56, 56, 56);
 }
 
+#sessionPopupContainer{
+    z-index: -1;
+    height: 100vh;
+    width: 100vw;
+    position:absolute;
+    top: 0px;
+
+}
+
 #sessionPopup{
     position: absolute;
     z-index: -1;
     top: 50%;
     left: 50%;
-    height: 30%;
+    height: 50%;
     width: 75%;
+    opacity: 0;
     background-color: #c079ff;
     border-radius: 9px;
     transform: translate(-50%, -50%);
     display: grid;
     grid-template-columns: 20px 1fr 20px;
-    grid-template-rows: repeat(6, 1fr);
+    grid-template-rows: repeat(8, 1fr);
 }
 
 #codeText{
@@ -240,14 +251,50 @@ i {
     justify-content: center;
     align-items: center;
     grid-column: 2;
-    grid-row: 4;
+    grid-row: 3;
     color: white;
     background-color: #d09aff;
     font-size: 32px;
-    border-radius: 5px;
-  
-    
+    border-radius: 5px;   
 }
+
+#playerCountText{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    grid-column: 2;
+    grid-row: 5;
+    color: white;
+    font-size: 25px;
+}
+
+#playerCountContainer{
+    color: white;
+    background-color: #d09aff;
+    grid-column: 2;
+    grid-row: 6;
+    display: grid;
+    grid-template-columns: 70px 1fr 70px;
+    grid-template-rows: 1fr;
+    color: white;
+    font-size: 32px;
+    border-radius: 5px;
+}
+
+#playerCount{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#arrow{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
 @media only screen and (min-width: 700px){
     
 }

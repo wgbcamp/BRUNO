@@ -1,24 +1,25 @@
 export const changeToWhite = e => e.target.style.color = '#8f8f8f';
 export const changeToBlack = e => e.target.style.color = 'black';
 
-// var x;
-// var y;
-// x = getComputedStyle(e.target).getPropertyValue("background-color").toString();
-// y = getComputedStyle(e.target).getPropertyValue("color").toString();
-
 export const btnClrShift = e => {
     e.target.animate([{ backgroundColor: '#b3b3b3' }], {duration: 200, fill: 'forwards'});
     e.target.animate([{ color: 'white'}], {duration: 0, fill: 'forwards'});
 }
 
 export const originalColor = e => {
-    e.target.animate([ {backgroundColor: '#c079ff' }], {duration: 200, fill: 'forwards' });
-    e.target.animate([{ color: 'black' }], {duration: 200, fill: 'forwards'});
+    if(localStorage.getItem('darkMode') == 'enabled'){
+        e.target.animate([ {backgroundColor: '#5eff99' }], {duration: 200, fill: 'forwards' });
+        e.target.animate([{ color: 'black' }], {duration: 200, fill: 'forwards'});
+    }else{
+        e.target.animate([ {backgroundColor: '#c079ff' }], {duration: 200, fill: 'forwards' });
+        e.target.animate([{ color: 'black' }], {duration: 200, fill: 'forwards'});
+    }   
 }
 
 export const darkMode = (type) => {
+    console.log("I RAN!")
+    console.log(type)
     var c = [];
-    console.log(type);
     switch(localStorage.getItem('darkMode')){
         case 'enabled':
             c[1] = '#fdf906';
@@ -30,6 +31,7 @@ export const darkMode = (type) => {
             c[7] = 'disabled';
             break;
         case 'disabled':
+            console.log("I GOT IT")
             c[1] = '#d549eb';
             c[2] = '#5eff99';
             c[3] = '#3d298a';
@@ -60,6 +62,7 @@ export const darkMode = (type) => {
         
             document.getElementById('darkMode').innerHTML = c[6];
             localStorage.setItem('darkMode', c[7]);
+            document.body.style.opacity = 1;
             break;
         default:
             document.getElementById('headerBar').animate([{backgroundColor: c[1]}], {duration: 200, fill: 'forwards'});
