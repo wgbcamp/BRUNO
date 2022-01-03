@@ -1,4 +1,4 @@
-import './App.css';
+
 import React, { useState, useEffect } from 'react';
 import * as ani from './animations/animateDropdown';
 import * as cC from './animations/colorChange';
@@ -23,14 +23,7 @@ function App() {
         detectDarkMode();
 
     })
-    
-    // function resizeContent(){
-    //     console.log('innerWidth: ' + window.innerWidth + 'innerHeight: ' + window.innerHeight)
-    // }
-    // window.addEventListener('resize', resizeContent);
 
-
-    const [value, setValue] = useState("");
     const [playerCount, setPlayers] = useState(2);
 
     function increment(){
@@ -45,15 +38,9 @@ function App() {
         }
     }
 
-    function generateGameCode(){
-        var result = Math.random().toString(36).substring(2,7);
-        console.log(result);
-        setValue(result);
-    }
-
     function submitCode(){
         
-        API.createSession(value, playerCount);
+        API.createSession(playerCount);
     }
 
   return (
@@ -124,7 +111,7 @@ function App() {
                 A recreation of the classic crazy eights card game.
             </div>
         </div>
-        <div id="createSession" className="mainButton btnClr" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor} onClick={e => {aP.animatePopup(e); generateGameCode();}}>
+        <div id="createSession" className="mainButton btnClr" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor} onClick={e => {aP.animatePopup(e);}}>
             Create Session
         </div>
         <div id="publicSession" className="mainButton btnClr" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor}>
@@ -136,12 +123,6 @@ function App() {
     </div>
     <div id="sessionPopupContainer" onClick={aP.deanimatePopup}>
         <div id="sessionPopup">
-            <div id="codeText">
-                Your session code is:
-            </div>
-            <div id="code">
-                {value}
-            </div>
             <div id="playerCountText">
                 How many players?
             </div>

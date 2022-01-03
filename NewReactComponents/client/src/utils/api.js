@@ -2,10 +2,9 @@ import axios from "axios";
 
 export default{
 
-    createSession: function (value, playerCount){
-        console.log(value);
+    createSession: function (playerCount){
         console.log(playerCount);
-        axios.post("http://localhost:3001/api/create", { code: value, playerCount: playerCount })
+        axios.post("http://localhost:3001/api/create", { playerCount: playerCount })
         .then(res => {
             console.log(res);
         });
