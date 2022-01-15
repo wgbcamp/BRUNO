@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import * as ani from '../animations/animateDropdown';
 import * as cC from '../animations/colorChange';
-import * as aP from '../animations/animatePopup';
-import API from "../utils/api";
-import axios from "axios";
+
+
+
 
 function DoesNotExist() {
 
@@ -94,7 +94,7 @@ return (
               Uh oh! It looks like you've ventured into uncharted terroritory. This address doesn't exist, but you can click the button below to go to the home page.
           </div>
       </div>
-      <div id="createSession" className="mainButton btnClr" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor} onClick={e => {aP.animatePopup(e);}}>
+      <div id="createSession" className="mainButton btnClr" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor}>
           Return to home page
       </div>
   </div>

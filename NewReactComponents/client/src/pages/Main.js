@@ -1,10 +1,8 @@
-
+import "../stylesheets/main.css";
 import React, { useState, useEffect } from 'react';
-import * as ani from './animations/animateDropdown';
-import * as cC from './animations/colorChange';
-import * as aP from './animations/animatePopup';
-import API from "./utils/api";
-import axios from "axios";
+import * as ani from '../animations/animateDropdown';
+import * as cC from '../animations/colorChange';
+import API from "../utilities/api";
 
 function App() {
 
@@ -25,6 +23,23 @@ function App() {
     })
 
     const [playerCount, setPlayers] = useState(2);
+    const [showPopup, switchPopup] = useState("false");
+
+    const changeStyle = () => {
+        switchPopup(!showPopup);
+    }
+
+    const [helpStatus, toggleHelp] = useState(false);
+    const [settingsStatus, toggleStatus] = useState(false);
+
+    const helpDropdown = () => {
+        toggleStatus(false);
+        toggleHelp(!helpStatus);  
+    }
+    const settingsDropdown = () => {
+        toggleHelp(false);
+        toggleStatus(!settingsStatus);
+    }
 
     function increment(){
         if (playerCount !== 8){
@@ -44,22 +59,21 @@ function App() {
     }
 
   return (
-    <div id="container">
-      <div id="headerBar" className="headerBar">
-        <div id="siteLogo">
-          <div id="placeholderLogo">
+    <div id="container" className="container">
+      <div id="headerBar" className={showPopup ? "headerBar1" : "headerBar2"}>
+        <div id="siteLogo" className="siteLogo">
+          <div id="placeholderLogo" className="placeholderLogo">
                   BRUNO
-                  
           </div>
         </div>
-        <div id="help" onClick={ani.animateDropdown} onMouseOut={cC.changeToBlack} style={{color: 'black'}}>Help </div>
+        <div id="help" className="help" onClick={helpDropdown} onMouseOut={cC.changeToBlack} style={{color: 'black'}}>Help </div>
 
-        <div id="settings" onClick={ani.animateDropdown} onMouseOut={cC.changeToBlack} style={{color: 'black'}}>Settings</div>
+        <div id="settings" className="settings" onClick={settingsDropdown} onMouseOut={cC.changeToBlack} style={{color: 'black'}}>Settings</div>
 
-        <div id="source"><a href="https://github.com/wgbcamp/BRUNO"><i className="fab fa-github" onMouseOut={cC.changeToBlack} style={{color: 'black'}}> </i></a>
+        <div id="source" className="source"><a href="https://github.com/wgbcamp/BRUNO"><i className="fab fa-github" onMouseOut={cC.changeToBlack} style={{color: 'black'}}> </i></a>
         </div>
       </div>
-      <div id="dropdownHelp">
+      <div id="dropdownHelp" className={helpStatus ? "dropdownHelp2" : "dropdownHelp1"}>
             <p>The key to winning a game of <u><b>BRUNO</b></u>, is by being the first player to play all of the cards in your hand each round.</p>
 
                             <p>The <u>first player</u> with no cards left in hand is awarded <u>points</u> based on the cards that are still left in each of their opponents' hands.</p>
@@ -90,48 +104,48 @@ function App() {
                                 Wild/Wild Draw 4 = 20 points
                             </p>
         </div>
-        <div id="dropdownSettings">
-            <div id="settingsChoices">
-                <div id="volume" className="ddButton btnClr">
+        <div id="dropdownSettings" className={settingsStatus ? "dropdownSettings2" : "dropdownSettings1"}>
+            <div id="settingsChoices" className="settingsChoices">
+                <div id="volume" className="volume">
                     Sounds: ON/OFF
                 </div>
-                <div id="textSize" className="ddButton btnClr">
+                <div id="textSize" className="textSize">
                     Change text size
                 </div>
-                <div id="darkMode" className="ddButton btnClr" onClick={cC.darkMode}>Enable Dark Mode</div>
-                <div id="leaveSession" className="ddButton btnClr">
+                <div id="darkMode" className="darkMode" onClick={cC.darkMode}>Enable Dark Mode</div>
+                <div id="leaveSession" className="leaveSession">
                     Leave Session
                 </div>
             </div>
         </div>
-    <div id="mainGrid">
-        <div id="title"> 
+    <div id="mainGrid" className={showPopup ? "mainGrid1" : "mainGrid2"}>
+        <div id="title" className="title"> 
             BRUNO
-            <div id="subtitle">
+            <div id="subtitle" className="subtitle">
                 A recreation of the classic crazy eights card game.
             </div>
         </div>
-        <div id="createSession" className="mainButton btnClr" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor} onClick={e => {aP.animatePopup(e);}}>
+        <div id="createSession" className="createSession" onClick={changeStyle}>
             Create Session
         </div>
-        <div id="publicSession" className="mainButton btnClr" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor}>
+        <div id="publicSession" className="publicSession" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor}>
             Browse Public Games
         </div>
-        <div id="searchForSession" className="mainButton btnClr" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor}>
+        <div id="searchForSession" className="searchForSession" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor}>
             Search for Private Game
         </div>
     </div>
-    <div id="sessionPopupContainer" onClick={aP.deanimatePopup}>
-        <div id="sessionPopup">
-            <div id="playerCountText">
+    <div id="sessionPopupContainer" className={showPopup ? "sessionPopupContainer1" : "sessionPopupContainer2"} onClick={changeStyle}>
+        <div id="sessionPopup" className={showPopup ? "sessionPopup1" : "sessionPopup2"} onClick={(e) => e.stopPropagation()}>
+            <div id="playerCountText" className="playerCountText">
                 How many players?
             </div>
-            <div id="playerCountContainer">
-            <i className="fas fa-long-arrow-alt-left" id="arrow" style={{backgroundColor: "#d7aaff", borderTopLeftRadius: "5px", borderBottomLeftRadius: "5px"}} onClick={() => decrement()}></i>
-            <div id="playerCount">{playerCount}</div>
-            <i className="fas fa-long-arrow-alt-right" id="arrow" style={{backgroundColor: "#d7aaff", borderTopRightRadius: "5px", borderBottomRightRadius: "5px"}} onClick={() => increment()}></i>
+            <div id="playerCountContainer" className="playerCountContainer">
+            <div id="arrow" className="arrowLeft" onClick={() => decrement()}><i className="fas fa-long-arrow-alt-left"></i></div>
+            <div id="playerCount" className="playerCount">{playerCount}</div>
+            <div id="arrow" className="arrowRight" onClick={() => increment()}><i className="fas fa-long-arrow-alt-right"></i></div>
             </div>
-            <div id="confirm" onClick={submitCode}>
+            <div id="confirm" className="confirm" onClick={submitCode}>
                 Submit
             </div>
         </div>

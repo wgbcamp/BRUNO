@@ -44,10 +44,10 @@ export const darkMode = (type) => {
         case 'pageLoad':
             document.getElementById('headerBar').style.backgroundColor = c[1];
 
-            var x = document.querySelectorAll('.btnClr');
-            for (var i=0; i<x.length; i++){
-                x[i].style.backgroundColor = c[2];
-            }
+            // var x = document.querySelectorAll(`.${styles.btnClr}`);
+            // for (var i=0; i<x.length; i++){
+            //     x[i].style.backgroundColor = c[2];
+            // }
         
             document.body.style.backgroundColor = c[3];
             document.getElementById('mainGrid').style.backgroundColor = c[3];
