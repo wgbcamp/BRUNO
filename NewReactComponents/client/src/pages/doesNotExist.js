@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as ani from '../animations/animateDropdown';
-import * as cC from '../animations/colorChange';
+
 
 
 
@@ -9,17 +9,17 @@ function DoesNotExist() {
 
   React.useEffect(() => {
       
-  function detectDarkMode(){
-          let matched = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          if(matched){
-              localStorage.setItem('darkMode', 'disabled');
-              cC.darkMode("pageLoad");
-          }else{
-              localStorage.setItem('darkMode', 'enabled');
-              cC.darkMode("pageLoad");
-          }   
-      }
-      detectDarkMode();
+//   function detectDarkMode(){
+//           let matched = window.matchMedia('(prefers-color-scheme: dark)').matches;
+//           if(matched){
+//               localStorage.setItem('darkMode', 'disabled');
+//               cC.darkMode("pageLoad");
+//           }else{
+//               localStorage.setItem('darkMode', 'enabled');
+//               cC.darkMode("pageLoad");
+//           }   
+//       }
+//       detectDarkMode();
   })
 
 
@@ -35,11 +35,11 @@ return (
                 
         </div>
       </div>
-      <div id="help" onClick={ani.animateDropdown} onMouseOut={cC.changeToBlack} style={{color: 'black'}}>Help </div>
+      <div id="help" onClick={ani.animateDropdown}  style={{color: 'black'}}>Help </div>
 
-      <div id="settings" onClick={ani.animateDropdown} onMouseOut={cC.changeToBlack} style={{color: 'black'}}>Settings</div>
+      <div id="settings" onClick={ani.animateDropdown}  style={{color: 'black'}}>Settings</div>
 
-      <div id="source"><a href="https://github.com/wgbcamp/BRUNO"><i className="fab fa-github" onMouseOut={cC.changeToBlack} style={{color: 'black'}}> </i></a>
+      <div id="source"><a href="https://github.com/wgbcamp/BRUNO"><i className="fab fa-github"  style={{color: 'black'}}> </i></a>
       </div>
     </div>
     <div id="dropdownHelp">
@@ -81,7 +81,7 @@ return (
               <div id="textSize" className="ddButton btnClr">
                   Change text size
               </div>
-              <div id="darkMode" className="ddButton btnClr" onClick={cC.darkMode}>Enable Dark Mode</div>
+              <div id="darkMode" className="ddButton btnClr" >Enable Dark Mode</div>
               <div id="leaveSession" className="ddButton btnClr">
                   Leave Session
               </div>
@@ -94,7 +94,7 @@ return (
               Uh oh! It looks like you've ventured into uncharted terroritory. This address doesn't exist, but you can click the button below to go to the home page.
           </div>
       </div>
-      <div id="createSession" className="mainButton btnClr" onMouseOver={cC.btnClrShift} onMouseOut={cC.originalColor}>
+      <div id="createSession" className="mainButton btnClr">
           Return to home page
       </div>
   </div>

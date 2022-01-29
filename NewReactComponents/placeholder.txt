@@ -1,0 +1,15 @@
+
+<div id="dropdownSettings" className={settingsStatus ? "dropdownSettings2" : "dropdownSettings1"} style={{backgroundColor: darkMode ? "#3d298a" : "white"}}>
+    <div id="settingsChoices" className="settingsChoices">
+        <div id="volume" className="volume">
+            Sounds: ON/OFF
+        </div>
+        <div id="textSize" className="textSize">
+            Change text size
+        </div>
+        <div id="darkMode" className="darkMode" onClick={changeDarkMode}>{dModeHTML}</div>
+        <div id="leaveSession" className="leaveSession">
+            Leave Session
+        </div>
+    </div>
+</div>
