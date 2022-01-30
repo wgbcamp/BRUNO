@@ -5,7 +5,7 @@ function HeaderBar(props){
 
     const [helpStatus, toggleHelp] = useState(false);
     const [settingsStatus, toggleStatus] = useState(false);
-    const [blurStatus, toggleBlur] = useState(false);
+
 
     const helpDropdown = () => {
         if(settingsStatus == true){
@@ -13,7 +13,7 @@ function HeaderBar(props){
             toggleHelp(!helpStatus);
         }else{
             toggleHelp(!helpStatus);
-            blurMainGrid();
+            props.blurFunction(true); 
         } 
 
     }
@@ -23,18 +23,21 @@ function HeaderBar(props){
             toggleStatus(!settingsStatus);
         }else{
             toggleStatus(!settingsStatus);
-            blurMainGrid();
+            props.blurFunction(true); 
         }       
     }
 
-    const blurMainGrid = () => {
-        toggleBlur(!blurStatus);
-        if(blurStatus == false){
-            props.blurFunction(true);
+    const overrideDarkMode = () => {
+        
+        if(props.darkMode == true){
+            localStorage.setItem('userSetDarkMode', 'light');
         }else{
-            props.blurFunction(false);
-        }     
+            localStorage.setItem('userSetDarkMode', 'dark');
+        }
+        
     }
+
+    const dModeHTML = props.darkMode ? "Disable Dark Mode" : "Enable Dark Mode";
 
     const headerBarStyle = {
         backgroundColor: props.darkMode ? "#d549eb" : "#fdf906",
@@ -93,7 +96,7 @@ function HeaderBar(props){
                 <div className={settingsStatus ? "dropdownSettings2" : "dropdownSettings1"}>
                     <div className="volume" style={{backgroundColor: props.darkMode ? "#c079ff" : "#3d298a"}}>Sounds: ON/OFF</div>
                     <div className="textSize" style={{backgroundColor: props.darkMode ? "#c079ff" : "#3d298a"}}>Change text size</div>
-                    <div className="darkMode" style={{backgroundColor: props.darkMode ? "#c079ff" : "#3d298a"}}>placeholder for dark mode</div>
+                    <div className="darkMode" style={{backgroundColor: props.darkMode ? "#c079ff" : "#3d298a"}} onClick={() => {props.swDarkMode3(true); overrideDarkMode();}}>{dModeHTML}</div>
                     <div className="leaveSession" style={{backgroundColor: props.darkMode ? "#c079ff" : "#3d298a"}}>Leave Session</div>
                 </div>
             </div>
