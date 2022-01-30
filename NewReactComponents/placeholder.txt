@@ -13,3 +13,28 @@
         </div>
     </div>
 </div>
+
+COLOR PALETTE FOR DARK MODE TRUE
+
+header bar: #d549eb
+option button/background: #c079ff
+submit button: #4cdd81
+increment/decrement buttons: #d7aaff
+text field: #d09aff
+major text: white
+minor text: black
+subtitle: #ededed
+background: #3d298a
+
+COLOR PALETTE FOR DARK MODE FALSE
+
+header bar: #fdf906
+option button/background: #3d298a
+submit button: #4cdd81
+increment/decrement buttons: #706bff
+text field: #5c57e6
+major text: black
+minor text: white
+subtitle:
+background: white
+

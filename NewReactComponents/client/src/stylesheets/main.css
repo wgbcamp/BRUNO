@@ -21,6 +21,14 @@ body{
 
 }
 
+.container1{
+    background-color: #2b1d61;
+}
+
+.container2{
+    background-color: #b3b3b3;
+}
+
 .root{ 
     height: 100vh;
 }
@@ -72,40 +80,13 @@ i {
     grid-template-rows: repeat(10, 1fr);
     grid-template-columns: repeat(7, 1fr);
     row-gap: 5px;
-    filter: brightness(25%);
+
 }
 
 .siteLogo{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-column: 1;
-}
-
-.placeholderLogo{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    grid-column: 2;
-    color: black;
-    font-size: 25px;
-}
-
-
-
-.help{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    grid-column: 3;
-    cursor: pointer;
-}
-
-.settings{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    grid-column: 4;
-    cursor: pointer;
 }
 
 .source{
@@ -127,7 +108,6 @@ i {
 
 .createSession{
     font-size: 19px;
-    background-color: #c079ff;
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -140,7 +120,6 @@ i {
 
 .publicSession{
     font-size: 19px;
-    background-color: #c079ff;
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -153,7 +132,6 @@ i {
 
 .searchForSession{
     font-size: 19px;
-    background-color: #c079ff;
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -165,7 +143,7 @@ i {
 }
 
 .sessionPopupContainer1{
-    z-index: -1;
+    z-index: 5;
     height: 100vh;
     width: 100vw;
     position:absolute;
@@ -173,7 +151,7 @@ i {
 }
 
 .sessionPopupContainer2{
-    z-index: 5;
+    z-index: -1;
     height: 100vh;
     width: 100vw;
     position:absolute;
@@ -182,13 +160,12 @@ i {
 
 .sessionPopup1{
     position: absolute;
-    z-index: -1;
+    z-index: 6;
     top: 50%;
     left: 50%;
     height: 250px;
     width: 350px;
-    opacity: 0;
-    background-color: #c079ff;
+    opacity: 1;
     border-radius: 9px;
     transform: translate(-50%, -50%);
     display: grid;
@@ -198,13 +175,12 @@ i {
 
 .sessionPopup2{
     position: absolute;
-    z-index: 6;
+    z-index: -1;
     top: 50%;
     left: 50%;
     height: 250px;
     width: 350px;
-    opacity: 1;
-    background-color: #c079ff;
+    opacity: 0;
     border-radius: 9px;
     transform: translate(-50%, -50%);
     display: grid;
@@ -224,7 +200,6 @@ i {
 
 .playerCountContainer{
     color: white;
-    background-color: #d09aff;
     grid-column: 2;
     grid-row: 3;
     display: grid;
@@ -245,7 +220,6 @@ i {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #d7aaff;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
 }
@@ -254,7 +228,6 @@ i {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #d7aaff;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
@@ -267,8 +240,6 @@ i {
     grid-row: 5;
     font-size: 32px;
     border-radius: 5px;
-    color: white;
-    background-color: #4cdd81;
 }
 
 .showPopup{
@@ -276,22 +247,14 @@ i {
     opacity: 1;
 }
 
-.dim{
-    filter:brightness(25%);
-}
-
 .blur{
-    filter: blur(4px);
+    filter: blur(5px) brightness(70%);
+    transition: filter 200ms;
 }
 
 .no-blur{
- 
+    transition: filter 200ms;
 }
-
-.hidePopup{
-
-}
-
 
 @media only screen and (min-width: 700px){
     

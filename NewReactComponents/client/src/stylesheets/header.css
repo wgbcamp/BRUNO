@@ -8,9 +8,10 @@
     height: 70px;
     top: 0px;
     font-size: 22px;
-    color: white;
     text-decoration: none;
     cursor: default;
+    filter: blur(5px) brightness(70%);
+    transition: filter 200ms;
 }
 
 .headerBar2{
@@ -23,14 +24,37 @@
     height: 70px;
     top: 0px;
     font-size: 22px;
-    color: white;
     text-decoration: none;
     cursor: default;
-    filter: brightness(25%);
+    transition: filter 200ms;
 }
 
+.placeholderLogo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    grid-column: 2;
+    font-size: 25px;
+}
+
+.help{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    grid-column: 3;
+    cursor: pointer;
+}
+
+.settings{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    grid-column: 4;
+    cursor: pointer;
+}
+
+
 .dropdownHelp1{
-    z-index: 0;
     font-size: 20px;
     padding-left: 30px;
     padding-right: 30px;
@@ -73,7 +97,6 @@
 }
 
 .dropdownSettings1{
-    z-index: 0;
     font-size: 20px;
     width: 100%;
     height: 100%;
