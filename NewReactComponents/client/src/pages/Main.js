@@ -1,6 +1,5 @@
 import "../stylesheets/main.css";
 import React, { useState, useEffect } from 'react';
-import * as ani from '../animations/animateDropdown';
 import API from "../utilities/api";
 import Help from "../subComponents/help";
 import HeaderBar from "../subComponents/headerBar";
