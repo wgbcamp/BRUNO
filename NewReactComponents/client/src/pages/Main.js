@@ -1,8 +1,8 @@
 import "../stylesheets/main.css";
 import React, { useState, useEffect } from 'react';
 import API from "../utilities/api";
-import Help from "../subComponents/help";
 import HeaderBar from "../subComponents/headerBar";
+import { Link } from "react-router-dom";
 
 function App() {
 
@@ -68,7 +68,8 @@ function App() {
 
     const submitStyle = {
         backgroundColor: darkMode ? "#4cdd81" : "#4cdd81",
-        color: darkMode ? "white" : "white"
+        color: darkMode ? "white" : "white",
+        textDecoration: 'none'
     }
 
   return (
@@ -101,9 +102,9 @@ function App() {
             <div id="playerCount" className="playerCount" style={{backgroundColor: darkMode ? "#d09aff" : "#5c57e6"}}>{playerCount}</div>
             <div id="arrow" className="arrowRight" style={{backgroundColor: darkMode ? "#d7aaff" : "#706bff"}} onClick={() => increment()}><i className="fas fa-long-arrow-alt-right"></i></div>
             </div>
-            <div id="confirm" className="confirm" style={submitStyle} onClick={submitCode}>
-                Submit
-            </div>
+            <Link to="/InGame" className="confirm" style={submitStyle} onClick={submitCode}>
+            Submit
+            </Link>
         </div>
     </div>
 
