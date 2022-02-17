@@ -1,54 +1,21 @@
 import "../stylesheets/main.css";
 import "../stylesheets/inGame.css";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import API from "../utilities/api";
 import HeaderBar from "../subComponents/headerBar";
-import { Link } from "react-router-dom";
+//write a function that checks existence of preliminary code, if it doesn't exist, window assign to does not exist 
 
-function InGame() {
+function InGame(props) {
 
-    React.useEffect(() => {
-        
-        function detectDarkMode(){
-            if(localStorage.getItem('userSetDarkMode') == undefined){
-                let matched = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                if(matched){
-                    swDarkMode1(true);
-                }else{
-                    swDarkMode1(false);
-                }
-            }
-            if(localStorage.getItem('userSetDarkMode') === 'dark'){
-                swDarkMode1(true);                
-            } 
-        }
-        detectDarkMode();
-    })
-
-    const [playerCount, setPlayers] = useState(2);
-    const [showPopup, switchPopup] = useState(false);
-    const [showBlur, switchBlur] = useState(false);
-
-    const blur = (data) => {  
-        if(data == true){
-            switchBlur(!showBlur);
-        }
+    props.ws.onopen = () => {
+        //if cookie doesn't exist, then send a message to server to log the user, then saves a cookie that only allows the logged-in user to play as a specific player
+        console.log("HIHIHI")
+        props.ws.send("test");
     }
+function StartGame(){
+        props.ws.send("test");
 
-    //dark mode switch
-    const [darkMode, swDarkMode1] = useState(false);
-
-    const swDarkMode2 = (data) => {
-        if(data == true){
-            swDarkMode1(!darkMode);
-
-        }
-    }
-
-    function submitCode(){
-        
-        API.createSession(playerCount);
-    }
+}
 
     const [yourHand, updateYourHand] = useState(["greenCard4", "yellowCard5", "blueCardReverse", "wildCardDraw4", "redCardSkip"]);
     const [yourScore, updateYourScore] = useState(0);
@@ -59,24 +26,26 @@ function InGame() {
     ]
     
   return (
-    <div id="container" className={darkMode ? "container1" : "container2"}>  
-    <HeaderBar swDarkMode3={swDarkMode2} darkMode={darkMode} showPopup={showPopup} blurFunction={blur}/>   
-        <div id="mainGrid" className={`${"igGrid"} ${showBlur ? "blur" : "no-blur"}`} style={{backgroundColor: darkMode ? "#3d298a" : "white"}}>
+    <div>  
+        <div id="mainGrid" className={`${"igGrid"} ${props.showBlur ? "blur" : "no-blur"}`} style={{backgroundColor: props.darkMode ? "#3d298a" : "white"}}>
 
+        <div className="gameCode" style={{color: 'white'}}>{props.gameCode}</div>
+        <div className="startButton" onClick={() => StartGame()} style={{color: 'white', backgroundColor: 'green'}}>START BUTTON</div>
+        <div className="playerStats" >PLAYER STATS</div>
                 {otherPlayerStats.map(({ player, name, score, hand }) => ( 
-                    <p className={player} style={{color: darkMode ? "white" : "black"}} key={[player]}>
+                    <div className={player} style={{color: props.darkMode ? "white" : "black"}} key={[player]}>
                         <div> {player}</div>
                         <div>Name: {name}</div>
                         <div>Score: {score}</div>
                         <div>Hand: {hand}</div>
-                    </p>     
+                    </div>     
                 ))}
                 <div className="playerHandContainer">
                     <div className="placeholderArrowLeft">Left</div>
                     <div className="placeholderArrowRight">Right</div>
                     <div className="playerHand">
                         {yourHand.map((x) => (
-                            <div className={`${"card1"} ${yourHand[yourHand.indexOf(x)].slice(0, yourHand[yourHand.indexOf(x)].search("Card"))}`}>{x}</div>    
+                            <div className={`${"cardAlign"} ${yourHand[yourHand.indexOf(x)].slice(0, yourHand[yourHand.indexOf(x)].search("Card"))}`} key={x}>{x}</div>    
                         ))}
                     </div>
                 </div>

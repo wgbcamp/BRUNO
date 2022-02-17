@@ -38,3 +38,13 @@ minor text: white
 subtitle:
 background: white
 
+
+        const ws = new WebSocket('ws://localhost:8080');
+        ws.onopen = () => {
+            console.log("websocket connected");
+        }
+        ws.onmessage = (e) => {
+        }
+        ws.onclose = () => {
+            console.log('websocket disconnected')
+        }

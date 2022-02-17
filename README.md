@@ -4,7 +4,8 @@ Recreation of a popular card game!
 
 BRUNO is a game that will allow users to play a recreation of a round-based multiplayer card game that involves playing matching cards in one's hand until none are left and collecting points based on the remaining cards in the competing players' hands.
 
-![Project image](NewReactComponents/public/brunoPreview.png)
+![Project image](Assets/main menu.png)
+![Project image](Assets/options.png)
 
 ## Technologies used
 
@@ -14,8 +15,7 @@ BRUNO is a full-stack application utilizing a component-based UI framework to al
 * Express.js
 * React.js
 * Node.js
-* Socket.IO
-* Inquirer.js
-* NPM
+* Three.js
+* HTML/CSS/JS
 
  

@@ -1,21 +1,23 @@
 import React from 'react';
-import { render } from 'react-dom';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Main from './pages/Main';
-import DoesNotExist from './pages/doesNotExist';
-import InGame from './pages/inGame';
+import  ReactDOM  from 'react-dom';
+import App from './app';
+const ws = new WebSocket('ws://localhost:8080');
 
+ws.onopen = () => {
+    console.log("websocket connected");
+    
+}
+ws.onmessage = (e) => {
+    if(sessionStorage.getItem('gameCode')){
+        ws.send("test");
+    }
+}
 
-const rootElement = document.getElementById("root");
-render(
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<Main />} />
-      <Route path="*" element={<DoesNotExist />} />
-      <Route path="/inGame" element={<InGame />} />
-    </Routes>
-  </BrowserRouter>,
-  rootElement
+ws.onclose = () => {
+    console.log('websocket disconnected')
+}
+
+ReactDOM.render(<App ws={ws}/>,  document.getElementById("root")
 );
 
 

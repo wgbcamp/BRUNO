@@ -22,6 +22,10 @@ http.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
 });
 
+//websocket operations
+var wsUtil = require('./webSockets');
+wsUtil.engageWebSockets();
+
 //start mongodb server
 var mongoUtil = require('./mongoUtil');
 mongoUtil.connectServer();

@@ -6,8 +6,8 @@ const collection = database.collection('test');
 async function insertOneFN(data){
 
     const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let randomString = ' ';
-    let gameCode = ' ';
+    let randomString = '';
+    let gameCode = '';
 
     for ( let i = 0; i < characters.length; i++ ) {
             randomString += characters.charAt(Math.floor(Math.random() * characters.length));
@@ -17,7 +17,7 @@ async function insertOneFN(data){
             gameCode += characters.charAt(Math.floor(Math.random() * characters.length));
     }
     
-    const doc = { code: gameCode, playerCount: data.playerCount, _id: randomString };
+    const doc = { code: gameCode, playerCount: data.playerCount, _id: randomString, preliminaryCode: data.preliminaryCode };
     const result = await collection.insertOne(doc);
     if(result !== "undefined"){
         console.log(`Document inserted: ${JSON.stringify(result)}`);
@@ -25,7 +25,21 @@ async function insertOneFN(data){
     
 }
 
-module.exports = { insertOneFN }
+async function readDB(data, cb){
+    var query = "";
+    if(data.fetchCode){
+        console.log(data)
+        query = { code: data.code };
+    }
+    if(data.fetchPrelim){
+        query = { preliminaryCode: data.preliminaryCode};
+    }
+    const result = await collection.findOne(query);
+    console.log(`Document found: ${JSON.stringify(result)}`);
+    cb(JSON.stringify(result.code));
+}
+
+module.exports = { insertOneFN, readDB }
 
 /*
 need error checking on playercount manipulation and same code/string already existing in database

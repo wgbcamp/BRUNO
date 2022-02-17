@@ -26,31 +26,7 @@
     grid-template-columns: repeat(5, 1fr);
 
 }
-.card1{
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.card2{
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.card3{
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.card4{
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.card5{
+.cardAlign{
 
     display: flex;
     align-items: center;
@@ -105,4 +81,19 @@
 .player4{
     grid-row: 7;
     grid-column: 1/10;
+}
+
+.gameCode{
+    grid-row: 1;
+    grid-column: 5/10;
+}
+
+.startButton{
+    grid-row: 10;
+    grid-column: 5/7;
+}
+
+.playerStats{
+    grid-row: 2;
+    grid-column: 8/10
 }

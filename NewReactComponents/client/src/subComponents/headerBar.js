@@ -1,5 +1,5 @@
 import "../stylesheets/header.css";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 function HeaderBar(props){
 
@@ -8,28 +8,28 @@ function HeaderBar(props){
 
 
     const helpDropdown = () => {
-        if(settingsStatus == true){
+        if(settingsStatus === true){
             toggleStatus(false);
             toggleHelp(!helpStatus);
         }else{
             toggleHelp(!helpStatus);
-            props.blurFunction(true); 
+            props.switchBlur(!props.showBlur); 
         } 
 
     }
     const settingsDropdown = () => {
-        if(helpStatus == true){
+        if(helpStatus === true){
             toggleHelp(false);
             toggleStatus(!settingsStatus);
         }else{
             toggleStatus(!settingsStatus);
-            props.blurFunction(true); 
+            props.switchBlur(!props.showBlur); 
         }       
     }
 
     const overrideDarkMode = () => {
         
-        if(props.darkMode == true){
+        if(props.darkMode === true){
             localStorage.setItem('userSetDarkMode', 'light');
         }else{
             localStorage.setItem('userSetDarkMode', 'dark');
@@ -48,8 +48,7 @@ function HeaderBar(props){
         <div>
             <div id="headerBar" className={props.showPopup ? "headerBar1" : "headerBar2"} style={headerBarStyle}>
                 <div id="siteLogo" className="siteLogo">
-                    <div id="placeholderLogo" className="placeholderLogo">
-                    BRUNO
+                    <div id="placeholderLogo" className="placeholderLogo" ><a href="/" style={{textDecoration: 'none', color: props.darkMode ? "white": "black"}}>BRUNO</a>
                     </div>
                 </div>
                 <div id="help" className="help" onClick={() =>{helpDropdown();}}>Help </div>
@@ -96,7 +95,7 @@ function HeaderBar(props){
                 <div className={settingsStatus ? "dropdownSettings2" : "dropdownSettings1"}>
                     <div className="volume" style={{backgroundColor: props.darkMode ? "#c079ff" : "#3d298a"}}>Sounds: ON/OFF</div>
                     <div className="textSize" style={{backgroundColor: props.darkMode ? "#c079ff" : "#3d298a"}}>Change text size</div>
-                    <div className="darkMode" style={{backgroundColor: props.darkMode ? "#c079ff" : "#3d298a"}} onClick={() => {props.swDarkMode3(true); overrideDarkMode();}}>{dModeHTML}</div>
+                    <div className="darkMode" style={{backgroundColor: props.darkMode ? "#c079ff" : "#3d298a"}} onClick={() => {props.swDarkMode(!props.darkMode); overrideDarkMode();}}>{dModeHTML}</div>
                     <div className="leaveSession" style={{backgroundColor: props.darkMode ? "#c079ff" : "#3d298a"}}>Leave Session</div>
                 </div>
             </div>
