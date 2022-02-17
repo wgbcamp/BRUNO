@@ -4,7 +4,7 @@ Recreation of a popular card game!
 
 BRUNO is a game that will allow users to play a recreation of a round-based multiplayer card game that involves playing matching cards in one's hand until none are left and collecting points based on the remaining cards in the competing players' hands.
 
-<img src="Assets/combined.png">
+![Project image](Assets/combined.png)
 
 ## Technologies used
 
