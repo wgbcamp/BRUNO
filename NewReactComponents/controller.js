@@ -36,7 +36,12 @@ async function readDB(data, cb){
     }
     const result = await collection.findOne(query);
     console.log(`Document found: ${JSON.stringify(result)}`);
-    cb(JSON.stringify(result.code));
+
+    if(result === null){
+        cb("Document not found")
+    }else{
+        cb(JSON.stringify(result.code));
+    }  
 }
 
 module.exports = { insertOneFN, readDB }

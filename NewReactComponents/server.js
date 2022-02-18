@@ -11,6 +11,7 @@ const http = require('http').createServer(app);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.resolve(__dirname, './client/build')));
+
 app.use(cors());
 
 

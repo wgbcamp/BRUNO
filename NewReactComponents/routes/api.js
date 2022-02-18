@@ -13,7 +13,5 @@ router.route("/fetch").post(async function (req, res){
     function response(result){
         res.send(result);
     }
-
-
 })
 module.exports = {router}

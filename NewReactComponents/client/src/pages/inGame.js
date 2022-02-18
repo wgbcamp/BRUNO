@@ -3,7 +3,6 @@ import "../stylesheets/inGame.css";
 import React, { useState } from 'react';
 import API from "../utilities/api";
 import HeaderBar from "../subComponents/headerBar";
-//write a function that checks existence of preliminary code, if it doesn't exist, window assign to does not exist 
 
 function InGame(props) {
 

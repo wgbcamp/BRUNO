@@ -256,6 +256,14 @@ i {
     transition: filter 200ms;
 }
 
+.loadingIconContainer{
+    grid-row: 5;
+    grid-column: 4;
+    display: flex;
+    justify-content: center;
+    align-items: center;  
+}
+
 @media only screen and (min-width: 700px){
     
 }

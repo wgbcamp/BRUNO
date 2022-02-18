@@ -16,7 +16,7 @@ function createSession(playerCount, packagedCharacters, cb){
     });
 }
 
-function fetchGameCode(data){
+function fetchGameCode(data, cb){
     for(var i = data.length; i > -1; i--){
         if(data.charAt(i) === "/"){
             var g = data.slice(i+1, data.length);
@@ -27,6 +27,7 @@ function fetchGameCode(data){
     axios.post("http://localhost:3001/api/fetch" , { preliminaryCode: g, fetchPrelim: 1})
     .then(res => {
         console.log(res);
+        cb(res);
     });
 }
 
