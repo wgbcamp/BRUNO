@@ -1,4 +1,4 @@
-var mongoUtil = require('./mongoUtil');
+var mongoUtil = require('./database/mongoUtil');
 var database = mongoUtil.getDb();
 const collection = database.collection('test');
 

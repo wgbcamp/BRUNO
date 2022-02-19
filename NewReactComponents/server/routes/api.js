@@ -1,3 +1,4 @@
+const path = require("path");
 const router = require("express").Router();
 const controller = require("../controller");
 
@@ -14,4 +15,10 @@ router.route("/fetch").post(async function (req, res){
         res.send(result);
     }
 })
-module.exports = {router}
+
+router.use(function(req, res){
+    res.sendFile(path.join(__dirname, "../build/index.html"));
+});
+
+
+module.exports = router;
