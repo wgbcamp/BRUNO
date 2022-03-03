@@ -8,12 +8,18 @@ router.route("/create").post(function (req, res) {
     res.send();
 })
 router.route("/fetch").post(async function (req, res){
-
     var data = req.body;
     controller.readDB(data, response);
     function response(result){
         res.send(result);
     }
+})
+router.route("/postUser").post(function (req, res){
+    var data = req.body;
+    controller.updateDoc(data, response);
+    function response(result){
+        res.send(result);
+    }  
 })
 
 router.use(function(req, res){

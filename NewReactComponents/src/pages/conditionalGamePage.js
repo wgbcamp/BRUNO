@@ -6,8 +6,14 @@ import API from '../utilities/api';
 function ConditionalGamePage(props){
 
     const value = useState('initial');
-    
+
     useEffect(() => {
+        const userID =  Math.random().toString(36).substring(2,13)
+
+        if(localStorage.getItem("userID")){
+        }else{
+            localStorage.setItem("userID", userID);
+        }
         
         API.fetchGameCode(window.location.href, response);
         
@@ -17,16 +23,20 @@ function ConditionalGamePage(props){
                 if(res.data !== 'Document not found'){
                     props.updateCURLC(true);
                 }else{
-                    props.switchLoadingIcon(false);
+                    props.updateCURLC(false);
                 }      
             }         
         }
+
+        
+        
     }, [])
     
         return (
             <div>{props.conditionalURLCheck ? <InGame darkMode={props.darkMode} switchPopup={props.switchPopup} showPopup={props.showPopup} gameCode={props.gameCode} updateGameCode={props.updateGameCode} showBlur={props.showBlur} ws={props.ws}/> : 
-            props.loadingIcon ? <div id="mainGrid" className={`${"mainGrid1"} ${props.showBlur ? "blur" : "no-blur"}`} style={{backgroundColor: props.darkMode ? "#3d298a" : "white"}}>
-            <div className="loadingIconContainer"><div className="fa-10x"><i className="fas fa-spinner fa-spin"></i></div></div></div>: 
+            props.conditionalURLCheck === "" ? 
+            <div id="mainGrid" className={`${"mainGrid1"} ${props.showBlur ? "blur" : "no-blur"}`} style={{backgroundColor: props.darkMode ? "#3d298a" : "white"}}>
+            <div className="loadingIconContainer"><div className="fa-10x"><i className="fas fa-spinner fa-spin" style={{color: props.darkMode ? "white" : "black"}}></i></div></div></div> :
             <DoesNotExist darkMode={props.darkMode} switchPopup={props.switchPopup} showPopup={props.showPopup} gameCode={props.gameCode} updateGameCode={props.updateGameCode} showBlur={props.showBlur} ws={props.ws}/>}</div>
         )
 }

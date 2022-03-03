@@ -1,10 +1,21 @@
 import "../stylesheets/main.css";
 import "../stylesheets/inGame.css";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import API from "../utilities/api";
 import HeaderBar from "../subComponents/headerBar";
 
+
+
 function InGame(props) {
+
+    var credentials ={
+        name: localStorage.getItem("userID"),
+        session: window.location.href.slice(window.location.href.lastIndexOf("/") + 1, window.location.href.length)
+    }
+    useEffect(() => {
+        
+        
+    }, [])
 
     props.ws.onopen = () => {
         //if cookie doesn't exist, then send a message to server to log the user, then saves a cookie that only allows the logged-in user to play as a specific player
@@ -12,7 +23,9 @@ function InGame(props) {
         props.ws.send("test");
     }
 function StartGame(){
-        props.ws.send("test");
+        // props.ws.send("test");
+        console.log(credentials);
+        API.signIntoGame(credentials);
 
 }
 

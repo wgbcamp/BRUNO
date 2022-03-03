@@ -25,6 +25,18 @@ async function insertOneFN(data){
     
 }
 
+async function updateDoc(data, cb){
+    const filter = { code: data.session };
+    const updateDocument = {
+        $set: {
+            player1: data.name
+        },
+    };
+    const result = await collection.updateOne(filter, updateDocument);
+    console.dir(result.acknowledged);
+    
+}
+
 async function readDB(data, cb){
     var query = "";
     if(data.fetchCode){
@@ -44,7 +56,7 @@ async function readDB(data, cb){
     }  
 }
 
-module.exports = { insertOneFN, readDB }
+module.exports = { insertOneFN, readDB, updateDoc }
 
 /*
 need error checking on playercount manipulation and same code/string already existing in database

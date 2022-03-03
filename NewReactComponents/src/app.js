@@ -18,8 +18,8 @@ function App(props){
     const [gameCode, updateGameCode] = useState(sessionStorage.getItem('gameCode'));
     const [showBlur, switchBlur] = useState(false);
 
-    const [conditionalURLCheck, updateCURLC] = useState(false);
-    const [loadingIcon, switchLoadingIcon] = useState(true);
+    const [conditionalURLCheck, updateCURLC] = useState("");
+    const [loadingIcon, switchLoadingIcon] = useState(false);
 
 
 
@@ -33,7 +33,7 @@ function App(props){
         
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<Main darkMode={darkMode} switchPopup={switchPopup} showPopup={showPopup} gameCode={gameCode} updateGameCode={updateGameCode} showBlur={showBlur} switchBlur={switchBlur}/>}/>
+                <Route path="/" element={<Main darkMode={darkMode} switchPopup={switchPopup} showPopup={showPopup} gameCode={gameCode} updateGameCode={updateGameCode} showBlur={showBlur} switchBlur={switchBlur} switchLoadingIcon={switchLoadingIcon} loadingIcon={loadingIcon}/>}/>
                 <Route path="*" element={<DoesNotExist darkMode={darkMode} switchPopup={switchPopup} showPopup={showPopup} gameCode={gameCode} updateGameCode={updateGameCode} showBlur={showBlur} loadingIcon={loadingIcon} switchLoadingIcon={switchLoadingIcon}/>} />
                 <Route path="/inGame/:id" element={<ConditionalGamePage darkMode={darkMode} switchPopup={switchPopup} showPopup={showPopup} gameCode={gameCode} updateGameCode={updateGameCode} showBlur={showBlur} ws={props.ws} loadingIcon={loadingIcon} switchLoadingIcon={switchLoadingIcon} conditionalURLCheck={conditionalURLCheck} updateCURLC={updateCURLC}/>} />
             </Routes>

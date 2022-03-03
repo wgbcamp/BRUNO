@@ -18,20 +18,20 @@ app.use(express.static('../build'));
 app.use(morgan('dev'));
 app.use(cors());
 
-app.post("/create", (req, res) => {
-    var data = req.body;
-    controller.insertOneFN(data);
-    res.send();
-})
-app.post("/fetch", (req, res) => {
-    var data = req.body;
-    controller.readDB(data, response);
-    function response(result){
-        res.send(result);
-    }
-})
+// app.post("/create", (req, res) => {
+//     var data = req.body;
+//     controller.insertOneFN(data);
+//     res.send();
+// })
+// app.post("/fetch", (req, res) => {
+//     var data = req.body;
+//     controller.readDB(data, response);
+//     function response(result){
+//         res.send(result);
+//     }
+// })
 
-// app.use('/api', routes);
+app.use('/api', routes);
 
 //listen on port
 const PORT = process.env.PORT || 3001;

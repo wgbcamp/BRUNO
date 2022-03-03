@@ -29,10 +29,17 @@ function App(props) {
     
     function submitCode(){
         
+    
+        props.switchLoadingIcon(true);
+        props.switchBlur(!props.showBlur);
+        props.switchPopup(!props.showPopup);
+        console.log("test")
+
         API.createSession(playerCount, packagedCharacters, response);
         function response(result){
             console.log(result);
-        }        
+            window.location.assign(`/inGame/${packagedCharacters}`);
+        }    
     }
 
     const submitStyle = {
@@ -42,8 +49,11 @@ function App(props) {
     }
 
   return (
-    <div>  
-    <div id="mainGrid" className={`${"mainGrid1"} ${props.showBlur ? "blur" : "no-blur"}`} style={{backgroundColor: props.darkMode ? "#3d298a" : "white"}}>
+    <div>
+        {props.loadingIcon ? <div id="mainGrid" className={`${"mainGrid1"} ${props.showBlur ? "blur" : "no-blur"}`} style={{backgroundColor: props.darkMode ? "#3d298a" : "white"}}>
+            <div className="loadingIconContainer"><div className="fa-10x"><i className="fas fa-spinner fa-spin" style={{color: props.darkMode ? "white" : "black"}}></i></div></div></div> : 
+            <div>
+                    <div id="mainGrid" className={`${"mainGrid1"} ${props.showBlur ? "blur" : "no-blur"}`} style={{backgroundColor: props.darkMode ? "#3d298a" : "white"}}>
         <div id="title" className="title" style={{color: props.darkMode ? "white" : "black"}}> 
             BRUNO
             <div id="subtitle" className="subtitle" style={{color: props.darkMode ? "#ededed" : "#383838"}}>
@@ -74,7 +84,10 @@ function App(props) {
             Submit
             </div>
         </div>
-    </div>
+    </div>    
+            </div>}
+
+    
     </div>
   );
 }
