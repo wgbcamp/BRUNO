@@ -2,7 +2,6 @@ import "../stylesheets/main.css";
 import "../stylesheets/inGame.css";
 import React, { useState, useEffect } from 'react';
 import API from "../utilities/api";
-import HeaderBar from "../subComponents/headerBar";
 
 
 
@@ -42,7 +41,7 @@ function StartGame(){
         <div id="mainGrid" className={`${"igGrid"} ${props.showBlur ? "blur" : "no-blur"}`} style={{backgroundColor: props.darkMode ? "#3d298a" : "white"}}>
 
         <div className="gameCode" style={{color: 'white'}}>{props.gameCode}</div>
-        <div className="startButton" onClick={() => StartGame()} style={{color: 'white', backgroundColor: 'green'}}>START BUTTON</div>
+        <div className="startButton" onClick={() => StartGame()} style={{color: 'white', backgroundColor: 'green'}}>Add Player</div>
         <div className="playerStats" >PLAYER STATS</div>
                 {otherPlayerStats.map(({ player, name, score, hand }) => ( 
                     <div className={player} style={{color: props.darkMode ? "white" : "black"}} key={[player]}>

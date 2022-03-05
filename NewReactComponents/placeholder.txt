@@ -48,3 +48,22 @@ background: white
         ws.onclose = () => {
             console.log('websocket disconnected')
         }
+
+
+
+//OLD SESSION POPUP CONTAINER
+    <div id="sessionPopupContainer" className={props.showPopup ? "sessionPopupContainer1" : "sessionPopupContainer2"} onClick={() => {props.switchPopup(!props.showPopup); props.switchBlur(!props.showBlur)}}>
+        <div id="sessionPopup" className={props.showPopup ? "sessionPopup1" : "sessionPopup2"} style={{backgroundColor: props.darkMode? "#c079ff" : "#3d298a"}} onClick={(e) => e.stopPropagation()}>
+            <div id="playerCountText" className="playerCountText">
+                How many players?
+            </div>
+            <div id="playerCountContainer" className="playerCountContainer">
+            <div id="arrow" className="arrowLeft" style={{backgroundColor: props.darkMode ? "#d7aaff" : "#706bff"}} onClick={() => decrement()}><i className="fas fa-long-arrow-alt-left"></i></div>
+            <div id="playerCount" className="playerCount" style={{backgroundColor: props.darkMode ? "#d09aff" : "#5c57e6"}}>{playerCount}</div>
+            <div id="arrow" className="arrowRight" style={{backgroundColor: props.darkMode ? "#d7aaff" : "#706bff"}} onClick={() => increment()}><i className="fas fa-long-arrow-alt-right"></i></div>
+            </div>
+            <div to="/InGame" className="confirm" style={submitStyle} onClick={() => submitCode()}>
+            Submit
+            </div>
+        </div>
+    </div> 

@@ -16,6 +16,7 @@ router.route("/fetch").post(async function (req, res){
 })
 router.route("/postUser").post(function (req, res){
     var data = req.body;
+    console.log(req.body);
     controller.updateDoc(data, response);
     function response(result){
         res.send(result);

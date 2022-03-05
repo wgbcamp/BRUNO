@@ -17,7 +17,7 @@ async function insertOneFN(data){
             gameCode += characters.charAt(Math.floor(Math.random() * characters.length));
     }
     
-    const doc = { code: gameCode, playerCount: data.playerCount, _id: randomString, preliminaryCode: data.preliminaryCode };
+    const doc = { code: gameCode, _id: randomString, preliminaryCode: data.preliminaryCode, players: [] };
     const result = await collection.insertOne(doc);
     if(result !== "undefined"){
         console.log(`Document inserted: ${JSON.stringify(result)}`);
@@ -26,13 +26,25 @@ async function insertOneFN(data){
 }
 
 async function updateDoc(data, cb){
-    const filter = { code: data.session };
-    const updateDocument = {
+    const filter = { preliminaryCode: data.session };
+    var update = {
         $set: {
-            player1: data.name
-        },
+
+        }
     };
-    const result = await collection.updateOne(filter, updateDocument);
+    const checkRule = await collection.findOne(filter);
+    if(checkRule.players.length < 8){
+        if(checkRule.players.includes(data.name)){
+
+        }else{
+            update = {
+                $push: {
+                    players: data.name
+                }
+            };
+        }
+    }
+    const result = await collection.updateOne(filter, update);
     console.dir(result.acknowledged);
     
 }

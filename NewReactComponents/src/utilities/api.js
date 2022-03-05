@@ -1,8 +1,8 @@
 import axios from "axios";
 
-function createSession(playerCount, packagedCharacters, cb){
-    console.log(playerCount);
-    axios.post("http://192.168.1.181:3001/api/create", { playerCount: playerCount, preliminaryCode: packagedCharacters })
+function createSession(packagedCharacters, cb){
+
+    axios.post("http://192.168.1.181:3001/api/create", { preliminaryCode: packagedCharacters })
     .then(res => {
         console.log(packagedCharacters);
         axios.post("http://192.168.1.181:3001/api/fetch", { preliminaryCode: packagedCharacters, fetchPrelim: 1})
@@ -31,7 +31,7 @@ function fetchGameCode(data, cb){
 }
 
 function signIntoGame(data){
-    axios.post("http://192.168.1.181:3001/api/postUser", { name: data.name, session: data.code, insertPlayer: 1})
+    axios.post("http://192.168.1.181:3001/api/postUser", { name: data.name, session: data.session, insertPlayer: 1})
     // .then(res => {
     //     console.log(res);
     // })
