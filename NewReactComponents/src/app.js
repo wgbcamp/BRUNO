@@ -7,9 +7,11 @@ import HeaderBar from './subComponents/headerBar';
 import ConditionalGamePage from './pages/conditionalGamePage';
 
 
+
 function App(props){
 
-    
+  
+
     const [darkMode, swDarkMode] = useState(
         localStorage.getItem('userSetDarkMode') === 'dark' ? true : 
         localStorage.getItem('userSetDarkMode') === 'light' ? false : 

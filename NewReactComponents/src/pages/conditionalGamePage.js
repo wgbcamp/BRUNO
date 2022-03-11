@@ -8,17 +8,11 @@ function ConditionalGamePage(props){
     const value = useState('initial');
 
     useEffect(() => {
-        const userID =  Math.random().toString(36).substring(2,13)
 
-        if(localStorage.getItem("userID")){
-        }else{
-            localStorage.setItem("userID", userID);
-        }
-        
         API.fetchGameCode(window.location.href, response);
         
         function response(res){
-            console.log(res)
+            props.updateGameCode(res.data);
             if(res.status === 200){  
                 if(res.data !== 'Document not found'){
                     props.updateCURLC(true);

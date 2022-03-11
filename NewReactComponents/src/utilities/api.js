@@ -19,13 +19,11 @@ function fetchGameCode(data, cb){
     for(var i = data.length; i > -1; i--){
         if(data.charAt(i) === "/"){
             var g = data.slice(i+1, data.length);
-            console.log(g);
             break;
         }
     }
     axios.post("http://192.168.1.181:3001/api/fetch" , { preliminaryCode: g, fetchPrelim: 1})
     .then(res => {
-        console.log(res);
         cb(res);
     });
 }

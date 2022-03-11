@@ -28,26 +28,33 @@ async function insertOneFN(data){
 async function updateDoc(data, cb){
     const filter = { preliminaryCode: data.session };
     var update = {
-        $set: {
-
-        }
+        $push: {
+            players: {name: data.name, status: "active"}
+                }
     };
     const checkRule = await collection.findOne(filter);
-    if(checkRule.players.length < 8){
-        if(checkRule.players.includes(data.name)){
 
+    //if we find a duplicate, break and if we found no duplicates then push
+    if(checkRule.players.length === 8){
+        console.log("Player length limit met.")
+        var update = {$set: {}};
         }else{
-            update = {
-                $push: {
-                    players: data.name
+            for (var i=0; i<checkRule.players.length; i++){   
+                if (checkRule.players[i].name === data.name){
+                    console.log("DUPLICATE FOUND!");
+                    var update = {$set: {}};
+                    break;
+                    }
                 }
-            };
-        }
+            }
+
+        const result = await collection.updateOne(filter, update);
+        console.dir(result.acknowledged);
+        const currentPlayers = await collection.findOne(filter);
+        console.log(currentPlayers.players);
+        cb(JSON.stringify(currentPlayers.players));
     }
-    const result = await collection.updateOne(filter, update);
-    console.dir(result.acknowledged);
-    
-}
+
 
 async function readDB(data, cb){
     var query = "";
@@ -64,7 +71,7 @@ async function readDB(data, cb){
     if(result === null){
         cb("Document not found")
     }else{
-        cb(JSON.stringify(result.code));
+        cb(result.code);
     }  
 }
 
