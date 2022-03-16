@@ -10,12 +10,14 @@ const io = new Server(server, {
     }
 });
 
+
 const local = "localhost";
 const localNetwork = "192.168.1.181";
 var cors = require('cors');
 
-//require routes
+//require routes & controller
 const routes = require("./routes/api");
+const controller = require("./controller");
 
 //express server properties
 app.use(express.urlencoded({ extended: true }));
@@ -24,13 +26,13 @@ app.use(express.static('../build'));
 app.use(morgan('dev'));
 app.use(cors());
 
-app.use('/api', routes);
+// app.use('/api', routes);
 
 //listen on port
 const PORT = process.env.PORT || 3001;
-server.listen(PORT, localNetwork, () => {
-    console.log(`Starting Proxy at ${localNetwork}:${PORT}`);
-});
+// server.listen(PORT, localNetwork, () => {
+//     console.log(`Starting Proxy at ${localNetwork}:${PORT}`);
+// });
 server.listen(PORT, local, () => {
     console.log(`Starting Proxy at ${local}:${PORT}`);
 });
@@ -45,14 +47,22 @@ io.on("connection", (socket) => {
     console.log("User connected.");
     socket.emit("contact", "connected to server");
   
-    // receive a message from the client
-    socket.on("hello from client", (...args) => {
-      // ...
-    });
-
-    socket.on("message", (data) => {
+    socket.on("create session", (data, callback) => {
         console.log(data);
-    })
+        controller.insertOneFN(data);
+        callback({
+          status: "ok"
+        });
+      });
+
+    socket.on("fetch session", (data, callback) => {
+        controller.readDB(data, response);
+        function response(result){
+            callback({
+                status: result 
+            })
+        }
+    });
 
     socket.on('disconnect', () => {
         console.log('user disconnected')

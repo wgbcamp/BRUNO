@@ -19,18 +19,9 @@ function InGame(props) {
             localStorage.setItem("userID", Math.random().toString(36).substring(2,13));
         }
 
-        const socket = socketIOClient('http://192.168.1.181:3001', {
+        const socket = socketIOClient('http://localhost:3001', {
         });
 
-        // send a message to the server
-        socket.emit("hello from client", 5, "6", { 7: Uint8Array.from([8]) });
-
-        // receive a message from the server
-        socket.on("contact", (data) => {
-            console.log(data);
-        });
-
-        socket.emit('message', "hello");
         // const ws = new WebSocket(`ws://localhost:8080/?token=${localStorage.getItem("userID")}`);
         // ws.onopen = () => {
         //     console.log("websocket connected");

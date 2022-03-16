@@ -11,8 +11,12 @@ function App(props) {
     }
 
     const packagedCharacters = JSON.parse(JSON.stringify(characters)).value;
+    API.createSession2(packagedCharacters, props.socket, response); 
+    function response(result){
+        console.log(result);
+        window.location.assign(`/inGame/${packagedCharacters}`);
+    }
 
-    
     function submitCode(){
         
     
@@ -25,7 +29,8 @@ function App(props) {
         function response(result){
             console.log(result);
             window.location.assign(`/inGame/${packagedCharacters}`);
-        }    
+        }
+           
     }
 
     const submitStyle = {
