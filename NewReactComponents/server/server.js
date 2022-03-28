@@ -11,8 +11,7 @@ const io = require("socket.io")(server, {
 
 var cors = require('cors');
 
-//require routes & controller
-const routes = require("./routes/api");
+//require controller
 const controller = require("./controller");
 
 //express server properties
@@ -22,13 +21,9 @@ app.use(express.static('../build'));
 app.use(morgan('dev'));
 app.use(cors());
 
-// app.use('/api', routes);
 
 //listen on port
 const PORT = process.env.PORT || 3001;
-// server.listen(PORT, localNetwork, () => {
-//     console.log(`Starting Proxy at ${localNetwork}:${PORT}`);
-// });
 server.listen(3001, "192.168.1.181", () => {
     console.log(`Starting Proxy at 192.168.1.181:3001`);
 });

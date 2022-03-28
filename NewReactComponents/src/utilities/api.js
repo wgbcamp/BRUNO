@@ -1,5 +1,3 @@
-import axios from "axios";
-
 function createSession2(packagedCharacters, socket, cb){
 
     socket.emit("create session", { preliminaryCode: packagedCharacters }, (response) => {
@@ -40,14 +38,9 @@ function signIntoRoom(data, gameCode, socket){
 
 }
 
-function signIntoGame(data){
-    axios.post("http://localhost/api/postUser", { name: data.name, session: data.session, insertPlayer: 1})
-    // .then(res => {
-    //     console.log(res);
-    // })
 
-}
 
-const functions = {createSession2, fetchGameCode2, signIntoGame, signIntoRoom};
+const functions = {createSession2, fetchGameCode2, signIntoRoom};
+
 export default functions;
 
