@@ -100,3 +100,7 @@
     grid-row: 1/18;
     grid-column: 6/11
 }
+
+.playerPresence{
+    background-color: rgb(70, 70, 255);
+}

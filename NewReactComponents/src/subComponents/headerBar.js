@@ -1,7 +1,7 @@
 import "../stylesheets/header.css";
-import React, { useState } from 'react';
-
+import React, { useContext, useState } from 'react';
 function HeaderBar(props){
+
 
     const [helpStatus, toggleHelp] = useState(false);
     const [settingsStatus, toggleStatus] = useState(false);
@@ -13,7 +13,7 @@ function HeaderBar(props){
             toggleHelp(!helpStatus);
         }else{
             toggleHelp(!helpStatus);
-            props.switchBlur(!props.showBlur); 
+            props.app.switchBlur(!props.app.showBlur); 
         } 
 
     }
@@ -23,13 +23,13 @@ function HeaderBar(props){
             toggleStatus(!settingsStatus);
         }else{
             toggleStatus(!settingsStatus);
-            props.switchBlur(!props.showBlur); 
+            props.app.switchBlur(!props.app.showBlur); 
         }       
     }
 
     const overrideDarkMode = () => {
         
-        if(props.darkMode === true){
+        if(props.app.darkMode === true){
             localStorage.setItem('userSetDarkMode', 'light');
         }else{
             localStorage.setItem('userSetDarkMode', 'dark');
@@ -37,18 +37,18 @@ function HeaderBar(props){
         
     }
 
-    const dModeHTML = props.darkMode ? "Disable Dark Mode" : "Enable Dark Mode";
+    const dModeHTML = props.app.darkMode ? "Disable Dark Mode" : "Enable Dark Mode";
 
     const headerBarStyle = {
-        backgroundColor: props.darkMode ? "#d549eb" : "#fdf906",
-        color: props.darkMode ? "white" : "black"
+        backgroundColor: props.app.darkMode ? "#d549eb" : "#fdf906",
+        color: props.app.darkMode ? "white" : "black"
     }
 
     return(
         <div>
-            <div id="headerBar" className={props.showPopup ? "headerBar1" : "headerBar2"} style={headerBarStyle}>
+            <div id="headerBar" className={props.app.showPopup ? "headerBar1" : "headerBar2"} style={headerBarStyle}>
                 <div id="siteLogo" className="siteLogo">
-                    <div id="placeholderLogo" className="placeholderLogo" ><a href="/" style={{textDecoration: 'none', color: props.darkMode ? "white": "black"}}>BRUNO</a>
+                    <div id="placeholderLogo" className="placeholderLogo" ><a href="/" style={{textDecoration: 'none', color: props.app.darkMode ? "white": "black"}}>BRUNO</a>
                     </div>
                 </div>
                 <div id="help" className="help" onClick={() =>{helpDropdown();}}>Help </div>
@@ -59,7 +59,7 @@ function HeaderBar(props){
                 </div>
             </div>
             <div className="helpContainer">
-                <div className={helpStatus ? "dropdownHelp2" : "dropdownHelp1"} style={{backgroundColor: props.darkMode ? "#d549eb" : "#3d298a", color: props.darkMode ? "white" : "#ededed"}}>
+                <div className={helpStatus ? "dropdownHelp2" : "dropdownHelp1"} style={{backgroundColor: props.app.darkMode ? "#d549eb" : "#3d298a", color: props.app.darkMode ? "white" : "#ededed"}}>
             <p>The key to winning a game of <u><b>BRUNO</b></u>, is by being the first player to play all of the cards in your hand each round.</p>
 
                             <p>The <u>first player</u> with no cards left in hand is awarded <u>points</u> based on the cards that are still left in each of their opponents' hands.</p>
@@ -93,10 +93,10 @@ function HeaderBar(props){
             </div>
             <div className="settingsContainer">
                 <div className={settingsStatus ? "dropdownSettings2" : "dropdownSettings1"}>
-                    <div className="volume" style={{backgroundColor: props.darkMode ? "#c079ff" : "#3d298a"}}>Sounds: ON/OFF</div>
-                    <div className="textSize" style={{backgroundColor: props.darkMode ? "#c079ff" : "#3d298a"}}>Change text size</div>
-                    <div className="darkMode" style={{backgroundColor: props.darkMode ? "#c079ff" : "#3d298a"}} onClick={() => {props.swDarkMode(!props.darkMode); overrideDarkMode();}}>{dModeHTML}</div>
-                    <div className="leaveSession" style={{backgroundColor: props.darkMode ? "#c079ff" : "#3d298a"}}>Leave Session</div>
+                    <div className="volume" style={{backgroundColor: props.app.darkMode ? "#c079ff" : "#3d298a"}}>Sounds: ON/OFF</div>
+                    <div className="textSize" style={{backgroundColor: props.app.darkMode ? "#c079ff" : "#3d298a"}}>Change text size</div>
+                    <div className="darkMode" style={{backgroundColor: props.app.darkMode ? "#c079ff" : "#3d298a"}} onClick={() => {props.app.swDarkMode(!props.app.darkMode); overrideDarkMode();}}>{dModeHTML}</div>
+                    <div className="leaveSession" style={{backgroundColor: props.app.darkMode ? "#c079ff" : "#3d298a"}}>Leave Session</div>
                 </div>
             </div>
     </div>

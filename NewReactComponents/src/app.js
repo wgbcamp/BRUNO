@@ -1,18 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Main from './pages/Main';
 import DoesNotExist from './pages/doesNotExist';
-import InGame from './pages/inGame';
 import HeaderBar from './subComponents/headerBar';
 import ConditionalGamePage from './pages/conditionalGamePage';
 
-import socketIOClient from "socket.io-client";
-
-
 function App(props){
-
-    const socket = socketIOClient('http://localhost:3001', {
-    });
 
     const [darkMode, swDarkMode] = useState(
         localStorage.getItem('userSetDarkMode') === 'dark' ? true : 
@@ -25,6 +18,8 @@ function App(props){
     const [conditionalURLCheck, updateCURLC] = useState("");
     const [loadingIcon, switchLoadingIcon] = useState(false);
 
+    const socket = props.socket;
+
     useEffect(() => {
         
         if(localStorage.getItem("userID")){
@@ -32,19 +27,6 @@ function App(props){
             localStorage.setItem("userID", Math.random().toString(36).substring(2,13));
         }
 
-
-        // send a message to the server
-        socket.emit('message', "hello");
-
-        // receive a message from the server
-        socket.on("contact", (data) => {
-            console.log(data);
-        });
-
-        
-
-        
-        
     }, [])
 
     
@@ -52,17 +34,20 @@ function App(props){
 
     return(
         <div id="container" className={darkMode ? "container1" : "container2"}>  
-        <>
-        <HeaderBar swDarkMode={swDarkMode} darkMode={darkMode} showPopup={showPopup} switchBlur={switchBlur} showBlur={showBlur}/>
-        
+
+        <HeaderBar app={{swDarkMode, darkMode, showPopup, switchBlur, showBlur}}/>
+
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<Main darkMode={darkMode} switchPopup={switchPopup} showPopup={showPopup} gameCode={gameCode} updateGameCode={updateGameCode} showBlur={showBlur} switchBlur={switchBlur} switchLoadingIcon={switchLoadingIcon} loadingIcon={loadingIcon} socket={socket}/>}/>
-                <Route path="*" element={<DoesNotExist darkMode={darkMode} switchPopup={switchPopup} showPopup={showPopup} gameCode={gameCode} updateGameCode={updateGameCode} showBlur={showBlur} loadingIcon={loadingIcon} switchLoadingIcon={switchLoadingIcon}/>} />
-                <Route path="/inGame/:id" element={<ConditionalGamePage darkMode={darkMode} switchPopup={switchPopup} showPopup={showPopup} gameCode={gameCode} updateGameCode={updateGameCode} showBlur={showBlur} ws={props.ws} loadingIcon={loadingIcon} switchLoadingIcon={switchLoadingIcon} conditionalURLCheck={conditionalURLCheck} updateCURLC={updateCURLC}/>} />
+                <Route path="/" element={<Main app={{darkMode, switchPopup, showPopup, gameCode, updateGameCode, showBlur, switchLoadingIcon, loadingIcon, socket}}/>}/>
+
+                <Route path="*" element={<DoesNotExist app={{darkMode, switchPopup, showPopup, showBlur, gameCode, updateGameCode, showBlur, loadingIcon, switchLoadingIcon}}/>}/>
+
+                <Route path="/inGame/:id" element={<ConditionalGamePage
+                app={{darkMode, switchPopup, showPopup, switchBlur, showBlur, gameCode, updateGameCode, showBlur, loadingIcon, switchLoadingIcon, conditionalURLCheck, updateCURLC, socket}}/>}/>
             </Routes>
         </BrowserRouter>
-        </>
+
         </div>
     );
 }

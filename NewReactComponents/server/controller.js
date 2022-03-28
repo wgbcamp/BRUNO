@@ -29,7 +29,7 @@ async function updateDoc(data, cb){
     const filter = { preliminaryCode: data.session };
     var update = {
         $push: {
-            players: {name: data.name, status: "active"}
+            players: {id: data.id, name: data.name, present: data.present}
                 }
     };
     const checkRule = await collection.findOne(filter);
@@ -40,7 +40,7 @@ async function updateDoc(data, cb){
         var update = {$set: {}};
         }else{
             for (var i=0; i<checkRule.players.length; i++){   
-                if (checkRule.players[i].name === data.name){
+                if (checkRule.players[i].id === data.id){
                     console.log("DUPLICATE FOUND!");
                     var update = {$set: {}};
                     break;
@@ -71,7 +71,7 @@ async function readDB(data, cb){
     if(result === null){
         cb("Document not found")
     }else{
-        cb(result.code);
+        cb(result);
     }  
 }
 

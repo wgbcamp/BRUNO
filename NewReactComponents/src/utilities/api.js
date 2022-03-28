@@ -1,21 +1,4 @@
 import axios from "axios";
-import socketIOClient from "socket.io-client";
-
-//purge this
-function createSession(packagedCharacters, cb){
-
-    axios.post("http://localhost/api/create", { preliminaryCode: packagedCharacters })
-    .then(res => {
-        console.log(packagedCharacters);
-        axios.post("http://localhost/api/fetch", { preliminaryCode: packagedCharacters, fetchPrelim: 1})
-        .then(res => {
-            cb(res.data);
-            if(res.status === 200){
-            sessionStorage.setItem('gameCode', res.data);
-            }
-        })
-    }); 
-}
 
 function createSession2(packagedCharacters, socket, cb){
 
@@ -24,7 +7,6 @@ function createSession2(packagedCharacters, socket, cb){
             console.log(response.status);
             socket.emit("fetch session", { preliminaryCode: packagedCharacters, fetchPrelim: 1}, (response) => {
                 if(response.status){
-                    sessionStorage.setItem('gameCode', response.data);
                     cb(response.data);
                 }
             })
@@ -32,17 +14,30 @@ function createSession2(packagedCharacters, socket, cb){
     });
 }
 
-function fetchGameCode(data, cb){
+function fetchGameCode2(data, socket, cb){
     for(var i = data.length; i > -1; i--){
         if(data.charAt(i) === "/"){
             var g = data.slice(i+1, data.length);
             break;
         }
     }
-    axios.post("http://localhost/api/fetch" , { preliminaryCode: g, fetchPrelim: 1})
-    .then(res => {
-        cb(res);
-    });
+    socket.emit("fetch session", { preliminaryCode: g, fetchPrelim: 1 }, (response) => {
+        if(response.status){
+            cb(response);
+        }
+    })
+}
+
+function signIntoRoom(data, gameCode, socket){
+
+    for(var i = data.length; i > -1; i--){
+        if(data.charAt(i) === "/"){
+            var g = data.slice(i+1, data.length);
+            break;
+        }
+    }
+    socket.emit("join room", gameCode, g);
+
 }
 
 function signIntoGame(data){
@@ -53,6 +48,6 @@ function signIntoGame(data){
 
 }
 
-const functions = {createSession, createSession2, fetchGameCode, signIntoGame};
+const functions = {createSession2, fetchGameCode2, signIntoGame, signIntoRoom};
 export default functions;
 
