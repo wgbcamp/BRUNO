@@ -1,7 +1,7 @@
 var mongoUtil = require('./database/mongoUtil');
 var database = mongoUtil.getDb();
 const collection = database.collection('test');
-
+var gameLogic = require('./gameLogic');
 
 async function insertOneFN(data){
 
@@ -25,7 +25,7 @@ async function insertOneFN(data){
     
 }
 
-async function updateDoc(data, cb){
+async function addPlayer(data, cb){
     const filter = { preliminaryCode: data.session };
     var update = {
         $push: {
@@ -69,7 +69,6 @@ async function readDB(data, cb){
     }
     
     const result = await collection.findOne(query);
-    console.log(`Document found: ${JSON.stringify(result)}`);
 
     if(result === null){
         cb("Document not found")
@@ -103,7 +102,21 @@ async function updatePresence(data, cb){
     cb(value);
 }
 
-module.exports = { insertOneFN, readDB, updateDoc, updatePresence }
+async function loadDeck(currentRoom){
+    console.log("Loading deck...");
+    console.log(gameLogic.deck);
+    console.log(currentRoom[0]);
+
+    const value = await collection.updateOne({code: currentRoom[0]}, {$set: { deck: gameLogic.deck }});
+    const readDeck = await collection.findOne({code: currentRoom[0]});
+    gameLogic.shuffleDeck(readDeck.deck, response);
+    function response(gDeck){
+        const result = collection.updateOne({code: currentRoom[0]}, {$set: { deck: gDeck }});
+    }
+
+}
+
+module.exports = { insertOneFN, readDB, addPlayer, updatePresence, loadDeck }
 
 /*
 need error checking on playercount manipulation and same code/string already existing in database

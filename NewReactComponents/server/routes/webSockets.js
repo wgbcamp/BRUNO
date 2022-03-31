@@ -1,5 +1,3 @@
-const e = require("express");
-
 function socketIoFunction(io, controller){
     io.on("connection", (socket) => {
         // send a message to the client
@@ -49,7 +47,7 @@ function socketIoFunction(io, controller){
                         }
                     }
                     if(x === 0){
-                        controller.updateDoc(data, response);
+                        controller.addPlayer(data, response);
                         function response(result){
                             callback({
                                 status: result
@@ -60,6 +58,12 @@ function socketIoFunction(io, controller){
                 } 
         })
     
+        socket.on("start game", () => {
+            console.log("received start game request");
+            getRoom(controller.loadDeck)
+            // controller.loadDeck();
+        })
+
         socket.on("disconnecting", () => {
             getRoom(response);
             function response(currentRoom){

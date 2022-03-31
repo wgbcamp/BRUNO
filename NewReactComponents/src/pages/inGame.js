@@ -34,11 +34,16 @@ function InGame(props) {
 
 
 
-function StartGame(){
+function joinGame(){
      
-        props.cgp.socket.emit('join game', g.slice(1+g.lastIndexOf('/', g.length)), localStorage.getItem('userID'), playerName, (response) => {
+    props.cgp.socket.emit('join game', g.slice(1+g.lastIndexOf('/', g.length)), localStorage.getItem('userID'), playerName, (response) => {
             console.log(response.status);
-        });
+    });
+}
+
+function startGame(){
+    
+    props.cgp.socket.emit('start game');
 }
 
 const submitStyle = {
@@ -60,7 +65,7 @@ const submitStyle = {
 
         <div className="gameCode" style={{color: 'white'}}>{props.cgp.gameCode}</div>
         <div className="joinGame" onClick={() => {props.cgp.switchPopup(!props.cgp.showPopup); props.cgp.switchBlur(!props.cgp.showBlur)}} style={{color: 'white', backgroundColor: 'green'}}>Add Player</div>
-        <div className="startGame" style={{color: 'white', backgroundColor: 'teal'}}>Start Game</div>
+        <div className="startGame" onClick={() => startGame()} style={{color: 'white', backgroundColor: 'teal'}}>Start Game</div>
         <div className="currentPlayers" style={{textAlign: "center"}}>CURRENT PLAYERS
             {players.map(( x ) => ( 
 
@@ -97,7 +102,7 @@ const submitStyle = {
 
             <input type="name" value={playerName} className="playerCount" onChange={e => setPlayerName(e.target.value)} style={{backgroundColor: props.cgp.darkMode ? "#d09aff" : "#5c57e6", border: 'none'}}></input>
 
-            <div className="confirm" style={submitStyle} onClick={() => {StartGame(); props.cgp.switchPopup(!props.cgp.showPopup); props.cgp.switchBlur(!props.cgp.showBlur); setPlayerName("")}}>
+            <div className="confirm" style={submitStyle} onClick={() => {joinGame(); props.cgp.switchPopup(!props.cgp.showPopup); props.cgp.switchBlur(!props.cgp.showBlur); setPlayerName("")}}>
             Submit
             </div>
         </div>
