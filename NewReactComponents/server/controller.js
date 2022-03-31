@@ -29,7 +29,7 @@ async function updateDoc(data, cb){
     const filter = { preliminaryCode: data.session };
     var update = {
         $push: {
-            players: {id: data.id, name: data.name, present: data.present}
+            players: {id: data.id, name: data.name, present: data.present, socketID: data.socketID}
                 }
     };
     const checkRule = await collection.findOne(filter);
@@ -59,12 +59,15 @@ async function updateDoc(data, cb){
 async function readDB(data, cb){
     var query = "";
     if(data.fetchCode){
-        console.log(data)
         query = { code: data.code };
     }
     if(data.fetchPrelim){
         query = { preliminaryCode: data.preliminaryCode};
     }
+    if(data.fetchSocketID){
+        query = { players: {$elemMatch: {socketID: data.socketID}}};
+    }
+    
     const result = await collection.findOne(query);
     console.log(`Document found: ${JSON.stringify(result)}`);
 
@@ -75,7 +78,32 @@ async function readDB(data, cb){
     }  
 }
 
-module.exports = { insertOneFN, readDB, updateDoc }
+async function updatePresence(data, cb){
+
+    var filter = {};
+    var update = {};
+    if(data.userID){
+        filter = {"players.id": data.userID, preliminaryCode: data.gameSession};
+        update = {$set: {"players.$.present": true, "players.$.socketID": data.socketID}};
+    }
+    
+    if(data.players){
+        var x = 0;
+        for(var i = 0; i<data.players.length; i++){
+            if(data.players[i].socketID === data.currentID){
+                x = i;
+                break;
+            }
+        }
+        filter = {"players.socketID": data.players[i].socketID};
+        update = {$set: {"players.$.present": false }};
+    }
+
+    const value = await collection.updateOne(filter, update);
+    cb(value);
+}
+
+module.exports = { insertOneFN, readDB, updateDoc, updatePresence }
 
 /*
 need error checking on playercount manipulation and same code/string already existing in database

@@ -89,9 +89,14 @@
     grid-column: 1/6;
 }
 
-.startButton{
+.joinGame{
     grid-row: 20;
-    grid-column: 5/7;
+    grid-column: 3/4;
+}
+
+.startGame{
+    grid-row: 20;
+    grid-column:5/7;
 }
 
 .currentPlayers{

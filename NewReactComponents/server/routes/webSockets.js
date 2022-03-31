@@ -1,3 +1,5 @@
+const e = require("express");
+
 function socketIoFunction(io, controller){
     io.on("connection", (socket) => {
         // send a message to the client
@@ -21,14 +23,19 @@ function socketIoFunction(io, controller){
             }
         });
     
-        socket.on("join room", (gameCode, gameSession, callback) => {
-            socket.join(gameCode);
-            getRoom(updateClients, gameSession);
+        socket.on("join room", (data, callback) => {
+            data.socketID = socket.id;
+            socket.join(data.gameCode);
+            controller.updatePresence(data, response);
+            function response(result){
+                getRoom(updateClients, data.gameSession);
+            }
+            
         });
     
     
         socket.on("join game", (gameSession, userID, playerName, callback) => {
-            var data = { session: gameSession, id: userID, name: playerName, present: true, preliminaryCode: gameSession, fetchPrelim: 1};
+            var data = { session: gameSession, id: userID, name: playerName, present: true, socketID: socket.id, preliminaryCode: gameSession, fetchPrelim: 1};
             controller.readDB(data, res);
                 function res(result){
                     console.log(result.players);
@@ -54,23 +61,35 @@ function socketIoFunction(io, controller){
         })
     
         socket.on("disconnecting", () => {
-    
             getRoom(response);
             function response(currentRoom){
-                console.log(currentRoom);
                 if(currentRoom != ""){
                     io.to(currentRoom).emit("join/leave", socket.id + " has exited the game.");
+                    
+                    var data = {
+                        socketID: socket.id,
+                        fetchSocketID: 1
+                    };  
+                    controller.readDB(data, res);
+                         function res(result){
+                             if(result === "Document not found"){
+                                }else{
+                                    result.currentID = socket.id;
+                                    var gameSession = result.preliminaryCode;
+                                    controller.updatePresence(result, res2); 
+                                    function res2(){
+                                        getRoom(updateClients, gameSession);
+                                }
+                             }
+                         }   
                 }
-            } 
+            }
         })
     
         function getRoom(cb, gameSession){
             const arr = Array.from(io.sockets.adapter.rooms);
-            console.log(arr);
             const roomsWithUsers = arr.filter(room => !room[1].has(room[0]));
-            console.log(roomsWithUsers);
             const roomMatchSocketId = roomsWithUsers.filter(id => id[1].has(socket.id));
-            console.log(roomMatchSocketId);
             const currentRoom = roomMatchSocketId.map(i => i[0]);
             cb(currentRoom, gameSession);
         }
@@ -79,8 +98,6 @@ function socketIoFunction(io, controller){
             var data2 = {fetchPrelim: 1, preliminaryCode: gameSession}
             controller.readDB(data2, res);
             function res(result){
-                console.log("the result...: ")
-                console.log(result);
                 var playerArray = [];
                 for(var i=0; i<result.players.length; i++){
                     playerArray.push({name: result.players[i].name, present: result.players[i].present});

@@ -34,7 +34,13 @@ function signIntoRoom(data, gameCode, socket){
             break;
         }
     }
-    socket.emit("join room", gameCode, g);
+    var userID = localStorage.getItem("userID");
+    var data = {
+        gameSession: g,
+        gameCode: gameCode,
+        userID: userID
+    }
+    socket.emit("join room", data);
 
 }
 

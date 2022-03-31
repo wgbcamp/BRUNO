@@ -9,12 +9,13 @@ const io = require("socket.io")(server, {
     }
 });
 
-var cors = require('cors');
+
 
 //require controller
 const controller = require("./controller");
 
 //express server properties
+var cors = require('cors');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('../build'));
@@ -24,7 +25,7 @@ app.use(cors());
 
 //listen on port
 const PORT = process.env.PORT || 3001;
-server.listen(3001, "192.168.1.181", () => {
+server.listen(PORT, "192.168.1.181", () => {
     console.log(`Starting Proxy at 192.168.1.181:3001`);
 });
 
