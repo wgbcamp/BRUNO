@@ -142,6 +142,52 @@ i {
     grid-row: 6; 
 }
 
+.dealerPopupContainer1{
+    z-index: 5;
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    top: 0px;
+}
+
+.dealerPopupContainer2{
+    z-index: -1;
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    top: 0px;
+}
+
+#dealerPopup{
+    display: grid;
+    grid-template-columns: 40px 1fr 1fr 40px;
+    grid-template-rows:  repeat(6, 1fr);
+}
+
+.dealerPopup1{
+    position: absolute;
+    z-index: 6;
+    top: 50%;
+    left: 50%;
+    height: 250px;
+    width: 350px;
+    opacity: 1;
+    border-radius: 9px;
+    transform: translate(-50%, -50%);
+}
+
+.dealerPopup2{
+    position: absolute;
+    z-index: -1;
+    top: 50%;
+    left: 50%;
+    height: 250px;
+    width: 350px;
+    opacity: 0;
+    border-radius: 9px;
+    transform: translate(-50%, -50%);
+}
+
 .sessionPopupContainer1{
     z-index: 5;
     height: 100vh;

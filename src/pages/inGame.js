@@ -8,13 +8,10 @@ import API from "../utilities/api";
 function InGame(props) {
     
     var [players, adjustPlayers] = useState([]);
-
-    
-
     var gameCode = sessionStorage.getItem('gameCode');
     var g = window.location.pathname;
     var [playerName, setPlayerName] = useState([]);
-    
+    var [dealerPopup, toggleDealerPopup] = useState(false);
 
     useEffect(() => {
         
@@ -27,6 +24,10 @@ function InGame(props) {
         props.cgp.socket.on("updatePlayerList", (data) => {
             adjustPlayers(data);
             console.log(data);
+        });
+        props.cgp.socket.on("dealer", (data) => {
+            props.cgp.switchBlur(!props.cgp.showBlur);
+            toggleDealerPopup(true);
         });
 
         
@@ -106,7 +107,13 @@ const submitStyle = {
             Submit
             </div>
         </div>
-    </div> 
+        </div>
+        <div id="dealerPopupContainer" className={dealerPopup ? "dealerPopupContainer1" : "dealerPopupContainer2"} onClick={() => toggleDealerPopup(false)}>
+            <div id="dealerPopup" className={dealerPopup ? "dealerPopup1" : "dealerPopup2"}>
+                <div id="dealerText">You are the dealer.</div>
+                <div id="dealerButton">Deal cards</div>
+            </div>
+        </div> 
     </div>
   );
 }

@@ -35,11 +35,10 @@ function uploadDeckToMongo(){
     console.log("made it to game logic...")
 }
 
-///CURRENT PROGRESS********
 //shuffles deck
 function shuffleDeck(gDeck, cb){
     
-    console.log("Before shuffle (unshuffled): ")
+    console.log("gameLogic received deck...");
     console.log(gDeck);
 
     var currentIndex = gDeck.length;
@@ -52,49 +51,30 @@ function shuffleDeck(gDeck, cb){
         gDeck[currentIndex] = gDeck[randomCard];
         gDeck[randomCard] = tempValue;
     }
-    console.log("Shuffled Deck: ")
-    console.log(gDeck);
+
+    console.log("shuffled deck...");
     cb(gDeck);
-}
-
-//adds number of players to game, will use connected sessions in the future
-function generatePlayers(){
-
-    inquirer
-        .prompt([
-            {
-                type: 'list',
-                name: 'playerCount',
-                message: 'How many players are in this game?',
-                choices: [1,2,3,4,5,6,7,8]
-            }
-        ])
-        .then((answer) =>{
-            var playerCount = JSON.stringify(answer.playerCount);
-            console.log(`There are ${playerCount} players in this game!`);
-            for (i=0; i<playerCount; i++){
-                players.push({name: `player${i+1}`, hand: [], score: 0, dealer: ""});
-            }
-            console.log(players);
-            initialDraw();
-        })
 }
 
 
 //all players draw one card at the start of the game
-function initialDraw(){
-    console.log("Starting initial draw...")
-    for (i=0; i<players.length; i++){
-            console.log("Pushed " + deck[0] + " into " + players[i].name + "'s hand.")
-            players[i].hand.push(deck[0]);
-            deck.splice(0, 1);
+function initialDraw(data, cb){
+    console.log("gameLogic received data to begin initial draw.");
+    var tempHand = [];
+    for (i=0; i<data.players.length; i++){
+            tempHand.push(data.deck[0]);
+            data.deck.splice(0, 1);
+            if(i === data.players.length-1){
+                console.log(`gameLogic loaded ${i+1} cards into tempHand and spliced ${i+1} cards from the deck.`);
+            }
     }
-    console.log("testing " + players[0].hand[0].charAt(players[0].hand[0].length-1));
-    console.log("###PLAYERS BEFORE ASSIGN DEALER");
-    console.table(players);
-    assignDealer();
+    console.log("gameLogic sending spliced deck and tempHand back to controller.");
+    cb(data.deck, tempHand);
+
+    // assignDealer();
 }
 
+// CURRENTLY HERE***
 //assigns dealer
 function assignDealer(){
 
@@ -623,4 +603,4 @@ function endGameScore(){
     
 }
 
-module.exports = { deck, uploadDeckToMongo, shuffleDeck };
+module.exports = { deck, uploadDeckToMongo, shuffleDeck, initialDraw };

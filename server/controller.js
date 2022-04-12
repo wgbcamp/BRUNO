@@ -29,7 +29,7 @@ async function addPlayer(data, cb){
     const filter = { preliminaryCode: data.session };
     var update = {
         $push: {
-            players: {id: data.id, name: data.name, present: data.present, socketID: data.socketID}
+            players: {id: data.id, name: data.name, present: data.present, socketID: data.socketID, hand: []}
                 }
     };
     const checkRule = await collection.findOne(filter);
@@ -103,18 +103,42 @@ async function updatePresence(data, cb){
 }
 
 async function loadDeck(currentRoom){
-    console.log("Loading deck...");
-    console.log(gameLogic.deck);
-    console.log(currentRoom[0]);
+    console.log("controller loading deck...");
 
     const value = await collection.updateOne({code: currentRoom[0]}, {$set: { deck: gameLogic.deck }});
+    console.log("controller added deck.");
     const readDeck = await collection.findOne({code: currentRoom[0]});
+    console.log("controller found deck.");
     gameLogic.shuffleDeck(readDeck.deck, response);
-    function response(gDeck){
-        const result = collection.updateOne({code: currentRoom[0]}, {$set: { deck: gDeck }});
+    async function response(deck2){
+        console.log("controller received shuffled deck.");
+        const result = await collection.updateOne({code: currentRoom[0]}, {$set: { deck: deck2 }});
+        console.log("controller updated deck.");
+        const value2 = await collection.findOne({code: currentRoom[0]});
+        console.log("controller found deck.")
+        console.log(deck2);
+        gameLogic.initialDraw(value2, response2);
+        async function response2(deck3, tempHand){
+            console.log("controller received spliced deck and tempHand from gameLogic.");
+            for (var i=0; i<tempHand.length; i++){
+                var tempHandValue = tempHand[i];
+                const test = await collection.updateOne({code: currentRoom[0], "players.hand": []}, {$push: {"players.$.hand": tempHandValue}});
+                if(i === tempHand.length-1){
+                    console.log(`controller distributed ${i+1} unique cards to players with empty hands.`);
+                    console.log(await collection.findOne({code: currentRoom[0]}));
+                }
+            }
+            
+
+            const updateDeck = await collection.updateOne({code: currentRoom[0]}, {$set: {deck: deck3}});
+            console.log("controller updated deck with spliced deck results.");
+        }
+
     }
 
 }
+
+async function pushIntoHand(){}
 
 module.exports = { insertOneFN, readDB, addPlayer, updatePresence, loadDeck }
 

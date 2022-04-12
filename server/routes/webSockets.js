@@ -82,7 +82,7 @@ function socketIoFunction(io, controller){
                                     var gameSession = result.preliminaryCode;
                                     controller.updatePresence(result, res2); 
                                     function res2(){
-                                        getRoom(updateClients, gameSession);
+                                        updateClients(currentRoom, gameSession);
                                 }
                              }
                          }   
@@ -95,6 +95,8 @@ function socketIoFunction(io, controller){
             const roomsWithUsers = arr.filter(room => !room[1].has(room[0]));
             const roomMatchSocketId = roomsWithUsers.filter(id => id[1].has(socket.id));
             const currentRoom = roomMatchSocketId.map(i => i[0]);
+            console.log("CURRENT ROOM STARTS HERE")
+            console.log(currentRoom);
             cb(currentRoom, gameSession);
         }
     
@@ -106,7 +108,9 @@ function socketIoFunction(io, controller){
                 for(var i=0; i<result.players.length; i++){
                     playerArray.push({name: result.players[i].name, present: result.players[i].present});
                 }
-                io.to(currentRoom).emit("updatePlayerList", playerArray);
+                console.log("end of the line...")
+                console.log(currentRoom);
+                io.to(currentRoom[0]).emit("updatePlayerList", playerArray);
             }
         }
         socket.on('disconnect', () => {
