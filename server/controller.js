@@ -132,6 +132,20 @@ async function loadDeck(currentRoom){
 
             const updateDeck = await collection.updateOne({code: currentRoom[0]}, {$set: {deck: deck3}});
             console.log("controller updated deck with spliced deck results.");
+            const value3 = await collection.findOne({code: currentRoom[0]});
+            gameLogic.assignDealer(value3, response3);
+            async function response3(dealer){
+                console.log("THE DEALER IS: ");
+                console.log(dealer);
+                const setDealer = await collection.updateOne({code: currentRoom[0], 'players.name': dealer}, {$set: { 'players.$.dealer': true }});
+                const value4 = await collection.findOne({code: currentRoom[0]});
+                gameLogic.retrieveInitialDraw(value4, response4);
+                async function response4(data){
+                    console.log("This is the retrieveInitialDraw response with the shuffled deck callback: ");
+                    console.log(data);
+
+                }
+            }
         }
 
     }

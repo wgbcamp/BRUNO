@@ -10,7 +10,7 @@ var drawPile = [];
 var discardPile = [];
 
 //PLAYER ARRAY**
-var players = [];
+// var players = [];
 
 //GLOBAL GAMEPLAY VARIABLES
 var playerCounter = 0;
@@ -62,26 +62,33 @@ function initialDraw(data, cb){
     console.log("gameLogic received data to begin initial draw.");
     var tempHand = [];
     for (i=0; i<data.players.length; i++){
+        //returns card to bottom of deck instead of adding to temphand array if its a non-number card
+        if(data.deck[0].slice(-1) < 10 && data.deck[0].slice(-2, -1) !== "w"){
             tempHand.push(data.deck[0]);
-            data.deck.splice(0, 1);
+            
             if(i === data.players.length-1){
                 console.log(`gameLogic loaded ${i+1} cards into tempHand and spliced ${i+1} cards from the deck.`);
             }
+        }else{
+            data.deck.push(data.deck[0]);
+        }
+        data.deck.splice(0, 1);
     }
     console.log("gameLogic sending spliced deck and tempHand back to controller.");
     cb(data.deck, tempHand);
-
-    // assignDealer();
 }
 
-// CURRENTLY HERE***
 //assigns dealer
-function assignDealer(){
-
+function assignDealer(data, cb){
+    var players = [];
+    for (var i=0; i<data.players.length; i++){
+        players.push(data.players[i]);
+    }
+    
     //randomizes player order
     var currentIndex = players.length;
     var randomPlayer, tempValue;
-
+    
     while (currentIndex !== 0){
         randomPlayer = Math.floor(Math.random() * currentIndex);
         currentIndex -= 1;
@@ -90,15 +97,13 @@ function assignDealer(){
         players[randomPlayer] = tempValue;
     }
 
-    console.log("###PLAYERS AFTER RANDOMIZE PLAYER ORDER");
-    console.table(players);
-
     //sends all nonzero values to the end of array
-    for(i=0; i<players.length; i++){
-        if (isNaN(players[i].hand[0].slice(-1)) == true && players[i].dealer == ""){
-            players[i].dealer = "Not a number";
-            players = players.concat(players.splice(i, 1));
-            i--;
+    for(var i=0; i<players.length; i++){
+        if (players[i].hand[0].slice(-1) < 10 && players[i].hand[0].slice(-2,-1) !== "w"){
+            console.log(players);
+            players[i].dealer = "number";   
+        }else{
+            players[i].dealer = "NaN";
         }
     }
 
@@ -112,36 +117,36 @@ function assignDealer(){
             }
     }
 
-    //resets all players.dealer values to false
-    for(i=0; i<players.length; i++){
-        players[i].dealer = "false"
+    //decides dealer
+    var x;
+    var y = 0;
+    var dealer;
+    for (var i=0; i<players.length; i++){
+        if(players[i].dealer === "number"){
+            x = players[i].hand[0].slice(-1);
+            if(x > y){
+                y = x;
+                dealer = players[i].name;
+            }
+        }
     }
-
-    //sets first players.dealer value to true
-    players[0].dealer = "true";
-
-
-    console.log("###PLAYERS AFTER ASSIGN DEALER");
-    console.table(players);
-    retrieveInitialDraw();
+    
+    cb(dealer);
+    // retrieveInitialDraw();
 
 }
 
+//**CURRENTLY HERE */
 //returns card to deck that was dealt to each player after assigning dealer and shuffles deck
-function retrieveInitialDraw(){
-    console.log("before retrieve initial draw")
-    console.dir(deck, {'maxArrayLength': null});
-    console.table(players);
-    for(i=0; i<players.length; i++){
-        deck.push(players[i].hand[0]);
-        players[i].hand = [];
+function retrieveInitialDraw(data, cb){
+    for(i=0; i<data.players.length; i++){
+        data.deck.push(data.players[i].hand[0]);
     }
-    console.log("after retrieve initial draw")
-    console.dir(deck, {'maxArrayLength': null});
-    console.table(players);
-
-    shuffleDeck();
-    initial7CardDeal();
+    shuffleDeck(data.deck, response);
+    function response(data){
+        cb(data);
+    }
+    // initial7CardDeal();
 }
 
 
@@ -603,4 +608,4 @@ function endGameScore(){
     
 }
 
-module.exports = { deck, uploadDeckToMongo, shuffleDeck, initialDraw };
+module.exports = { deck, uploadDeckToMongo, shuffleDeck, initialDraw, assignDealer, retrieveInitialDraw };
