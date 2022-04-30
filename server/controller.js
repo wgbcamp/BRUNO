@@ -102,6 +102,7 @@ async function updatePresence(data, cb){
     cb(value);
 }
 
+//I want off Mr. Bones' async ride
 async function loadDeck(currentRoom){
     console.log("controller loading deck...");
 
@@ -143,13 +144,45 @@ async function loadDeck(currentRoom){
                 async function response4(data){
                     console.log("This is the retrieveInitialDraw response with the shuffled deck callback: ");
                     console.log(data);
+                    const initDrawReset = await collection.updateOne({code: currentRoom[0]}, {$set: {deck: data}});
+                    const playerCount = await collection.findOne({code: currentRoom[0]});
+                    
+                    console.log(playerCount.players.length)
+                    for (var i=0; i<playerCount.players.length; i++){
+                        const kill1FromHand = await collection.updateOne({code: currentRoom[0], 'players.hand': {$size: 1}}, {$set: {'players.$.hand': []}});
+                    }
+                    console.log("controller returned initial draws from dealer assignment to bottom deck.");
+                    const value5 = await collection.findOne({code: currentRoom[0]});
+                    console.log('documents before initial7cardDeal:');
+                    console.log(value5);
+                    gameLogic.initial7CardDeal(value5, response5);
+                    async function response5(deckInit7, tempHand){
+                        const updDeckInit7 = await collection.updateOne({code: currentRoom[0]}, {$set: {deck: deckInit7}});
+                        console.log("Temphand at start of response5:");
+                        console.log(tempHand);
+                        for (var i=0; i< value5.players.length; i++){
+                            const distribute7Cards = await collection.updateOne({code: currentRoom[0], 'players.hand': []}, {$set: {'players.$.hand': tempHand.splice(0, 7)}});
+                        }
+                        console.log("Temphand at end of response5:");
+                        console.log(tempHand);
+                        const value6 = await collection.findOne({code: currentRoom[0]});
+                        gameLogic.createDrawPile(value6, response6);
+                        async function response6(drawPile){
+                            const insDrawPile = await collection.updateOne({code: currentRoom[0]}, {$set: {drawPile: drawPile}});
+                            const scrapDeck = await collection.updateOne({code: currentRoom[0]}, {$set: {deck: []}});
+                            const value7 = await collection.findOne({code: currentRoom[0]});
+                            gameLogic.beginDiscardPile(value7, response7);
+                            async function response7(data, discardPile, rule){
+                                console.log(discardPile);
+                                const firstDiscardPileUpdate = await collection.updateOne({code: currentRoom[0]}, {$set: {drawPile: data, discardPile: discardPile, rule: rule}});
 
+                            }
+                        }
+                    }
                 }
             }
         }
-
     }
-
 }
 
 async function pushIntoHand(){}

@@ -70,6 +70,7 @@ function initialDraw(data, cb){
                 console.log(`gameLogic loaded ${i+1} cards into tempHand and spliced ${i+1} cards from the deck.`);
             }
         }else{
+            i--;
             data.deck.push(data.deck[0]);
         }
         data.deck.splice(0, 1);
@@ -132,13 +133,13 @@ function assignDealer(data, cb){
     }
     
     cb(dealer);
-    // retrieveInitialDraw();
-
 }
 
-//**CURRENTLY HERE */
+
 //returns card to deck that was dealt to each player after assigning dealer and shuffles deck
 function retrieveInitialDraw(data, cb){
+    console.log("This is the deck before retrieve initial draw starts shuffleDeck");
+    console.log(data.deck);
     for(i=0; i<data.players.length; i++){
         data.deck.push(data.players[i].hand[0]);
     }
@@ -146,63 +147,56 @@ function retrieveInitialDraw(data, cb){
     function response(data){
         cb(data);
     }
-    // initial7CardDeal();
 }
 
-
 //evenly distributes 7 cards to 
-function initial7CardDeal(){
+function initial7CardDeal(data, cb){
 
-    for (z=0; z<players.length; z++){
-
+    console.log("gameLogic received data to begin initial draw.");
+    var tempHand = [];
+    for (i=0; i<data.players.length; i++){
         for (a=0; a<7; a++){
-
-            players[z].hand.push(deck[0]);
-            deck.splice(0, 1);
-        }
-        players[z].hand.push("Draw card from deck");
+            tempHand.push(data.deck[0]);
+            data.deck.splice(0, 1);
+        }        
     }
-    
-    console.dir(players, {'maxArrayLength': null});
-    console.log(deck);
-    createDrawPile();
+    console.log("Here's the deck after 7 cards were distributed to each player:");
+    console.log(data.deck);
+    cb(data.deck, tempHand);
 }
 
 //reflects deck and pushes to draw pile
-function createDrawPile(){
-
-    console.log("Deck before createDrawPile()");
-    console.dir(deck, {'maxArrayLength': null});
-    
-    console.log("Creating draw pile...");
-    
-
-    for (i=0; i<Math.ceil(deck.length/2); i++){
+function createDrawPile(data, cb){
+    console.log("DECK SENT TO CREATEDRAWPILE:");
+    console.log(data.deck);
+    for (i=0; i<Math.ceil(data.deck.length/2); i++){
     
         var tempValue;
-        var value2 = deck.length-i;
+        var value2 = data.deck.length-i;
     
         value2--;
     
-        tempValue = deck[i];
-        deck[i] = deck[value2];
-        deck[value2] = tempValue;
+        tempValue = data.deck[i];
+        data.deck[i] = data.deck[value2];
+        data.deck[value2] = tempValue;
     }
 
-    drawPile = (deck.splice(0, deck.length)); 
-    console.dir(drawPile, {'maxArrayLength': null});
-    console.log(deck);
-    beginDiscardPile();
+    drawPile = (data.deck.splice(0, data.deck.length));
+    console.log("THE DRAWPILE:");
+    console.log(drawPile);
+    cb(drawPile);
 }
 
+//**CURRENTLY HERE**/
 //starts discard pile, applies rules based on first card revealed
-function beginDiscardPile(){
-
-    switch (drawPile[0]){
+function beginDiscardPile(data, cb){
+var rule = "";
+var discardPile = [];
+    switch (data.drawPile[0]){
         case "WildDraw4Card":
-            while (drawPile[0] == 'WildDraw4Card'){
+            while (data.drawPile[0] === 'WildDraw4Card'){
                 console.log("Pushing a wild card to the bottom of the deck..")
-                drawPile.push(drawPile.splice(0, 1).toString());
+                data.drawPile.push(data.drawPile.splice(0, 1).toString());
             }        
             break;
         case "WildCard":
@@ -229,7 +223,8 @@ function beginDiscardPile(){
         default:
     }       
     discardPile.unshift(drawPile.splice(0, 1).toString());
-    normalTurn();
+    cb(data.drawPile, discardPile, rule);
+    // normalTurn();
 }
 
 //regular gameplay
@@ -608,4 +603,4 @@ function endGameScore(){
     
 }
 
-module.exports = { deck, uploadDeckToMongo, shuffleDeck, initialDraw, assignDealer, retrieveInitialDraw };
+module.exports = { deck, uploadDeckToMongo, shuffleDeck, initialDraw, assignDealer, retrieveInitialDraw, initial7CardDeal, createDrawPile, beginDiscardPile };
