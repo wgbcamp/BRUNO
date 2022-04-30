@@ -65,7 +65,11 @@ const submitStyle = {
         <div id="mainGrid" className={`${"igGrid"} ${props.cgp.showBlur ? "blur" : "no-blur"}`} style={{backgroundColor: props.cgp.darkMode ? "#3d298a" : "white"}}>
 
         <div className="gameCode" style={{color: 'white'}}>{props.cgp.gameCode}</div>
-        <div className="joinGame" onClick={() => {props.cgp.switchPopup(!props.cgp.showPopup); props.cgp.switchBlur(!props.cgp.showBlur)}} style={{color: 'white', backgroundColor: 'green'}}>Add Player</div>
+        <div className="playerChoices" style={{backgroundColor: "#1c1c1c"}}>
+        <div className="joinGame" onClick={() => {props.cgp.switchPopup(!props.cgp.showPopup); props.cgp.switchBlur(!props.cgp.showBlur)}} style={{color: 'white'}}>
+        <div className="choicesStyles">Join Game</div>
+        </div>
+        </div>
         <div className="startGame" onClick={() => startGame()} style={{color: 'white', backgroundColor: 'teal'}}>Start Game</div>
         <div className="currentPlayers" style={{textAlign: "center"}}>CURRENT PLAYERS
             {players.map(( x ) => ( 

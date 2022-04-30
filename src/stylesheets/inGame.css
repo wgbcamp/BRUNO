@@ -89,9 +89,30 @@
     grid-column: 1/6;
 }
 
+.playerChoices{
+    grid-row: 3/21;
+    grid-column: 1/3;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(10, 1fr);
+}
+
+.choicesStyles{
+   background-color: #4cdd81;
+   width: 70%;
+   height: 60%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   border-radius: 0.8rem;
+   
+}
+
 .joinGame{
-    grid-row: 20;
-    grid-column: 3/4;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .startGame{
