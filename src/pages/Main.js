@@ -17,7 +17,7 @@ function App(props) {
     function submitCode(){
         
     
-        API.createSession2(packagedCharacters, props.app.socket, response); 
+        API.createSession2(packagedCharacters, props.app.socket, localStorage.getItem("userID"), response); 
         function response(result){
             console.log(result);
             window.location.assign(`/inGame/${packagedCharacters}`);

@@ -108,16 +108,10 @@
    
 }
 
-.joinGame{
-    grid-row: 1;
+.bChoiceContainer{
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.startGame{
-    grid-row: 20;
-    grid-column:5/7;
 }
 
 .currentPlayers{

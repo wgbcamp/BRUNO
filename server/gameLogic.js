@@ -1,5 +1,7 @@
 // var inquirer = require('inquirer');
 
+const { useSearchParams } = require("react-router-dom");
+
 //DECK ARRAY**
 var deck = [ "BlueCard0", "BlueCard1", "BlueCard1", "BlueCard2", "BlueCard2", "BlueCard3", "BlueCard3", "BlueCard4", "BlueCard4", "BlueCard5", "BlueCard5", "BlueCard6", "BlueCard6", "BlueCard7", "BlueCard7", "BlueCard8", "BlueCard8", "BlueCard9", "BlueCard9", "BlueCardSkip", "BlueCardSkip", "BlueCardReverse", "BlueCardReverse", "BlueCardDraw2", "BlueCardDraw2", "GreenCard0", "GreenCard1", "GreenCard1", "GreenCard2", "GreenCard2", "GreenCard3", "GreenCard3", "GreenCard4", "GreenCard4", "GreenCard5", "GreenCard5", "GreenCard6", "GreenCard6", "GreenCard7", "GreenCard7", "GreenCard8", "GreenCard8", "GreenCard9", "GreenCard9", "GreenCardSkip", "GreenCardSkip", "GreenCardReverse", "GreenCardReverse", "GreenCardDraw2", "GreenCardDraw2", "RedCard0", "RedCard1", "RedCard1", "RedCard2", "RedCard2", "RedCard3", "RedCard3", "RedCard4", "RedCard4", "RedCard5", "RedCard5", "RedCard6", "RedCard6", "RedCard7", "RedCard7", "RedCard8", "RedCard8", "RedCard9", "RedCard9", "RedCardSkip", "RedCardSkip", "RedCardReverse", "RedCardReverse", "RedCardDraw2", "RedCardDraw2", "YellowCard0", "YellowCard1", "YellowCard1", "YellowCard2", "YellowCard2", "YellowCard3", "YellowCard3", "YellowCard4", "YellowCard4", "YellowCard5", "YellowCard5", "YellowCard6", "YellowCard6", "YellowCard7", "YellowCard7", "YellowCard8", "YellowCard8", "YellowCard9", "YellowCard9", "YellowCardSkip", "YellowCardSkip", "YellowCardReverse", "YellowCardReverse", "YellowCardDraw2", "YellowCardDraw2", "WildCard", "WildCard", "WildCard", "WildCard", "WildDraw4Card", "WildDraw4Card", "WildDraw4Card", "WildDraw4Card"]
 
@@ -58,81 +60,76 @@ function shuffleDeck(gDeck, cb){
 
 
 //all players draw one card at the start of the game
-function initialDraw(data, cb){
+function initialDraw(data, playerID, cb){
     console.log("gameLogic received data to begin initial draw.");
-    var tempHand = [];
-    for (i=0; i<data.players.length; i++){
-        //returns card to bottom of deck instead of adding to temphand array if its a non-number card
-        if(data.deck[0].slice(-1) < 10 && data.deck[0].slice(-2, -1) !== "w"){
-            tempHand.push(data.deck[0]);
-            
-            if(i === data.players.length-1){
+    for (var i=0; i<data.players.length; i++){
+        if(data.players[i].id === playerID){
+
+            if(data.deck[0].slice(-1) < 10 && data.deck[0].slice(-2, -1) !== "w"){
+                data.players[i].hand.push(data.deck.splice(0, 1).toString());
+                data.players[i].choices = [];        
                 console.log(`gameLogic loaded ${i+1} cards into tempHand and spliced ${i+1} cards from the deck.`);
+                break;
+
+            }else{
+                data.deck.push(data.deck.splice(0, 1).toString());
+                i--;
             }
-        }else{
-            i--;
-            data.deck.push(data.deck[0]);
         }
-        data.deck.splice(0, 1);
     }
-    console.log("gameLogic sending spliced deck and tempHand back to controller.");
-    cb(data.deck, tempHand);
+    console.log("gameLogic finished initialDraw, sending data back to controller.");
+    cb(data);
 }
 
 //assigns dealer
 function assignDealer(data, cb){
-    var players = [];
-    for (var i=0; i<data.players.length; i++){
-        players.push(data.players[i]);
-    }
+    data.playerOrder = data.players.map((x) => x);
     
-    //randomizes player order
-    var currentIndex = players.length;
-    var randomPlayer, tempValue;
-    
-    while (currentIndex !== 0){
-        randomPlayer = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-        tempValue = players[currentIndex];
-        players[currentIndex] = players[randomPlayer];
-        players[randomPlayer] = tempValue;
-    }
-
-    //sends all nonzero values to the end of array
-    for(var i=0; i<players.length; i++){
-        if (players[i].hand[0].slice(-1) < 10 && players[i].hand[0].slice(-2,-1) !== "w"){
-            console.log(players);
-            players[i].dealer = "number";   
-        }else{
-            players[i].dealer = "NaN";
+    //distinguishes between number and non-number cards
+    for(var i=0; i<data.players.length; i++){
+        if (data.players[i].hand[0].slice(-1) < 10 && data.players[i].hand[0].slice(-2,-1) !== "w"){
+            console.log(data.players);
         }
     }
 
     //sorts all zero values from highest to lowest
+    console.log("PLAYER ORDER 1st:");
+    console.log(data.playerOrder);
     for(i=0; i<10; i++){
-            for(a=0; a<players.length; a++){
-                    if(players[a].hand[0].slice(-1) > i && players[a].dealer == ""){
-
-                        players = players.splice(a, 1).concat(players);
+        console.log("ran i" + i + " times")
+            for(a=0; a<data.playerOrder.length; a++){
+                console.log("ran a" + a + " times")
+                    if(data.playerOrder[a].hand[0].slice(-1) > i){
+                        console.log("LOOK");
+                        console.log(data.playerOrder);   
+                        data.playerOrder.splice(0, 0, data.playerOrder[a]);
+                        data.playerOrder.splice(a+1, 1);
                     }      
             }
     }
 
     //decides dealer
-    var x;
-    var y = 0;
-    var dealer;
-    for (var i=0; i<players.length; i++){
-        if(players[i].dealer === "number"){
-            x = players[i].hand[0].slice(-1);
-            if(x > y){
-                y = x;
-                dealer = players[i].name;
-            }
+    for (var i=0; i<data.players.length; i++){
+        if(data.players[i].id === data.playerOrder[0].id){
+            data.players[i].privileges = "dealer";
         }
     }
-    
-    cb(dealer);
+
+    //grant choice to dealer the ability to retrieve initial draw
+    for (var i=0; i<data.players.length; i++){
+        if(data.players[i].privileges === 'dealer'){
+            data.players[i].choices.push('Retrieve initial draw');
+        }
+    }
+
+    //removes redundant playerOrder properties
+    for (var i=0; i<data.playerOrder.length; i++){
+        data.playerOrder[i] = data.playerOrder[i].id;
+    }
+
+    console.log("PLAYER ORDER:");
+    console.log(data.playerOrder);
+    cb(data);
 }
 
 
@@ -142,27 +139,37 @@ function retrieveInitialDraw(data, cb){
     console.log(data.deck);
     for(i=0; i<data.players.length; i++){
         data.deck.push(data.players[i].hand[0]);
+        data.players[i].hand.splice(0,1);
+        if(data.players[i].privileges === "dealer"){
+            data.players[i].choices = [];
+            data.players[i].choices.push("Deal starting hand");
+        }
     }
+    
     shuffleDeck(data.deck, response);
-    function response(data){
+    function response(shuffledDeck){
+        data.deck = shuffledDeck;
         cb(data);
     }
 }
 
-//evenly distributes 7 cards to 
+//evenly distributes 7 cards to players
 function initial7CardDeal(data, cb){
 
     console.log("gameLogic received data to begin initial draw.");
-    var tempHand = [];
+
     for (i=0; i<data.players.length; i++){
         for (a=0; a<7; a++){
-            tempHand.push(data.deck[0]);
-            data.deck.splice(0, 1);
-        }        
+            data.players[i].hand.push(data.deck.splice(0, 1).toString());
+        }  
+        if(data.players[i].privileges === "dealer"){
+            data.players[i].choices = [];
+            data.players[i].choices.push("Set draw pile");
+        }    
     }
     console.log("Here's the deck after 7 cards were distributed to each player:");
     console.log(data.deck);
-    cb(data.deck, tempHand);
+    cb(data);
 }
 
 //reflects deck and pushes to draw pile
@@ -180,51 +187,54 @@ function createDrawPile(data, cb){
         data.deck[i] = data.deck[value2];
         data.deck[value2] = tempValue;
     }
+    data.drawPile = [];
+    data.drawPile = data.deck.map((x) => x);
+    data.deck.splice(0, data.deck.length);
 
-    drawPile = (data.deck.splice(0, data.deck.length));
+    for (i=0; i<data.players.length; i++){
+        if(data.players[i].privileges === "dealer"){
+            data.players[i].choices = [];
+            data.players[i].choices.push("Set discard pile");
+        }    
+    }
     console.log("THE DRAWPILE:");
-    console.log(drawPile);
-    cb(drawPile);
+    console.log(data.drawPile);
+    
+    cb(data);
 }
 
-//**CURRENTLY HERE**/
 //starts discard pile, applies rules based on first card revealed
-function beginDiscardPile(data, cb){
-var rule = "";
-var discardPile = [];
-    switch (data.drawPile[0]){
-        case "WildDraw4Card":
-            while (data.drawPile[0] === 'WildDraw4Card'){
-                console.log("Pushing a wild card to the bottom of the deck..")
-                data.drawPile.push(data.drawPile.splice(0, 1).toString());
-            }        
+async function beginDiscardPile(data, cb){
+
+    for (var i=0; i<data.drawPile.length; i++){
+        if(data.drawPile[0] === 'WildDraw4Card'){
+            data.drawPile.push(data.drawPile.splice(0, 1).toString()); 
+        }else{
+            data.rule = await getRule(data.drawPile[0].slice(-8));
+            data.discardPile = [data.drawPile.splice(0, 1).toString()];
+            for (var d=0; d<data.players.length; d++){
+                if(data.players[d].privileges === "dealer"){
+                    data.players[d].choices = [];
+                    //push choices based on player order since the game will start after this function
+                    cb(data);
+                    break;
+                }
+            }
             break;
-        case "WildCard":
-            rule = "wildcard";
-            break;
-        case "BlueCardSkip":
-        case "GreenCardSkip":
-        case "RedCardSkip":
-        case "YellowCardSkip": 
-            rule = "skip";
-            break;
-        case "BlueCardReverse":
-        case "GreenCardReverse":
-        case "RedCardReverse":
-        case "YellowCardReverse":
-            rule = "reverse";
-            break;
-        case "BlueCardDraw2":
-        case "GreenCardDraw2":
-        case "RedCardDraw2":
-        case "YellowCardDraw2":
-            rule = "draw2";
-            break;
-        default:
-    }       
-    discardPile.unshift(drawPile.splice(0, 1).toString());
-    cb(data.drawPile, discardPile, rule);
-    // normalTurn();
+        }
+    }
+
+    function getRule(type){
+        var rules = {
+            'WildCard': 'wildcard',
+            'CardSkip': 'skip',
+            'dReverse': 'reverse',
+            'ardDraw2': 'draw2',
+            'default': 'none'
+        };
+        return rules[type] || rules['default'];
+    }
+           
 }
 
 //regular gameplay

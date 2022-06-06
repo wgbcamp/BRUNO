@@ -57,11 +57,56 @@ function socketIoFunction(io, controller){
                     }
                 } 
         })
-    
-        socket.on("start game", () => {
+    //**STILL NEED TO BLOCK MESSAGE FROM AFFFECTING GAME THAT DOESN'T HAVE THE PLAYER IN IT WHO SENT SAID MESSAGE! */
+
+        socket.on("start game", (gameSession, userID) => {
             console.log("received start game request");
-            getRoom(controller.loadDeck)
+            getRoom(controller.startGame, res, userID);
+            function res(){
+                getRoom(updateClients, gameSession);
+            }
+            // getRoom(controller.loadDeck);
             // controller.loadDeck();
+        })
+
+        socket.on("draw first card", (gameSession, player) => {
+            console.log(`received draw first card request from ${player}.`);
+            getRoom(controller.drawFirstCard, res, player);
+            function res(){
+                getRoom(updateClients, gameSession);
+            }
+        })
+
+        socket.on("retrieve initial draw", (gameSession, dealer) => {
+            console.log(`received retrieve initial draw request from ${dealer}.`);
+            getRoom(controller.retrieveInitialDraw, res);
+            function res(){
+                getRoom(updateClients, gameSession);
+            }
+        })
+
+        socket.on("deal starting hand", (gameSession, dealer) => {
+            console.log(`received deal starting hand request from ${dealer}.`);
+            getRoom(controller.dealStartingHand, res);
+            function res(){
+                getRoom(updateClients, gameSession);
+            }
+        })
+
+        socket.on("set draw pile", (gameSession, dealer) => {
+            console.log(`received set draw pile request from ${dealer}.`);
+            getRoom(controller.setDrawPile, res);
+            function res(){
+                getRoom(updateClients, gameSession);
+            }
+        })
+
+        socket.on("set discard pile", (gameSession, dealer) => {
+            console.log(`received set draw pile request from ${dealer}.`);
+            getRoom(controller.setDiscardPile, res);
+            function res(){
+                getRoom(updateClients, gameSession);
+            }
         })
 
         socket.on("disconnecting", () => {
@@ -90,14 +135,16 @@ function socketIoFunction(io, controller){
             }
         })
     
-        function getRoom(cb, gameSession){
+        function getRoom(cb, gameSession, extra){
             const arr = Array.from(io.sockets.adapter.rooms);
             const roomsWithUsers = arr.filter(room => !room[1].has(room[0]));
             const roomMatchSocketId = roomsWithUsers.filter(id => id[1].has(socket.id));
+            console.log("LOOK WARREN")
+            console.log(roomMatchSocketId);
             const currentRoom = roomMatchSocketId.map(i => i[0]);
             console.log("CURRENT ROOM STARTS HERE")
             console.log(currentRoom);
-            cb(currentRoom, gameSession);
+            cb(currentRoom, gameSession, extra);
         }
     
         function updateClients(currentRoom, gameSession){
@@ -108,9 +155,20 @@ function socketIoFunction(io, controller){
                 for(var i=0; i<result.players.length; i++){
                     playerArray.push({name: result.players[i].name, present: result.players[i].present});
                 }
-                console.log("end of the line...")
+                var choicesArray = [];
+                for(var i=0; i<result.players.length; i++){
+                    choicesArray.push({name: result.players[i].name, socketID: result.players[i].socketID, choices: result.players[i].choices});
+                }
                 console.log(currentRoom);
                 io.to(currentRoom[0]).emit("updatePlayerList", playerArray);
+                if(result.inSession === true){
+                    io.to(currentRoom[0]).emit("updatePrivileges", []);
+                }
+                console.log(choicesArray);
+                for (var i=0; i<choicesArray.length; i++){
+                    io.to(choicesArray[i].socketID).emit('updatePlayerChoices', choicesArray[i].choices);
+                    io.to(choicesArray[i].socketID).emit('updatePrivileges', []);
+                }
             }
         }
         socket.on('disconnect', () => {

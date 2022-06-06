@@ -1,9 +1,9 @@
-function createSession2(packagedCharacters, socket, cb){
+function createSession2(packagedCharacters, socket, gameCreator, cb){
 
-    socket.emit("create session", { preliminaryCode: packagedCharacters }, (response) => {
+    socket.emit("create session", { preliminaryCode: packagedCharacters, gameCreator: gameCreator }, (response) => {
         if(response.status === "ok"){
             console.log(response.status);
-            socket.emit("fetch session", { preliminaryCode: packagedCharacters, fetchPrelim: 1}, (response) => {
+            socket.emit("fetch session", { preliminaryCode: packagedCharacters, gameCreator: gameCreator, fetchPrelim: 1}, (response) => {
                 if(response.status){
                     cb(response.data);
                 }
