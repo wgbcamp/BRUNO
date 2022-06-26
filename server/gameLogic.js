@@ -1,5 +1,6 @@
 // var inquirer = require('inquirer');
 
+const e = require("express");
 const { useSearchParams } = require("react-router-dom");
 
 //DECK ARRAY**
@@ -212,10 +213,41 @@ async function beginDiscardPile(data, cb){
         }else{
             data.rule = await getRule(data.drawPile[0].slice(-8));
             data.discardPile = [data.drawPile.splice(0, 1).toString()];
+
+            //clears choices from dealer and applies choices to player position on first card that was drawn
+
             for (var d=0; d<data.players.length; d++){
                 if(data.players[d].privileges === "dealer"){
+
                     data.players[d].choices = [];
-                    //push choices based on player order since the game will start after this function
+
+                    var VR = await applyRule(d, data.rule);
+                    
+
+                    //NEW
+                    //calculate position if value is less than max index
+                    if(VR[0] < data.players.length-1){
+                        if(VR[0] >= 0){
+                            console.log("case1");
+                            data.players[VR[0]].choices = [VR[1]];
+                        }else{
+                            console.log("case2");
+                            data.players[data.players.length - Math.abs(VR[0])].choices = [VR[1]];
+                        }
+                    }
+
+                    //calculate position if value is greater than or equal to max index
+                    if(VR[0] >= data.players.length-1){
+                        if(VR[0] === data.players.length-1){
+                            console.log("case3")
+                            data.players[VR[0]].choices = [VR[1]];
+                        }else{
+                            console.log("case4");
+                            data.players[Math.abs(data.players.length-VR[0])].choices = [VR[1]];
+                        }
+                        
+                    }
+
                     cb(data);
                     break;
                 }
@@ -223,6 +255,7 @@ async function beginDiscardPile(data, cb){
             break;
         }
     }
+}
 
     function getRule(type){
         var rules = {
@@ -234,7 +267,16 @@ async function beginDiscardPile(data, cb){
         };
         return rules[type] || rules['default'];
     }
-           
+
+    function applyRule(value, rule){
+        var rules = {
+            'reverse': [value+1, 'Play card'],
+            'skip': [value-2, 'Play card'],
+            'draw2': [value-1, 'Draw 2 cards'],
+            'wildcard': [value-1, 'Choose color'],
+            'none': [value-1, 'Play card']
+        };
+        return rules[rule];
 }
 
 //regular gameplay
