@@ -102,8 +102,16 @@ function socketIoFunction(io, controller){
         })
 
         socket.on("set discard pile", (gameSession, dealer) => {
-            console.log(`received set draw pile request from ${dealer}.`);
+            console.log(`received set discard pile request from ${dealer}.`);
             getRoom(controller.setDiscardPile, res);
+            function res(){
+                getRoom(updateClients, gameSession);
+            }
+        })
+
+        socket.on("play card", (gameSession, player, value) => {
+            console.log(`received play card request from ${player}.`);
+            getRoom(controller.playCard, res, [player, value]);
             function res(){
                 getRoom(updateClients, gameSession);
             }
@@ -135,7 +143,7 @@ function socketIoFunction(io, controller){
             }
         })
     
-        function getRoom(cb, gameSession, extra){
+        function getRoom(cb, param1, param2){
             const arr = Array.from(io.sockets.adapter.rooms);
             const roomsWithUsers = arr.filter(room => !room[1].has(room[0]));
             const roomMatchSocketId = roomsWithUsers.filter(id => id[1].has(socket.id));
@@ -144,7 +152,7 @@ function socketIoFunction(io, controller){
             const currentRoom = roomMatchSocketId.map(i => i[0]);
             console.log("CURRENT ROOM STARTS HERE")
             console.log(currentRoom);
-            cb(currentRoom, gameSession, extra);
+            cb(currentRoom, param1, param2);
         }
     
         function updateClients(currentRoom, gameSession){
@@ -159,6 +167,12 @@ function socketIoFunction(io, controller){
                 for(var i=0; i<result.players.length; i++){
                     choicesArray.push({name: result.players[i].name, socketID: result.players[i].socketID, choices: result.players[i].choices});
                 }
+
+                var handArray = [];
+                for(var i=0; i<result.players.length; i++){
+                    handArray.push({socketID: result.players[i].socketID, hand: result.players[i].hand})
+                }
+
                 console.log(currentRoom);
                 io.to(currentRoom[0]).emit("updatePlayerList", playerArray);
                 if(result.inSession === true){
@@ -168,6 +182,10 @@ function socketIoFunction(io, controller){
                 for (var i=0; i<choicesArray.length; i++){
                     io.to(choicesArray[i].socketID).emit('updatePlayerChoices', choicesArray[i].choices);
                     io.to(choicesArray[i].socketID).emit('updatePrivileges', []);
+                }
+                console.log(handArray);
+                for (var i=0; i<handArray.length; i++){
+                    io.to(handArray[i].socketID).emit('updatePlayerHand', handArray[i].hand);
                 }
             }
         }

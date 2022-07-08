@@ -237,7 +237,6 @@ async function setDrawPile(currentRoom, cb){
     }
 }
 
-//continue here
 async function setDiscardPile(currentRoom, cb){
     const search = await collection.findOne({code: currentRoom[0]});
     gameLogic.beginDiscardPile(search, response);
@@ -247,92 +246,16 @@ async function setDiscardPile(currentRoom, cb){
     }
 }
 
-//I want off Mr. Bones' async ride
-async function loadDeck(currentRoom){
-    console.log("controller loading deck...");
-
-    const value = await collection.updateOne({code: currentRoom[0]}, {$set: { deck: gameLogic.deck }});
-    console.log("controller added deck.");
-    const readDeck = await collection.findOne({code: currentRoom[0]});
-    console.log("controller found deck.");
-    gameLogic.shuffleDeck(readDeck.deck, response);
-    async function response(deck2){
-        console.log("controller received shuffled deck.");
-        const result = await collection.updateOne({code: currentRoom[0]}, {$set: { deck: deck2 }});
-        console.log("controller updated deck.");
-        const value2 = await collection.findOne({code: currentRoom[0]});
-        console.log("controller found deck.")
-        console.log(deck2);
-        gameLogic.initialDraw(value2, response2);
-        async function response2(deck3, tempHand){
-            console.log("controller received spliced deck and tempHand from gameLogic.");
-            for (var i=0; i<tempHand.length; i++){
-                var tempHandValue = tempHand[i];
-                const test = await collection.updateOne({code: currentRoom[0], "players.hand": []}, {$push: {"players.$.hand": tempHandValue}});
-                if(i === tempHand.length-1){
-                    console.log(`controller distributed ${i+1} unique cards to players with empty hands.`);
-                    console.log(await collection.findOne({code: currentRoom[0]}));
-                }
-            }
-            
-
-            const updateDeck = await collection.updateOne({code: currentRoom[0]}, {$set: {deck: deck3}});
-            console.log("controller updated deck with spliced deck results.");
-            const value3 = await collection.findOne({code: currentRoom[0]});
-            gameLogic.assignDealer(value3, response3);
-            async function response3(dealer){
-                console.log("THE DEALER IS: ");
-                console.log(dealer);
-                const setDealer = await collection.updateOne({code: currentRoom[0], 'players.name': dealer}, {$set: { 'players.$.dealer': true }});
-                const value4 = await collection.findOne({code: currentRoom[0]});
-                gameLogic.retrieveInitialDraw(value4, response4);
-                async function response4(data){
-                    console.log("This is the retrieveInitialDraw response with the shuffled deck callback: ");
-                    console.log(data);
-                    const initDrawReset = await collection.updateOne({code: currentRoom[0]}, {$set: {deck: data}});
-                    const playerCount = await collection.findOne({code: currentRoom[0]});
-                    
-                    console.log(playerCount.players.length)
-                    for (var i=0; i<playerCount.players.length; i++){
-                        const kill1FromHand = await collection.updateOne({code: currentRoom[0], 'players.hand': {$size: 1}}, {$set: {'players.$.hand': []}});
-                    }
-                    console.log("controller returned initial draws from dealer assignment to bottom deck.");
-                    const value5 = await collection.findOne({code: currentRoom[0]});
-                    console.log('documents before initial7cardDeal:');
-                    console.log(value5);
-                    gameLogic.initial7CardDeal(value5, response5);
-                    async function response5(deckInit7, tempHand){
-                        const updDeckInit7 = await collection.updateOne({code: currentRoom[0]}, {$set: {deck: deckInit7}});
-                        console.log("Temphand at start of response5:");
-                        console.log(tempHand);
-                        for (var i=0; i< value5.players.length; i++){
-                            const distribute7Cards = await collection.updateOne({code: currentRoom[0], 'players.hand': []}, {$set: {'players.$.hand': tempHand.splice(0, 7)}});
-                        }
-                        console.log("Temphand at end of response5:");
-                        console.log(tempHand);
-                        const value6 = await collection.findOne({code: currentRoom[0]});
-                        gameLogic.createDrawPile(value6, response6);
-                        async function response6(drawPile){
-                            const insDrawPile = await collection.updateOne({code: currentRoom[0]}, {$set: {drawPile: drawPile}});
-                            const scrapDeck = await collection.updateOne({code: currentRoom[0]}, {$set: {deck: []}});
-                            const value7 = await collection.findOne({code: currentRoom[0]});
-                            gameLogic.beginDiscardPile(value7, response7);
-                            async function response7(data, discardPile, rule){
-                                console.log(discardPile);
-                                const firstDiscardPileUpdate = await collection.updateOne({code: currentRoom[0]}, {$set: {drawPile: data, discardPile: discardPile, rule: rule}});
-
-                            }
-                        }
-                    }
-                }
-            }
-        }
+async function playCard(currentRoom, cb, cardInfo){
+    const search = await collection.findOne({code: currentRoom[0]});
+    gameLogic.playCard(search, cardInfo[0], cardInfo[1], response);
+    async function response(data){
+        const result = await collection.updateOne({code: currentRoom[0]}, {$set: {discardPile: data.discardPile, players: data.players}});
+        cb();
     }
 }
 
-async function pushIntoHand(){}
-
-module.exports = { insertOneFN, readDB, addPlayer, updatePresence, loadDeck, startGame, drawFirstCard, retrieveInitialDraw, dealStartingHand, setDrawPile, setDiscardPile }
+module.exports = { insertOneFN, readDB, addPlayer, updatePresence, startGame, drawFirstCard, retrieveInitialDraw, dealStartingHand, setDrawPile, setDiscardPile, playCard }
 
 /*
 need error checking on playercount manipulation and same code/string already existing in database

@@ -39,7 +39,12 @@ function InGame(props) {
         props.cgp.socket.on("updatePrivileges", (data) => {
             console.log(data);
             updateYourPrivileges(data);
-        })
+        });
+        props.cgp.socket.on("updatePlayerHand", (data) => {
+            console.log(data);
+            updateYourHand(data);
+            updateSimplifiedHand(data.slice(0,5));
+        });
         
     }, [])
 
@@ -67,6 +72,13 @@ function buttonChoice(option){
         case "Set discard pile":
             props.cgp.socket.emit('set discard pile', g.slice(1+g.lastIndexOf('/', g.length)), localStorage.getItem('userID'));
             break;
+        default:
+            if(option !== "Play card"){
+            props.cgp.socket.emit('play card', g.slice(1+g.lastIndexOf('/', g.length)), localStorage.getItem('userID'), option);
+            console.log(option);
+            break;
+            };
+
     }
 }
 
@@ -84,14 +96,43 @@ const submitStyle = {
     color: props.cgp.darkMode ? "white" : "white",
     textDecoration: 'none'
 }
-    const [yourHand, updateYourHand] = useState(["greenCard4", "yellowCard5", "blueCardReverse", "wildCardDraw4", "redCardSkip"]);
+    const [yourHand, updateYourHand] = useState([]);
+
+    const [simplifiedHand, updateSimplifiedHand] = useState([]);
+
+    const [handFloor, updateHandFloor] = useState(0);
+    const [handCeil, updateHandCeil] = useState(5);
+
+    async function calculateArrayShift(data){
+        if(yourHand.length > 5){
+
+            if(data === "left"){
+                if(handFloor > 0){
+                    updateHandFloor(handFloor-1);
+                    updateHandCeil(handCeil-1);
+                    updateSimplifiedHand(yourHand.slice(handFloor-1, handCeil-1));
+                }     
+            }
+            if(data === "right"){
+                if(handCeil < yourHand.length){
+                    updateHandFloor(handFloor+1);
+                    updateHandCeil(handCeil+1);
+                    updateSimplifiedHand(yourHand.slice(handFloor+1, handCeil+1));
+                }
+            }
+
+            
+        }else{
+            console.log("NOPE");
+        }
+    }
     
-    const [yourScore, updateYourScore] = useState(0);
-    const otherPlayerStats = [
-        { player: "player2", name: "Bill", score: 0, hand: ["redCard6 ", "blueCardSkip "] },
-        { player: "player3", name: "Sam", score: 0, hand: ["redCard6 ", "blueCardSkip "] },
-        { player: "player4", name: "Phil", score: 0, hand: ["redCard6 ", "blueCardSkip "] },
-    ]
+    // const [yourScore, updateYourScore] = useState(0);
+    // const otherPlayerStats = [
+    //     { player: "player2", name: "Bill", score: 0, hand: ["redCard6 ", "blueCardSkip "] },
+    //     { player: "player3", name: "Sam", score: 0, hand: ["redCard6 ", "blueCardSkip "] },
+    //     { player: "player4", name: "Phil", score: 0, hand: ["redCard6 ", "blueCardSkip "] },
+    // ]
 
   return (
     <div>  
@@ -120,14 +161,14 @@ const submitStyle = {
                 ))}
         </div>
                 <div className="playerHandContainer">
-                    <div className="placeholderArrowLeft">Left</div>
+                    <div className="placeholderArrowLeft" onClick={() => calculateArrayShift("left")}>Left</div>
                     
                     <div className="playerHand">
-                        {yourHand.map((x) => (
-                            <div className={`${"cardAlign"} ${yourHand[yourHand.indexOf(x)].slice(0, yourHand[yourHand.indexOf(x)].search("Card"))}`} key={x}>{x}</div>    
+                        {simplifiedHand.map((x, index) => (
+                            <div className={`${"cardAlign"} ${x.slice(0, x.search("Card"))}`} onClick={() => buttonChoice(x)} key={index}>{x}</div>    
                         ))}
                     </div>
-                    <div className="placeholderArrowRight">Right</div>
+                    <div className="placeholderArrowRight" onClick={() => calculateArrayShift("right")}>Right</div>
                 </div>
         </div>
 

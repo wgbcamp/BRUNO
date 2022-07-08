@@ -34,19 +34,23 @@
     overflow: hidden;
 }
 
-.red{
+.Red{
     background-color: rgb(243, 93, 93);
 }
-.blue{
+.Blue{
     background-color: rgb(63, 166, 235);
 }
-.green{
+.Green{
     background-color: rgb(96, 190, 96);
 }
-.yellow{
+.Yellow{
     background-color: rgb(255, 255, 88);
 }
-.wild{
+.Wild{
+    background-color: black;
+    color: white;
+}
+.WildDraw4{
     background-color: black;
     color: white;
 }

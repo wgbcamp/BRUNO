@@ -1,5 +1,6 @@
 // var inquirer = require('inquirer');
 
+const { setInternalBufferSize } = require("bson");
 const e = require("express");
 const { useSearchParams } = require("react-router-dom");
 
@@ -279,375 +280,127 @@ async function beginDiscardPile(data, cb){
         return rules[rule];
 }
 
-//regular gameplay
-function normalTurn(){
-    //if drawPile is depleted, run reshuffle, also prevents forcing reshuffle by playing the wrong card
-    for (i=0; i<players.length; i++){
-        if(players[i].hand.length == 0){
-            noCardsLeft == players[i].name;
+async function playCard(data, player, card, cb){
+
+    var currentPlayer = "";
+    var currentCard = "";
+    var target = "";
+    var choice = "";
+
+    //validate player name, choice, and card requested
+    loop1:
+        for (var i=0; i<data.players.length; i++){
+            for (var a=0; a<data.players[i].choices.length; a++){
+                if (data.players[i].choices[a] === "Play card"){
+                    if (data.players[i].id === player){
+                        currentPlayer = data.players[i].name; 
+                        for (var e=0; e<data.players[i].hand.length; e++){
+                            if (data.players[i].hand[e] === card){
+                                currentCard = data.players[i].hand[e];
+                                break loop1;
+                            }
+                        }
+                    } 
+                }
+            }
         }
-    }
-    if(noCardsLeft !== "blank"){
-        endGameScore();
-    }else{
-        if(drawPile.length == 0 && stayOnPlayer == 0){
-            reshuffle();
-        }
-        console.log("drawPile is = ")
-        console.log(drawPile);
-        console.log("discardPile is = ")
-        console.log(discardPile)
-     
-        switch (rule){
-            case "wildcard":
-                rule = "";
-                inquirer
-                .prompt([
-                    {
-                        type: 'list',
-                        name: 'chooseColor',
-                        message: `What color will ${players[playerCounter].name} choose?`,
-                        choices: [
-                            'Red',
-                            'Blue',
-                            'Green',
-                            'Yellow'
-                        ]
-                    }
-                ]).then((answer) =>{
-                    console.log("The color " + answer.chooseColor + " has been chosen.")
-                    previousWildCardColor = wildCardColor;
-                    wildCardColor = answer.chooseColor.toString();
-                    standardSequence();
-                })
-                break;
-            case "skip":
-                rule = "";
-                if(gameDirection == 0){
-                    playerCounter--;
-                }else{
-                    playerCounter++;
-                }
-                console.log("PlayerCounter = " + playerCounter);
-                if(playerCounter < 0){
-                    playerCounter = players.length-1
-                }else if (playerCounter > players.length-1){
-                    playerCounter = 0;
-                }
-                standardSequence();
-                break;
-            case "reverse":
-                rule = "";
-                if(gameDirection == 0){
-                    gameDirection = 1
-                }else{
-                    gameDirection = 0
-                }
-                standardSequence();
-                break;
-            case "draw2":
-                rule = "";
-                if(gameDirection == 0){
-                    if(playerCounter > 0){
-                        console.log(players[playerCounter-1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                        players[playerCounter-1].hand.unshift(drawPile.splice(0, 1).toString());
-                        console.log(players[playerCounter-1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                        players[playerCounter-1].hand.unshift(drawPile.splice(0, 1).toString());
-                    }else{
-                        console.log(players[players.length-1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                        players[players.length-1].hand.unshift(drawPile.splice(0, 1).toString());
-                        console.log(players[players.length-1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                        players[players.length-1].hand.unshift(drawPile.splice(0, 1).toString());
-                    }
     
-                }else{
-                    if(playerCounter < players.length-1){
-                        console.log(players[playerCounter+1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                        players[playerCounter+1].hand.unshift(drawPile.splice(0, 1).toString());
-                        console.log(players[playerCounter+1].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                        players[playerCounter+1].hand.unshift(drawPile.splice(0, 1).toString());
-                    }else{
-                        console.log(players[0].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                        players[0].hand.unshift(drawPile.splice(0, 1).toString());
-                        console.log(players[0].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                        players[0].hand.unshift(drawPile.splice(0, 1).toString());
+    console.log("currentPlayer: " + currentPlayer);
+    console.log("currentCard: " + currentCard);
+
+    //splice card from player hand into top of discardpile
+    loop2:
+    if ((data.discardPile[0].slice(0, 4) === currentCard.slice(0, 4) || data.discardPile[0].slice(-5) === currentCard.slice(-5)) && currentPlayer !== ""){
+        for (var i=0; i<data.players.length; i++){
+            if (data.players[i].name === currentPlayer){
+                for (var a=0; a<data.players[i].hand.length; a++){
+                    if (data.players[i].hand[a] === currentCard){
+                        data.discardPile.unshift(data.players[i].hand.splice(a, 1).toString());
+                        break loop2;
                     }
                 }
-                if(firstReverse == 1){
-                    if(gameDirection == 0){
-                        playerCounter--;
-                    }else{
-                        playerCounter++;
-                    }
-                    console.log("PlayerCounter = " + playerCounter);
-                    if(playerCounter < 0){
-                        playerCounter = players.length-1
-                    }else if (playerCounter > players.length-1){
-                        playerCounter = 0;
-                    }
-                }
-                standardSequence();
-                break;
-            case "wilddraw4card":
-                rule = "";
-                inquirer
-                .prompt([
-                    {
-                        type: 'list',
-                        name: 'chooseColor',
-                        message: `What color will ${players[playerCounter].name} choose?`,
-                        choices: [
-                            'Red',
-                            'Blue',
-                            'Green',
-                            'Yellow'
-                        ]
-                    }
-                ]).then((answer) =>{
-                    console.log("The color " + answer.chooseColor + " has been chosen.")
-                    previousWildCardColor = wildCardColor;
-                    wildCardColor = answer.chooseColor.toString();
-                    challenge();
-                })
-                break;
-            default:
-                standardSequence();
+            }
         }
     }
 
-}
+    //pass play card choice and special card rule onto next player
+    if (currentPlayer !== ""){
+        for (var i=0; i<data.players.length; i++){
+            for (var a=0; a<data.players[i].choices; a++){
+                if (data.players[i].choices[a] === "Play card"){
+                    data.players[i].choices.splice(a, 1);
+                    
+                    //creates array for rules given to players related to their positions
+                    choice = await passRule(currentCard.slice(-5));
 
-function standardSequence(){
+                    //index position differs based on wild cards
+                    var index = 1;
 
-    //prevents first reverse card rule from being applied
-    firstReverse = 1;
+                        if (choice.length === 3){
+                            index = 2;
+                        }else if (choice.length === 4){
+                            index = 3;
+                        }
 
-    //prevents function from moving onto next player until a correct card is played
-    if(stayOnPlayer == 0){
-        //choose the next player based on game direction status
-        if(gameDirection == 0){
-            playerCounter--;
-        }else{
-            playerCounter++;
-        }
-        //check if player counter tracking goes out of bounds, correct when necessary
-        if(playerCounter < 0){
-            playerCounter = players.length-1
-        }else if (playerCounter > players.length-1){
-            playerCounter = 0;
-        }
-    }
-    
-    console.log(players[playerCounter]);
+                        //flips direction if reverse rule is already in place
+                        if (data.rule === "reverse"){
+                            choice[index] = -choice[index];
+                        }
 
-    inquirer
-    .prompt([
-        {
-            type: 'list',
-            name: 'startPlay',
-            message: `What card will ${players[playerCounter].name} play?`,
-            choices: players[playerCounter].hand
-        }
-    ])
-    .then((answer) =>{
-        var cardPicked = JSON.stringify(answer.startPlay);
-        cardPicked = cardPicked.slice(1,-1); //removes quotes
+                        //decides target player 
+                        if (i + choice[index] < 0){
+                            target = data.players.length - choice[index];
+                        }else if (i + choice[index] > data.players.length-1){
+                            target = -1 + choice[index];
+                        } else {
+                            target = i + choice[index];
+                        }
 
-        console.log("THIS IS THE WILDCARD COLOR CHOICE: " + wildCardColor);
-        console.log("THIS IS THE CARD YOU PLAYED: " + cardPicked);
-            //validate if card exists at top of discard pile based on type
+                        //applies choices to target player and reversal rule to game session
+                        if (choice.length === 2){
+                            ///
 
-            //first statement=checking first character, second statement=checking for last two characters to get number type, third statement=wildcard check
-            if(cardPicked.charAt(0) == discardPile[0].charAt(0) || cardPicked.slice(cardPicked.length-2,cardPicked.length) == discardPile[0].slice(discardPile[0].length-2, discardPile[0].length) || cardPicked.charAt(0) == "W" || cardPicked.charAt(0) == wildCardColor.charAt(0)){
-                console.log(`${cardPicked} matches ${discardPile[0]}!`)
-                console.log(`Copying ${cardPicked} to top of discard pile.`);
-                discardPile.unshift(cardPicked);
-                console.log(`Removing ${cardPicked} from ${players[playerCounter].name}'s hand.`);
-                players[playerCounter].hand.splice(players[playerCounter].hand.indexOf(cardPicked), 1);
-                //card type will apply a rule that affects the cases of the next normalTurn
-                if(cardPicked.slice(cardPicked.length-4, cardPicked.length) == "Skip"){
-                    rule = "skip";
-                }
-                if(cardPicked.slice(cardPicked.length-7, cardPicked.length) == "Reverse"){
-                    rule = "reverse";
-                }
-                if(cardPicked.slice(cardPicked.length-5, cardPicked.length) == "Draw2"){
-                    rule = "draw2";
-                }
-                if(cardPicked.slice(0, cardPicked.length) == "WildCard"){
-                    rule = "wildcard";
-                }
-                if(cardPicked == "WildDraw4Card"){
-                    rule = "wilddraw4card"
-                }
-                //lets function move onto next player
-                stayOnPlayer = 0;
-                normalTurn();
+                            data.players[target].choices.unshift(choice[1]);
 
-                
-            }else if(cardPicked == "Draw card from deck"){
-                //if drawPile is depleted, run reshuffle 
-                if(drawPile.length == 0){
-                    reshuffle();
-                }
-                //player draws card if they have no match or choose to draw on their own accord, if card drawn matches card at top of discardPile, it must be played
-                console.log(players[playerCounter].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                players[playerCounter].hand.unshift(drawPile.splice(0, 1).toString());
-                var x = players[playerCounter].hand[0];
-                console.log("######THIS IS X = " + x);
-                if(x.charAt(0) == discardPile[0].charAt(0) || x.slice(x.length-2,x.length) == discardPile[0].slice(discardPile[0].length-2, discardPile[0].length) || x.charAt(0) == "W" || x.charAt(0) == wildCardColor.charAt(0)){
-                    console.log(`${x} matches ${discardPile[0]}!`);
-                    console.log(`Copying ${x} to top of discard pile.`);
-                    discardPile.unshift(x);
-                    console.log(`Removing ${x} from ${players[playerCounter].name}'s hand.`);
-                    players[playerCounter].hand.splice(players[playerCounter].hand[0], 1);
-                                    //card type will apply a rule that affects the cases of the next normalTurn
-                    if(x.slice(x.length-4, x.length) == "Skip"){
-                        rule = "skip";
+                            if (currentCard.slice(-7) === "Reverse"){
+                                if (data.rule === "reverse"){
+                                    data.rule = "none";
+                                }else{
+                                    data.rule = "reverse";
+                                }
+                            }
+
+                        }else if (choices.length === 3){
+
+                            //we need to add a temporary storage array to mongodb here to prevent the next player from receiving their choices at the same time as the current player
+                            data.players[i].choo
+                            data.players[target].choices.unshift(choice[1]);
+                        } else {
+
+                        }
+
                     }
-                    if(x.slice(x.length-7, x.length) == "Reverse"){
-                        rule = "reverse";
-                    }
-                    if(x.slice(x.length-5, x.length) == "Draw2"){
-                        rule = "draw2";
-                    }
-                    if(x.slice(0, x.length) == "WildCard"){
-                        rule = "wildcard";
-                    }
-                    if(x == "WildDraw4Card"){
-                        rule = "wilddraw4card"
-                    }
+                    
+                    
+
                 }
-                //lets function move onto next player
-                stayOnPlayer = 0;
-                normalTurn();
-            }else{
-                //restart function if played card does not match the type of the card at the top of the discard pile, alert player
-                stayOnPlayer = 1;
-                console.log(players[playerCounter].name + " picked " + cardPicked + ", but it doesn't match " + discardPile[0] + "!");
-                normalTurn();
             }
-
-    })  
-}
-
-function challenge(){
-
-    if(gameDirection == 0){
-        if(playerCounter > 0){                   
-            challenger = playerCounter-1;
-        }else{
-            challenger = players.length-1;
         }
-    }else{
-        if(playerCounter < players.length-1){
-            challenger = playerCounter+1;
-        }else{
-            challenger = 0;
-        }
+        //add reneging choice somewhere at the end of this function
+    cb(data);
+} 
+
+    function passRule(type){
+        var rules = {
+            'Draw2': ['Draw two cards', -1],
+            'verse': ['Play card', 1],
+            'dSkip': ['Play card', -2],
+            'dCard': ['Choose card color', 'Play card', -1],
+            '4Card': ['Choose card color', 'Draw four cards', 'Challenge Wild Draw 4 Play', -1]
+        };
+        return rules[type];
     }
 
-    inquirer
-    .prompt([
-        {
-            type: 'list',
-            name: 'challengePrompt',
-            message: `Will ${players[challenger].name} challenge ${players[playerCounter].name}'s WildDraw4Card?`,
-            choices: [
-                'Yes',
-                'No'
-            ]
-        }
-    ]).then((answer) =>{
-        if (answer.challengePrompt == "Yes"){
-            console.log(`Naturally, we would show ${players[playerCounter].name}'s hand to ${players[challenger].name}, but this is only a terminal application! Here's ${players[playerCounter].name}'s hand:`);
-            console.log(players[playerCounter].hand);
-            //variable that determines who will draw cards at the end of the challenge
-            var draw = 0;
-            //loops through hand of player who played WildDrawCard4
-            for (i=0; i<players[playerCounter].hand.length; i++){
-                //checks for color type between hand and discardPile, but omits wild cards
-                if(players[playerCounter].hand[i].charAt(0) == discardPile[1].charAt(0) && players[playerCounter].hand[i].charAt(0)!== "W"){
-                    console.log("### playerCounter.hand = " + players[playerCounter].hand[i].charAt(0))
-                    console.log("### discardPile[1] = " + discardPile[1].charAt(0));
-                    draw = 1;  
-                }
-                //checks for number and action type between hand and discardPile, but omits wild cards
-                if(players[playerCounter].hand[i].slice(players[playerCounter].hand[i].length-2,players[playerCounter].hand[i].length) == discardPile[1].slice(discardPile[1].length-2, discardPile[1].length) && players[playerCounter].hand[i].charAt(0)!== "W"){
-                    console.log("#### playerCounter.hand = " + players[playerCounter].hand[i].slice(players[playerCounter].hand[i].length-2,players[playerCounter].hand[i].length));
-                    console.log("#### discardPile[1] = " + discardPile[1].slice(discardPile[1].length-2, discardPile[1].length));
-                    draw = 1;
-                }
-                //checks for color type between hand and previousWildCardColor if wildCard or wildDraw4Card was played directly beforehand
-                if(players[playerCounter].hand[i].charAt(0) == previousWildCardColor.charAt(0) && discardPile[1].charAt(0) == "W"){
-                    console.log("## playerCounter.hand = " + players[playerCounter].hand[i].charAt(0));
-                    console.log("## previousWildCardColor = " + previousWildCardColor.charAt(0));
-                    console.log("## discardPile[1] = " + discardPile[1].charAt(0));
-                    draw = 1;
-                }
-            }
-            if(draw == 1){
-                console.log(`${players[playerCounter].name} played WildDraw4Card illegally and will draw 4 cards!`);
-                for(i=0; i<4; i++){
-                    console.log(players[playerCounter].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                    players[playerCounter].hand.unshift(drawPile.splice(0, 1).toString());
-                }  
-            }else{
-                console.log(`${players[challenger].name} played is incorrect and will draw 6 cards!`);
-                for(i=0; i<6; i++){
-                    console.log(players[challenger].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                    players[challenger].hand.unshift(drawPile.splice(0, 1).toString());
-                }  
-            }
-        }else{
-            for(i=0; i<4; i++){
-                console.log(players[challenger].name + " drew " + drawPile.slice(0, 1) + " from the drawPile!");
-                players[challenger].hand.unshift(drawPile.splice(0, 1).toString());
-            }
-        }
-
-        if(firstReverse == 1){
-            if(gameDirection == 0){
-                playerCounter--;
-            }else{
-                playerCounter++;
-            }
-            console.log("PlayerCounter = " + playerCounter);
-            if(playerCounter < 0){
-                playerCounter = players.length-1
-            }else if (playerCounter > players.length-1){
-                playerCounter = 0;
-            }
-        }
-        standardSequence();
-    })
-};
-
-//shuffles deck
-function reshuffle(){
-    var g;
-
-    console.log("discardPile before shuffle (unshuffled): ")
-    console.log(discardPile);
-    console.log("preserving card at top of discardPile");
-    g = discardPile.splice(0, 1).toString();
-
-    var currentIndex = discardPile.length;
-    var randomCard, tempValue;
-
-    while (currentIndex !== 0){
-        randomCard = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-        tempValue = discardPile[currentIndex];
-        discardPile[currentIndex] = discardPile[randomCard];
-        discardPile[randomCard] = tempValue;
-    }
-    console.log("Reshuffled discardPile and transferring to drawPile");
-    drawPile = (discardPile.splice(0, discardPile.length)); 
-    console.log("Unshifting preserved card into discardPile");
-    discardPile.unshift(g);
-    console.dir(drawPile, {'maxArrayLength': null});
-}
 
 //calculates end game score
 function endGameScore(){
@@ -655,4 +408,4 @@ function endGameScore(){
     
 }
 
-module.exports = { deck, uploadDeckToMongo, shuffleDeck, initialDraw, assignDealer, retrieveInitialDraw, initial7CardDeal, createDrawPile, beginDiscardPile };
+module.exports = { deck, uploadDeckToMongo, shuffleDeck, initialDraw, assignDealer, retrieveInitialDraw, initial7CardDeal, createDrawPile, beginDiscardPile, playCard };
