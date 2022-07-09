@@ -3,9 +3,8 @@ import  ReactDOM  from 'react-dom';
 import App from './app';
 import socketIOClient from "socket.io-client";
 
-const socket = socketIOClient('http://192.168.1.181:3001', {
+const socket = socketIOClient(`http://${window.location.hostname}:3001`, {
 });
-
 
 socket.on("contact", (data) => {
     console.log(data);

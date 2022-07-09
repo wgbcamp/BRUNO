@@ -293,10 +293,13 @@ async function playCard(data, player, card, cb){
             for (var a=0; a<data.players[i].choices.length; a++){
                 if (data.players[i].choices[a] === "Play card"){
                     if (data.players[i].id === player){
-                        currentPlayer = data.players[i].name; 
                         for (var e=0; e<data.players[i].hand.length; e++){
-                            if (data.players[i].hand[e] === card){
+                            console.log("TESTING")
+                            if (data.players[i].hand[e] === card && (data.discardPile[0].slice(0, 4) === data.players[i].hand[e].slice(0, 4) || data.discardPile[0].slice(-5) === data.players[i].hand[e].slice(-5) || (data.players[i].hand[e] && card === 'WildCard') || (data.players[i].hand[e] && card === 'WildDraw4Card'))){
+                                console.log("TESTING2")
                                 currentCard = data.players[i].hand[e];
+                                currentPlayer = data.players[i].name;
+                                data.discardPile.unshift(data.players[i].hand.splice(e, 1).toString());
                                 break loop1;
                             }
                         }
@@ -304,29 +307,15 @@ async function playCard(data, player, card, cb){
                 }
             }
         }
-    
+    console.log("card from websocket " + card);
     console.log("currentPlayer: " + currentPlayer);
     console.log("currentCard: " + currentCard);
 
-    //splice card from player hand into top of discardpile
-    loop2:
-    if ((data.discardPile[0].slice(0, 4) === currentCard.slice(0, 4) || data.discardPile[0].slice(-5) === currentCard.slice(-5)) && currentPlayer !== ""){
-        for (var i=0; i<data.players.length; i++){
-            if (data.players[i].name === currentPlayer){
-                for (var a=0; a<data.players[i].hand.length; a++){
-                    if (data.players[i].hand[a] === currentCard){
-                        data.discardPile.unshift(data.players[i].hand.splice(a, 1).toString());
-                        break loop2;
-                    }
-                }
-            }
-        }
-    }
-
     //pass play card choice and special card rule onto next player
     if (currentPlayer !== ""){
+        loop3:
         for (var i=0; i<data.players.length; i++){
-            for (var a=0; a<data.players[i].choices; a++){
+            for (var a=0; a<data.players[i].choices.length; a++){
                 if (data.players[i].choices[a] === "Play card"){
                     data.players[i].choices.splice(a, 1);
                     
@@ -335,7 +324,7 @@ async function playCard(data, player, card, cb){
 
                     //index position differs based on wild cards
                     var index = 1;
-
+                    console.log(choice);
                         if (choice.length === 3){
                             index = 2;
                         }else if (choice.length === 4){
@@ -349,18 +338,21 @@ async function playCard(data, player, card, cb){
 
                         //decides target player 
                         if (i + choice[index] < 0){
-                            target = data.players.length - choice[index];
+                            console.log("1 fired")
+                            target = data.players.length + choice[index];
                         }else if (i + choice[index] > data.players.length-1){
+                            console.log("2 fired")
                             target = -1 + choice[index];
                         } else {
+                            console.log("3 fired")
                             target = i + choice[index];
                         }
 
+                        console.log("Target: " + target);
+
                         //applies choices to target player and reversal rule to game session
                         if (choice.length === 2){
-                            ///
-
-                            data.players[target].choices.unshift(choice[1]);
+                            data.players[target].choices.unshift(choice[0]);
 
                             if (currentCard.slice(-7) === "Reverse"){
                                 if (data.rule === "reverse"){
@@ -370,15 +362,17 @@ async function playCard(data, player, card, cb){
                                 }
                             }
 
+                        //places target's choices into tempStorage and places color choice in the current player's hand
                         }else if (choices.length === 3){
 
                             //we need to add a temporary storage array to mongodb here to prevent the next player from receiving their choices at the same time as the current player
-                            data.players[i].choo
-                            data.players[target].choices.unshift(choice[1]);
+                            data.players[target].tempStorage = [choice[1]];
+                            data.players[i].choices = [choice[0]];                     
                         } else {
-
+                            data.players[target].tempStorage = [choice[1], choice[2]];
+                            data.players[i].choices = [choice[0]];  
                         }
-
+                        break loop3;
                     }
                     
                     
@@ -396,9 +390,11 @@ async function playCard(data, player, card, cb){
             'verse': ['Play card', 1],
             'dSkip': ['Play card', -2],
             'dCard': ['Choose card color', 'Play card', -1],
-            '4Card': ['Choose card color', 'Draw four cards', 'Challenge Wild Draw 4 Play', -1]
+            '4Card': ['Choose card color', 'Draw four cards', 'Challenge Wild Draw 4 Play', -1],
+            'colorCard': ['Play card', -1]
         };
-        return rules[type];
+        console.log(type);
+        return rules[type] || rules['colorCard'];
     }
 
 

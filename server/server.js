@@ -19,8 +19,9 @@ app.use(cors());
 
 //listen on port
 const PORT = process.env.PORT || 3001;
-server.listen(PORT, "192.168.1.181", () => {
-    console.log(`Starting Proxy at 192.168.1.181:3001`);
+const IP = process.env.IP || 'localhost'
+server.listen(PORT, IP , () => {
+    console.log(`Starting Proxy at ${IP}:${PORT}`);
 });
 
 //start mongodb server

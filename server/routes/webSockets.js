@@ -170,7 +170,17 @@ function socketIoFunction(io, controller){
 
                 var handArray = [];
                 for(var i=0; i<result.players.length; i++){
-                    handArray.push({socketID: result.players[i].socketID, hand: result.players[i].hand})
+                    handArray.push({socketID: result.players[i].socketID, hand: result.players[i].hand});
+                }
+
+                var discardPileArray = [];
+                if (result.discardPile){
+                discardPileArray.push(result.discardPile[0].toString());
+                }
+                
+                var rule = [];
+                if(result.rule){
+                rule.push(result.rule);
                 }
 
                 console.log(currentRoom);
@@ -187,6 +197,9 @@ function socketIoFunction(io, controller){
                 for (var i=0; i<handArray.length; i++){
                     io.to(handArray[i].socketID).emit('updatePlayerHand', handArray[i].hand);
                 }
+                console.log(discardPileArray);
+                io.to(currentRoom[0]).emit("updateDiscardPile", discardPileArray);
+                io.to(currentRoom[0]).emit("updateRule", rule);
             }
         }
         socket.on('disconnect', () => {

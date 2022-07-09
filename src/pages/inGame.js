@@ -45,6 +45,14 @@ function InGame(props) {
             updateYourHand(data);
             updateSimplifiedHand(data.slice(0,5));
         });
+        props.cgp.socket.on("updateDiscardPile", (data) => {
+            console.log(data);
+            updateDiscardPile(data);
+        });
+        props.cgp.socket.on("updateRule", (data) => {
+            console.log(data);
+            updateRule(data);
+        });
         
     }, [])
 
@@ -127,12 +135,18 @@ const submitStyle = {
         }
     }
     
-    // const [yourScore, updateYourScore] = useState(0);
-    // const otherPlayerStats = [
-    //     { player: "player2", name: "Bill", score: 0, hand: ["redCard6 ", "blueCardSkip "] },
-    //     { player: "player3", name: "Sam", score: 0, hand: ["redCard6 ", "blueCardSkip "] },
-    //     { player: "player4", name: "Phil", score: 0, hand: ["redCard6 ", "blueCardSkip "] },
-    // ]
+    const [discardPile, updateDiscardPile] = useState([]);
+    const [currentRule, updateRule] = useState([]);
+
+    function receiveEnter(e) {
+        if(e.key === 'Enter'){
+            joinGame(); 
+            props.cgp.switchPopup(!props.cgp.showPopup); 
+            props.cgp.switchBlur(!props.cgp.showBlur); 
+            setPlayerName("");
+        }
+    }
+    
 
   return (
     <div>  
@@ -160,6 +174,16 @@ const submitStyle = {
     
                 ))}
         </div>
+        <div className="discardPile" style={{textAlign: "center"}}> Previous Card
+                {discardPile.map((x, index) => (
+                    <div className={`${x.slice(0, x.search("Card"))}`} key={index}>{x}</div>
+                ))}
+        </div>
+        <div className="currentRule" style={{textAlign: "center"}}> Current Rule
+               {currentRule.map((x, index) => (
+                    <div  style={{backgroundColor: "black", color: "white"}}key={index}>{x}</div>
+               ))}
+        </div>
                 <div className="playerHandContainer">
                     <div className="placeholderArrowLeft" onClick={() => calculateArrayShift("left")}>Left</div>
                     
@@ -178,7 +202,7 @@ const submitStyle = {
                 Enter nickname
             </div>
 
-            <input type="name" value={playerName} className="playerCount" onChange={e => setPlayerName(e.target.value)} style={{backgroundColor: props.cgp.darkMode ? "#d09aff" : "#5c57e6", border: 'none'}}></input>
+            <input type="name" value={playerName} className="playerCount" onChange={e => setPlayerName(e.target.value)} style={{backgroundColor: props.cgp.darkMode ? "#d09aff" : "#5c57e6", border: 'none'}} onKeyDown={(e) => receiveEnter(e)}></input>
 
             <div className="confirm" style={submitStyle} onClick={() => {joinGame(); props.cgp.switchPopup(!props.cgp.showPopup); props.cgp.switchBlur(!props.cgp.showBlur); setPlayerName("")}}>
             Submit
