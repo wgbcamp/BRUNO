@@ -117,6 +117,14 @@ function socketIoFunction(io, controller){
             }
         })
 
+        socket.on("Red" || "Blue" || "Green" || "Yellow", (gameSession, player, value) => {
+            console.log(`received color choice request of ${value} from ${player}.`);
+            getRoom(controller.applyColor, res, [player, value]);
+            function res(){
+                getRoom(updateClients, gameSession);
+            }
+        })
+
         socket.on("disconnecting", () => {
             getRoom(response);
             function response(currentRoom){

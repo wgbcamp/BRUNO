@@ -57,36 +57,20 @@ function InGame(props) {
     }, [])
 
 function buttonChoice(option){
-    switch (option){
+    switch (option[0]){
         case "Join game":
             props.cgp.switchPopup(!props.cgp.showPopup); 
             props.cgp.switchBlur(!props.cgp.showBlur);
-            break;
-        case "Start game":
-            props.cgp.socket.emit('start game', g.slice(1+g.lastIndexOf('/', g.length)), localStorage.getItem('userID'));
-            break;
-        case "Draw first card":
-            props.cgp.socket.emit('draw first card', g.slice(1+g.lastIndexOf('/', g.length)), localStorage.getItem('userID'));
-            break;
-        case "Retrieve initial draw":
-            props.cgp.socket.emit('retrieve initial draw', g.slice(1+g.lastIndexOf('/', g.length)), localStorage.getItem('userID'));
-            break;
-        case "Deal starting hand":
-            props.cgp.socket.emit('deal starting hand', g.slice(1+g.lastIndexOf('/', g.length)), localStorage.getItem('userID'));
-            break;
-        case "Set draw pile":
-            props.cgp.socket.emit('set draw pile', g.slice(1+g.lastIndexOf('/', g.length)), localStorage.getItem('userID'));
-            break;
-        case "Set discard pile":
-            props.cgp.socket.emit('set discard pile', g.slice(1+g.lastIndexOf('/', g.length)), localStorage.getItem('userID'));
-            break;
-        default:
-            if(option !== "Play card"){
-            props.cgp.socket.emit('play card', g.slice(1+g.lastIndexOf('/', g.length)), localStorage.getItem('userID'), option);
+            props.cgp.handleClick();
+            break;            
+        case "Play card":
+            props.cgp.socket.emit('play card', g.slice(1+g.lastIndexOf('/', g.length)), localStorage.getItem('userID'), option[1]);
             console.log(option);
             break;
-            };
-
+        case "Red" || "Blue" || "Green" || "Yellow":
+            props.cgp.socket.emit(option[0].toLowerCase(), g.slice(1+g.lastIndexOf('/', g.length)), localStorage.getItem('userID'), option[0]);
+        default:
+            props.cgp.socket.emit(option[0].toLowerCase(), g.slice(1+g.lastIndexOf('/', g.length)), localStorage.getItem('userID'));
     }
 }
 
@@ -155,13 +139,13 @@ const submitStyle = {
         <div className="gameCode" style={{color: 'white'}}>{props.cgp.gameCode}</div>
         <div className="playerChoices" style={{backgroundColor: "#1c1c1c"}}>  
             {yourChoices === null ? '' : yourChoices.map((x) => (
-                <div className={'bChoiceContainer'} style={{color: 'white'}} onClick={() => buttonChoice(x)}>
+                <div className={'bChoiceContainer'} style={{color: 'white'}} onClick={() => buttonChoice([x])}>
                 <div className="choicesStyles"  key={x}>{x}</div> 
                 </div>))}
             
             
             {yourPrivileges === [] ? "" : yourPrivileges.map((x) => (
-                <div className={'bChoiceContainer'} style={{color: 'white'}} onClick={() => buttonChoice(x)}>
+                <div className={'bChoiceContainer'} style={{color: 'white'}} onClick={() => buttonChoice([x])}>
                 <div className="choicesStyles"  key={x}>{x}</div> 
                 </div>
             ))}          
@@ -189,7 +173,7 @@ const submitStyle = {
                     
                     <div className="playerHand">
                         {simplifiedHand.map((x, index) => (
-                            <div className={`${"cardAlign"} ${x.slice(0, x.search("Card"))}`} onClick={() => buttonChoice(x)} key={index}>{x}</div>    
+                            <div className={`${"cardAlign"} ${x.slice(0, x.search("Card"))}`} onClick={() => buttonChoice(["Play card", x])} key={index}>{x}</div>    
                         ))}
                     </div>
                     <div className="placeholderArrowRight" onClick={() => calculateArrayShift("right")}>Right</div>
@@ -202,7 +186,7 @@ const submitStyle = {
                 Enter nickname
             </div>
 
-            <input type="name" value={playerName} className="playerCount" onChange={e => setPlayerName(e.target.value)} style={{backgroundColor: props.cgp.darkMode ? "#d09aff" : "#5c57e6", border: 'none'}} onKeyDown={(e) => receiveEnter(e)}></input>
+            <input ref={props.cgp.ref} type="name" value={playerName} className="playerCount" onChange={e => setPlayerName(e.target.value)} style={{backgroundColor: props.cgp.darkMode ? "#d09aff" : "#5c57e6", border: 'none'}} onKeyDown={(e) => receiveEnter(e)}></input>
 
             <div className="confirm" style={submitStyle} onClick={() => {joinGame(); props.cgp.switchPopup(!props.cgp.showPopup); props.cgp.switchBlur(!props.cgp.showBlur); setPlayerName("")}}>
             Submit

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Main from './pages/Main';
 import DoesNotExist from './pages/doesNotExist';
@@ -19,6 +19,11 @@ function App(props){
     const [loadingIcon, switchLoadingIcon] = useState(false);
 
     const socket = props.socket;
+
+    const ref = useRef(null);
+    const handleClick = () => {
+        ref.current.focus();
+    }
 
     useEffect(() => {
         
@@ -44,7 +49,7 @@ function App(props){
                 <Route path="*" element={<DoesNotExist app={{darkMode, switchPopup, showPopup, showBlur, gameCode, updateGameCode, showBlur, loadingIcon, switchLoadingIcon}}/>}/>
 
                 <Route path="/inGame/:id" element={<ConditionalGamePage
-                app={{darkMode, switchPopup, showPopup, switchBlur, showBlur, gameCode, updateGameCode, showBlur, loadingIcon, switchLoadingIcon, conditionalURLCheck, updateCURLC, socket}}/>}/>
+                app={{darkMode, switchPopup, showPopup, switchBlur, showBlur, gameCode, updateGameCode, showBlur, loadingIcon, switchLoadingIcon, conditionalURLCheck, updateCURLC, socket, handleClick, ref}}/>}/>
             </Routes>
         </BrowserRouter>
 

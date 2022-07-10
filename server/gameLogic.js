@@ -363,15 +363,16 @@ async function playCard(data, player, card, cb){
                             }
 
                         //places target's choices into tempStorage and places color choice in the current player's hand
-                        }else if (choices.length === 3){
+                        }else if (choice.length === 3){
 
                             //we need to add a temporary storage array to mongodb here to prevent the next player from receiving their choices at the same time as the current player
                             data.players[target].tempStorage = [choice[1]];
-                            data.players[i].choices = [choice[0]];                     
+                            data.players[i].choices = ["Red", "Blue", "Green", "Yellow"]; 
                         } else {
                             data.players[target].tempStorage = [choice[1], choice[2]];
-                            data.players[i].choices = [choice[0]];  
+                            data.players[i].choices = ["Red", "Blue", "Green", "Yellow"]; 
                         }
+                          
                         break loop3;
                     }
                     
@@ -397,6 +398,18 @@ async function playCard(data, player, card, cb){
         return rules[type] || rules['colorCard'];
     }
 
+async function applyColor(data, player, value, cb){
+    
+    for (var i=0; i<data.players.length; i++){
+        for (var a=0; a<data.players[i].choices.length; a++){
+            if (data.players[i].choices[a] === "Choose card color" && data.players[i].id === player){
+                data.players[i].choices[a] = [];
+                data.tempColor = value;              
+            }
+        }
+    }
+    cb(data);
+}
 
 //calculates end game score
 function endGameScore(){
@@ -404,4 +417,4 @@ function endGameScore(){
     
 }
 
-module.exports = { deck, uploadDeckToMongo, shuffleDeck, initialDraw, assignDealer, retrieveInitialDraw, initial7CardDeal, createDrawPile, beginDiscardPile, playCard };
+module.exports = { deck, uploadDeckToMongo, shuffleDeck, initialDraw, assignDealer, retrieveInitialDraw, initial7CardDeal, createDrawPile, beginDiscardPile, playCard, applyColor };

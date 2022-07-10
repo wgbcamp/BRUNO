@@ -255,7 +255,16 @@ async function playCard(currentRoom, cb, cardInfo){
     }
 }
 
-module.exports = { insertOneFN, readDB, addPlayer, updatePresence, startGame, drawFirstCard, retrieveInitialDraw, dealStartingHand, setDrawPile, setDiscardPile, playCard }
+async function applyColor(currentRoom, cb, colorInfo){
+    const search = await collection.findOne({code: currentRoom[0]});
+    gameLogic.applyColor(search, colorInfo[0], colorInfo[1], response);
+    async function response(data){
+        const result = await collection.updateOne({code: currentRoom[0]}, {$set: {players: data.players, tempColor: data.tempColor}});
+        cb();
+    }
+}
+
+module.exports = { insertOneFN, readDB, addPlayer, updatePresence, startGame, drawFirstCard, retrieveInitialDraw, dealStartingHand, setDrawPile, setDiscardPile, playCard, applyColor }
 
 /*
 need error checking on playercount manipulation and same code/string already existing in database
