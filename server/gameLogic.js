@@ -1,39 +1,6 @@
-// var inquirer = require('inquirer');
-
-const { setInternalBufferSize } = require("bson");
-const e = require("express");
-const { useSearchParams } = require("react-router-dom");
-
 //DECK ARRAY**
 var deck = [ "BlueCard0", "BlueCard1", "BlueCard1", "BlueCard2", "BlueCard2", "BlueCard3", "BlueCard3", "BlueCard4", "BlueCard4", "BlueCard5", "BlueCard5", "BlueCard6", "BlueCard6", "BlueCard7", "BlueCard7", "BlueCard8", "BlueCard8", "BlueCard9", "BlueCard9", "BlueCardSkip", "BlueCardSkip", "BlueCardReverse", "BlueCardReverse", "BlueCardDraw2", "BlueCardDraw2", "GreenCard0", "GreenCard1", "GreenCard1", "GreenCard2", "GreenCard2", "GreenCard3", "GreenCard3", "GreenCard4", "GreenCard4", "GreenCard5", "GreenCard5", "GreenCard6", "GreenCard6", "GreenCard7", "GreenCard7", "GreenCard8", "GreenCard8", "GreenCard9", "GreenCard9", "GreenCardSkip", "GreenCardSkip", "GreenCardReverse", "GreenCardReverse", "GreenCardDraw2", "GreenCardDraw2", "RedCard0", "RedCard1", "RedCard1", "RedCard2", "RedCard2", "RedCard3", "RedCard3", "RedCard4", "RedCard4", "RedCard5", "RedCard5", "RedCard6", "RedCard6", "RedCard7", "RedCard7", "RedCard8", "RedCard8", "RedCard9", "RedCard9", "RedCardSkip", "RedCardSkip", "RedCardReverse", "RedCardReverse", "RedCardDraw2", "RedCardDraw2", "YellowCard0", "YellowCard1", "YellowCard1", "YellowCard2", "YellowCard2", "YellowCard3", "YellowCard3", "YellowCard4", "YellowCard4", "YellowCard5", "YellowCard5", "YellowCard6", "YellowCard6", "YellowCard7", "YellowCard7", "YellowCard8", "YellowCard8", "YellowCard9", "YellowCard9", "YellowCardSkip", "YellowCardSkip", "YellowCardReverse", "YellowCardReverse", "YellowCardDraw2", "YellowCardDraw2", "WildCard", "WildCard", "WildCard", "WildCard", "WildDraw4Card", "WildDraw4Card", "WildDraw4Card", "WildDraw4Card"]
 
-//DRAW PILE ARRAY
-var drawPile = [];
-
-//DISCARD PILE ARRAY
-var discardPile = [];
-
-//PLAYER ARRAY**
-// var players = [];
-
-//GLOBAL GAMEPLAY VARIABLES
-var playerCounter = 0;
-var rule;
-var gameDirection = 0;
-var firstReverse = 0;
-var wildCardColor = "z";
-var previousWildCardColor;
-var stayOnPlayer = 0;
-var challenger;
-var noCardsLeft = "blank";
-
-
-//MAIN GAME FUNCTION CALLS**
-//shuffleDeck, generatePlayers, initialDraw, assignDealer, retrieveInitialDraw, initial7CardDeal, createDrawPile, beginDiscardPile
-
-
-// shuffleDeck();
-// generatePlayers();
 
 function uploadDeckToMongo(){
     console.log("made it to game logic...")
@@ -271,7 +238,7 @@ async function beginDiscardPile(data, cb){
 
     function applyRule(value, rule){
         var rules = {
-            'reverse': [value+1, 'Play card'],
+            'reverse': [value, 'Play card'],
             'skip': [value-2, 'Play card'],
             'draw2': [value-1, 'Draw 2 cards'],
             'wildcard': [value-1, 'Choose color'],

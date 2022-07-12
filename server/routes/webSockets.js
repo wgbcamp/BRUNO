@@ -125,6 +125,12 @@ function socketIoFunction(io, controller){
             }
         })
 
+        //we stopped here
+        socket.on("draw 2 cards", (gameSession, player) => {
+            console.log(`received draw 2 cards request from ${player}.`);
+            getRoom(controller.play)
+        })
+
         socket.on("disconnecting", () => {
             getRoom(response);
             function response(currentRoom){
